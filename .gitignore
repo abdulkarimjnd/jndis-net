@@ -1,0 +1,38 @@
+# JND Integrated Solutions — static site
+# Plain HTML + Bootstrap (CDN) + vanilla JS. There is no build step and no
+# dependencies, so nothing below is needed to build or deploy the site.
+# These rules just keep OS and editor clutter out of the repository.
+
+# ---- OS junk ----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ---- Editors / IDEs ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+
+# ---- Logs and local temp ----
+*.log
+*.tmp
+.cache/
+
+# ---- Secrets / environment ----
+.env
+.env.*
+!.env.example
+
+# ---- Future tooling (not used today) ----
+# Kept so that adding a tool later doesn't accidentally commit its output.
+node_modules/
+dist/

@@ -22,7 +22,7 @@ Definition of done for every task:
 ## Phase 1: Setup
 
 - [x] TASK-001: Create folder structure (`/`, `/services/`, `/assets/css`, `/assets/js`, `/assets/img`)
-- [ ] TASK-002: Initialize Git repo and add `.gitignore`
+- [x] TASK-002: Initialize Git repo and add `.gitignore`
 - [ ] TASK-003: Link Bootstrap 5.3.8 and Inter (Google Fonts + jsDelivr CDN, correct load order)
 - [ ] TASK-004: Create `assets/css/jnd.css` (brand tokens, type scale, gradients, button and card overrides)
 - [ ] TASK-005: Create base HTML template (meta tags, fonts, CDN links, skip link)
