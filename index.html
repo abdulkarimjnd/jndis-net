@@ -51,6 +51,9 @@
   <!-- Mobile menu behaviour. Deferred scripts run in document order, so the
        bundle above is guaranteed to have executed first. -->
   <script defer src="assets/js/nav.js"></script>
+
+  <!-- Copyright year in the footer -->
+  <script defer src="assets/js/footer.js"></script>
 </head>
 <body>
 
@@ -129,9 +132,86 @@
   </header>
 
   <!--
-    Site footer — built in TASK-008, moved to a shared JS partial in TASK-010.
-    It is a <footer> landmark so screen readers can jump to it.
+    Site footer (TASK-008). Moves to a shared JS partial at TASK-010.
+    <footer> is a landmark, so screen readers can jump straight to it.
   -->
+  <footer class="site-footer bg-grad-primary text-white">
+    <div class="container">
+
+      <div class="row g-4">
+
+        <!-- About -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <a class="d-inline-flex align-items-center gap-2 mb-3" href="index.html">
+            <img src="assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+            <span class="d-flex flex-column">
+              <span class="site-brand-name">JND</span>
+              <span class="site-brand-tagline">Integrated Solutions</span>
+            </span>
+          </a>
+          <p class="small mb-0">
+            IT support, networking, cloud, cybersecurity and CCTV solutions for
+            businesses. Reliable support, professional service.
+          </p>
+        </div>
+
+        <!-- Services — same list, order and filenames as the header dropdown -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Services</h2>
+          <ul class="list-unstyled mb-0 small">
+            <li class="mb-2"><a href="services/it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
+            <li class="mb-2"><a href="services/network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
+            <li class="mb-2"><a href="services/server-management-hosting.html">Server Management &amp; Hosting</a></li>
+            <li class="mb-2"><a href="services/cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
+            <li class="mb-2"><a href="services/cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
+            <li class="mb-2"><a href="services/cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
+            <li class="mb-2"><a href="services/web-development.html">Web Development &amp; Digital Solutions</a></li>
+            <li class="mb-2"><a href="services/it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
+            <li class="mb-2"><a href="services/managed-it-services.html">Managed IT Services</a></li>
+            <li class="mb-0"><a href="services/equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Company</h2>
+          <ul class="list-unstyled mb-0 small">
+            <li class="mb-2"><a href="about.html">About Us</a></li>
+            <li class="mb-2"><a href="services/index.html">All Services</a></li>
+            <li class="mb-2"><a href="contact.html">Contact</a></li>
+            <li class="mb-0"><a href="contact.html">Get a Quote</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact — PLACEHOLDERS. Real details must be supplied before launch.
+             Nothing real-looking is here on purpose, so nothing ships by accident. -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Contact</h2>
+          <ul class="list-unstyled mb-0 small">
+            <!-- TODO (TASK-042): real phone number -->
+            <li class="mb-2"><span class="site-placeholder">Phone number to be added</span></li>
+            <!-- TODO (TASK-042): real email address -->
+            <li class="mb-2"><span class="site-placeholder">Email address to be added</span></li>
+            <!-- TODO (TASK-042): real postal address -->
+            <li class="mb-0"><span class="site-placeholder">Street address, City, Country</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bootstrap's <hr> inherits the footer's colour at 25% opacity, so this
+           renders as a subtle white divider with no extra classes. -->
+      <hr class="my-4">
+
+      <div class="site-footer-meta d-flex flex-column flex-md-row justify-content-between gap-2 small">
+        <p class="mb-0">
+          &copy; <span data-current-year>2026</span> JND Integrated Solutions. All rights reserved.
+        </p>
+        <p class="mb-0">Reliable Support. Professional Service.</p>
+      </div>
+
+    </div>
+  </footer>
 
   <!-- tabindex="-1" lets the skip link move focus here, not just scroll to it -->
   <main id="main" tabindex="-1">

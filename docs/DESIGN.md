@@ -205,6 +205,25 @@ Two deliberate header decisions:
 2. Because JavaScript suppresses that navigation when it *is* working, the dropdown ends with a divider and an **"All services →"** item — the keyboard route to the hub page.
 3. **Focus stays on the hamburger when the panel opens.** A navbar collapse is a disclosure pattern, not a dialog. See `assets/js/nav.js` — it closes the panel on link click, closes it on Escape (returning focus to the toggle), and drops the open state when the viewport crosses into desktop. Bootstrap handles the toggling itself; `nav.js` only adds those three behaviours.
 
+### Footer
+
+`.site-footer` in `jnd.css` §8, sitting on `.bg-grad-primary.text-white`. Same service list, order and filenames as the header dropdown.
+
+| Class | Purpose |
+|---|---|
+| `.site-footer` | Section padding — 64px mobile, 96px desktop |
+| `.site-footer-title` | Column heading (`<h2>`) — .875rem, 600, uppercase, letter-spacing .05em, white |
+| `.site-footer-meta` | Bottom bar text at 85% white |
+| `.site-placeholder` | **TEMPORARY** — italic with a dashed underline, flags contact details not yet supplied. Delete at TASK-042 |
+
+Contrast decisions, all measured rather than assumed:
+
+- **Column titles are white, not Highlight.** `#62D5E8` reaches only **4.30:1** against the lighter end of the Primary gradient — below AA's 4.5:1 at this text size. White measures **7.40:1** there (11.06:1 at the darker end), so hierarchy comes from size, weight and uppercase instead of colour.
+- **Links and meta text use 85% white (5.86:1)**, not Bootstrap's `.text-white-50` which manages only **3.08:1** and would fail AA.
+- **Footer links must be inverted explicitly.** Bootstrap's `--bs-link-color` (`#1455A0`) is nearly invisible against this gradient.
+
+Column headings are real `<h2>` elements, not styled paragraphs, so screen reader users can navigate the footer by heading.
+
 ## Icons and Imagery
 
 - Icon set: **Lucide** (default), Heroicons or Bootstrap Icons — outline, 1.5px stroke, one set only for the whole site

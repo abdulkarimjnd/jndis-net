@@ -11,7 +11,8 @@
      5. Buttons
      6. Cards
      7. Header
-     8. Skip link, focus and reduced motion (accessibility)
+     8. Footer
+     9. Skip link, focus and reduced motion (accessibility)
 
    Source of truth: docs/DESIGN.md. Keep the two in sync when either changes.
    ========================================================================== */
@@ -302,7 +303,64 @@ small, .small { font-size: 14px; }
   .navbar .nav-cta { margin-left: 1rem; }
 }
 
-/* 8. Skip link, focus and reduced motion ---------------------------------- */
+/* 8. Footer --------------------------------------------------------------- */
+/* Sits on the Primary gradient (.bg-grad-primary) with white text.
+   Section spacing here is 64px / 96px per DESIGN.md; TASK-009 will extract a
+   shared .section class using the same values. */
+
+.site-footer {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 992px) {
+  .site-footer {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+/* Links must be inverted: Bootstrap's --bs-link-color (#1455A0) is almost
+   invisible on this gradient. 85% white measures 5.9:1 against the lighter
+   end of the gradient, so it clears AA. */
+.site-footer a {
+  color: rgba(255, 255, 255, .85);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Column headings are real <h2> elements so screen readers can navigate by
+   heading. They are NOT Highlight coloured: #62D5E8 only reaches 4.31:1 on the
+   lighter end of the gradient, under the AA floor of 4.5:1 at this text size.
+   White measures 7.4:1, so hierarchy comes from size, weight and uppercase. */
+.site-footer-title {
+  font-size: .875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #fff;
+}
+
+/* Bootstrap's .text-white-50 only reaches 3.1:1 here and would fail AA. */
+.site-footer-meta {
+  color: rgba(255, 255, 255, .85);
+}
+
+/* The wordmark is Secondary navy in the header; it has to invert down here. */
+.site-footer .site-brand-name { color: #fff; }
+.site-footer .site-brand-tagline { color: rgba(255, 255, 255, .85); }
+
+/* TEMPORARY — flags contact details that have not been supplied yet.
+   Delete this rule and the .site-placeholder spans at TASK-042. */
+.site-placeholder {
+  font-style: italic;
+  border-bottom: 1px dashed rgba(255, 255, 255, .5);
+}
+
+/* 9. Skip link, focus and reduced motion ---------------------------------- */
 
 /* Skip link: off-screen until focused, then pinned to the top-left. Uses
    :focus rather than :focus-visible so it can never be focused but invisible. */
