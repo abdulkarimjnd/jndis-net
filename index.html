@@ -14,7 +14,8 @@
   <!-- Bootstrap 5.3.8 — base styles (must load before assets/css/jnd.css) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
 
-  <!-- assets/css/jnd.css (brand tokens + overrides) is linked in TASK-004 -->
+  <!-- JND brand layer — tokens, type scale, gradients, button/card overrides -->
+  <link rel="stylesheet" href="assets/css/jnd.css">
 
   <!-- Bootstrap 5.3.8 bundle (Popper + Bootstrap) for dropdowns, collapse, etc. -->
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -22,18 +23,16 @@
 <body>
 
   <!-- ===================================================================
-       TEMPORARY TASK-003 VERIFICATION BLOCK
-       Confirms Bootstrap CSS, Bootstrap JS and Inter are all loading.
-       Delete this entire <main> when the real home page starts (TASK-011).
+       TEMPORARY VERIFICATION BLOCK (TASK-003 / TASK-004)
+       Confirms Bootstrap CSS, Bootstrap JS, Inter and assets/css/jnd.css
+       are all loading. Delete this entire <main> at TASK-011.
        =================================================================== -->
   <main class="container py-5">
-    <h1 style="font-family: 'Inter', system-ui, sans-serif;">
-      Bootstrap + Inter loading check
-    </h1>
+    <h1>Bootstrap + Inter + brand layer</h1>
 
-    <p class="lead" style="font-family: 'Inter', system-ui, sans-serif;">
-      If this text renders in Inter and the button below is Bootstrap blue,
-      TASK-003 is done. Brand colours arrive in TASK-004.
+    <p class="lead">
+      Headings should now be JND navy, the button JND blue with an accent
+      gradient, and this paragraph in Inter at 16px / 1.6.
     </p>
 
     <div class="row g-4 my-2">
@@ -49,7 +48,15 @@
     </div>
 
     <!-- Exercises the Bootstrap JS bundle: this dropdown only opens if it loaded. -->
-    <div class="dropdown">
+    <div class="d-flex flex-wrap gap-3 align-items-center">
+      <a class="btn btn-primary" href="#">Primary</a>
+      <a class="btn btn-outline-primary" href="#">Secondary</a>
+      <div class="bg-grad-primary p-3 rounded">
+        <a class="btn btn-outline-light" href="#">Ghost on dark</a>
+      </div>
+    </div>
+
+    <div class="dropdown mt-3">
       <button class="btn btn-primary dropdown-toggle" type="button"
               data-bs-toggle="dropdown" aria-expanded="false">
         JS bundle check

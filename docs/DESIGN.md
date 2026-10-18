@@ -118,7 +118,7 @@ Use the semantic `.bg-grad-*` utilities rather than Bootstrap's `.bg-primary` fo
 ## Layout
 
 - Max content width: 1200px, centered
-- Side padding: 16px mobile, 24px tablet, 32px desktop
+- Side padding: 16px each side (`--bs-gutter-x: 2rem` on `.container` and `.row`). Above the 1200px cap, centering margins provide the extra breathing room.
 - Section spacing: 64px mobile, 96px desktop
 - Grid: 1 column mobile, 2 tablet, 3 desktop for service cards (`.col-12 .col-md-6 .col-lg-4`)
 - Breakpoints: Bootstrap defaults (`sm` ≥576, `md` ≥768, `lg` ≥992, `xl` ≥1200, `xxl` ≥1400)
@@ -134,18 +134,13 @@ All buttons: 8px radius, 12px 24px padding, 600 weight, min height 44px, visible
 - **Destructive** (forms only): `#C62828` background, white text.
 - Disabled: 50% opacity, no hover effect.
 
-Built on Bootstrap `.btn`, restyled in `jnd.css`:
+Built on Bootstrap `.btn`, restyled in `jnd.css` §5. Variants are themed through Bootstrap's `--bs-btn-*` variables rather than `!important` overrides:
 
-```css
-.btn { border-radius: 8px; padding: 12px 24px; font-weight: 600; min-height: 44px; transition: all .2s ease-out; }
-.btn:focus-visible { outline: 2px solid #50B8E8; outline-offset: 2px; box-shadow: none; }
-.btn-primary { background-image: linear-gradient(135deg, #1455A0, #50B8E8); border: 0; }
-.btn-primary:hover { background-image: none; background-color: #1455A0; transform: translateY(-1px); }
-.btn-outline-primary { border-width: 2px; }
-.btn-outline-primary:hover { background-color: #F2F5F8; color: #1455A0; }
-.btn-danger { --bs-btn-bg: #C62828; --bs-btn-border-color: #C62828; }
-.btn:disabled, .btn.disabled { opacity: .5; }
-```
+- `.btn` sets `--bs-btn-border-width: 2px` and `--bs-btn-disabled-opacity: .5`, so borderless and bordered variants render at identical height and dim consistently
+- `.btn-primary` keeps the accent gradient in `background-image` and removes it on hover, letting the solid Primary `background-color` show through
+- `.btn-outline-primary` overrides Bootstrap's fill-on-hover so it goes white → Surface with Primary text
+- `.btn-danger` sets the full hover/active ramp, otherwise it falls back to Bootstrap's stock red on interaction
+- Focus rings come from one shared `a:focus-visible, .btn:focus-visible` rule
 
 Class mapping:
 

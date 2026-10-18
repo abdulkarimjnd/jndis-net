@@ -1,0 +1,265 @@
+/* ==========================================================================
+   JND Integrated Solutions — brand layer
+   ==========================================================================
+   Loaded AFTER bootstrap.min.css, so these rules win.
+
+   Contents
+     1. Design tokens
+     2. Typography
+     3. Layout: container
+     4. Utilities: surface and gradients
+     5. Buttons
+     6. Cards
+     7. Focus and reduced motion (accessibility)
+
+   Source of truth: docs/DESIGN.md. Keep the two in sync when either changes.
+   ========================================================================== */
+
+/* 1. Design tokens -------------------------------------------------------- */
+
+:root {
+  /* JND palette */
+  --jnd-primary:   #1455A0;
+  --jnd-secondary: #123B73;
+  --jnd-accent:    #50B8E8;
+  --jnd-highlight: #62D5E8;
+  --jnd-midblue:   #2E83C5;
+  --jnd-surface:   #F2F5F8;
+  --jnd-ink:       #080B10;
+  --jnd-border:    #E3E8EE;
+
+  /* Bootstrap overrides.
+     Note: Bootstrap compiles component colours (e.g. .btn-primary) to literal
+     values, so overriding --bs-primary alone is not enough to restyle buttons
+     or cards. Those are handled explicitly in sections 5 and 6. */
+  --bs-body-font-family: 'Inter', system-ui, sans-serif;
+  --bs-body-font-size: 1rem;
+  --bs-body-line-height: 1.6;
+  --bs-body-color: var(--jnd-ink);
+  --bs-body-bg: #FFFFFF;
+
+  --bs-primary: var(--jnd-primary);
+  --bs-primary-rgb: 20, 85, 160;
+  --bs-secondary: var(--jnd-secondary);
+  --bs-secondary-rgb: 18, 59, 115;
+
+  --bs-link-color: var(--jnd-primary);
+  --bs-link-color-rgb: 20, 85, 160;
+  --bs-link-hover-color: var(--jnd-midblue);
+
+  --bs-border-color: var(--jnd-border);
+  --bs-border-radius: 12px;    /* cards */
+  --bs-border-radius-sm: 8px;  /* inputs */
+
+  --bs-heading-color: var(--jnd-secondary);
+}
+
+/* 2. Typography ----------------------------------------------------------- */
+/* Scale from DESIGN.md, mobile -> desktop. h1 is the 700 "hero" weight. */
+
+h1, .h1 { font-weight: 700; font-size: clamp(2.25rem, 5vw, 3.5rem); }    /* 36 -> 56px */
+h2, .h2 { font-weight: 600; font-size: clamp(1.75rem, 3.5vw, 2.5rem); }  /* 28 -> 40px */
+h3, .h3 { font-weight: 600; font-size: clamp(1.25rem, 2vw, 1.5rem); }    /* 20 -> 24px */
+h4, .h4, h5, .h5, h6, .h6 { font-weight: 600; }
+
+/* Heading colour comes from --bs-heading-color above. Inside a gradient or
+   dark section, add .text-white — Bootstrap's !important beats the token. */
+
+p { line-height: 1.6; }
+.lead { font-size: 1.125rem; font-weight: 400; line-height: 1.6; }
+
+/* Labels use weight 500 per DESIGN.md */
+.form-label, label { font-weight: 500; }
+
+small, .small { font-size: 14px; }
+
+/* 3. Layout: container ---------------------------------------------------- */
+/* Bootstrap gives containers 12px of side padding. Bump it to 16px and keep
+   .row in sync — rows pull back by half the gutter, so the two values must
+   match or column edges drift out of line with the padding. */
+
+.container,
+.container-fluid {
+  --bs-gutter-x: 2rem; /* 16px each side */
+}
+
+.row {
+  --bs-gutter-x: 2rem; /* half of this becomes the negative margin */
+}
+
+/* Max content width: 1200px, centered */
+@media (min-width: 1200px) {
+  .container { max-width: 1200px; }
+}
+
+/* 4. Utilities: surface and gradients ------------------------------------- */
+
+.bg-surface { background-color: var(--jnd-surface) !important; }
+
+.bg-grad-primary   { background-image: linear-gradient(135deg, var(--jnd-secondary), var(--jnd-primary)); }
+.bg-grad-accent    { background-image: linear-gradient(135deg, var(--jnd-primary),   var(--jnd-accent)); }
+.bg-grad-highlight { background-image: linear-gradient(135deg, var(--jnd-midblue),   var(--jnd-highlight)); }
+.bg-grad-modern    { background-image: linear-gradient(135deg, var(--jnd-secondary), var(--jnd-highlight)); }
+
+.text-midblue { color: var(--jnd-midblue) !important; }
+.text-accent  { color: var(--jnd-accent) !important; }
+
+/* 5. Buttons -------------------------------------------------------------- */
+/* All variants: 8px radius, 12/24 padding, 600 weight, 44px min height.
+   --bs-btn-border-width is lifted to 2px site-wide so the bordered and
+   borderless variants render at an identical height. */
+
+.btn {
+  --bs-btn-border-width: 2px;
+  --bs-btn-disabled-opacity: .5;
+
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  min-height: 44px;
+  transition:
+    color .2s ease-out,
+    background-color .2s ease-out,
+    background-image .2s ease-out,
+    border-color .2s ease-out,
+    box-shadow .2s ease-out,
+    transform .2s ease-out;
+}
+
+/* Primary — accent gradient, white text; hover goes solid Primary with a lift */
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--jnd-primary);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--jnd-primary);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--jnd-secondary);
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--jnd-primary);
+  --bs-btn-disabled-border-color: transparent;
+  --bs-btn-focus-shadow-rgb: 80, 184, 232;
+
+  background-image: linear-gradient(135deg, var(--jnd-primary), var(--jnd-accent));
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-image: none; /* reveal the solid background-color */
+}
+.btn-primary:hover { transform: translateY(-1px); }
+
+/* Secondary — white fill, 2px Primary border, Primary text; hover fills Surface.
+   Bootstrap's .btn-outline-primary normally fills with Primary on hover, so the
+   hover/active colours are overridden to match DESIGN.md instead. */
+.btn-outline-primary {
+  --bs-btn-color: var(--jnd-primary);
+  --bs-btn-border-color: var(--jnd-primary);
+  --bs-btn-hover-color: var(--jnd-primary);
+  --bs-btn-hover-bg: var(--jnd-surface);
+  --bs-btn-hover-border-color: var(--jnd-primary);
+  --bs-btn-active-color: var(--jnd-primary);
+  --bs-btn-active-bg: var(--jnd-border);
+  --bs-btn-active-border-color: var(--jnd-secondary);
+  --bs-btn-disabled-color: var(--jnd-primary);
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: var(--jnd-primary);
+  --bs-btn-focus-shadow-rgb: 80, 184, 232;
+}
+
+/* Ghost / on dark — transparent, white border and text; hover inverts */
+.btn-outline-light {
+  --bs-btn-color: #fff;
+  --bs-btn-border-color: #fff;
+  --bs-btn-hover-color: var(--jnd-secondary);
+  --bs-btn-hover-bg: #fff;
+  --bs-btn-hover-border-color: #fff;
+  --bs-btn-active-color: var(--jnd-secondary);
+  --bs-btn-active-bg: #fff;
+  --bs-btn-active-border-color: #fff;
+  --bs-btn-focus-shadow-rgb: 255, 255, 255;
+}
+
+/* Destructive — forms only. Hover/active are darker shades of #C62828 so the
+   button does not fall back to Bootstrap's stock red on interaction. */
+.btn-danger {
+  --bs-btn-bg: #C62828;
+  --bs-btn-border-color: #C62828;
+  --bs-btn-hover-bg: #A82222;
+  --bs-btn-hover-border-color: #9E1F1F;
+  --bs-btn-active-bg: #9E1F1F;
+  --bs-btn-active-border-color: #941D1D;
+  --bs-btn-focus-shadow-rgb: 198, 40, 40;
+  --bs-btn-disabled-bg: #C62828;
+  --bs-btn-disabled-border-color: #C62828;
+}
+
+/* 6. Cards ---------------------------------------------------------------- */
+
+.card {
+  --bs-card-border-color: var(--jnd-border);
+  --bs-card-border-radius: 12px;
+  --bs-card-cap-bg: transparent;
+
+  border: 1px solid var(--jnd-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(18, 59, 115, .08);
+  transition: box-shadow .2s ease-out, transform .2s ease-out;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(18, 59, 115, .14);
+  transform: translateY(-2px);
+}
+
+.card-body { padding: 24px; }
+
+/* Service-card icon tile: 48px, accent gradient, white glyph */
+.card-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-image: linear-gradient(135deg, var(--jnd-primary), var(--jnd-accent));
+  color: #fff;
+  flex: 0 0 auto;
+}
+
+/* "Learn more ->" link on service cards */
+.card-link {
+  font-weight: 600;
+  text-decoration: none;
+}
+.card-link:hover { text-decoration: underline; }
+
+/* 7. Focus and reduced motion --------------------------------------------- */
+
+/* Visible focus ring per DESIGN.md. Bootstrap already handles form controls,
+   so this covers links and buttons only to avoid doubling the indicator. */
+a:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--jnd-accent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* Disable all non-essential motion. Transforms are switched off too, not just
+   the transitions — otherwise the hover lift still snaps into place. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .card:hover,
+  .btn-primary:hover {
+    transform: none;
+  }
+}
