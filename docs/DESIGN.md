@@ -24,8 +24,9 @@ Modern, clean, professional. Trustworthy and technical without feeling cold. Gen
 |---|---|---|
 | Primary | `#1455A0` | Buttons, links, key UI |
 | Secondary | `#123B73` | Headings, header, footer, dark sections |
-| Accent | `#50B8E8` | Icons, highlights, hover accents |
-| Highlight | `#62D5E8` | Small emphasis, badges, gradient ends |
+| Accent | `#50B8E8` | Icon tiles, decorative accents |
+| Accent Dark | `#2878B8` | End of the Accent gradient — the lightest blue that still carries white text |
+| Highlight | `#62D5E8` | Badges and small decorative emphasis — never behind text |
 | Mid Blue | `#2E83C5` | Hover states, secondary links |
 | Background | `#FFFFFF` | Page background |
 | Text | `#080B10` | Body text |
@@ -35,14 +36,16 @@ Modern, clean, professional. Trustworthy and technical without feeling cold. Gen
 
 - Primary: `#123B73 → #1455A0` (header, footer)
 - Modern: `#123B73 → #1455A0 65% → #2E83C5` (hero, CTA banners)
-- Accent: `#1455A0 → #50B8E8` (buttons, icon tiles — **never behind text**)
+- Accent: `#1455A0 → #2878B8` (buttons, icon tiles)
 - Highlight: `#2E83C5 → #62D5E8` (badges — **never behind text**)
 
 Use direction 135deg. Text on gradients is white. Do not place gradients behind long body text.
 
 **Why Modern does not end in Highlight.** Highlight `#62D5E8` is far too light to carry white text: measured against it, white reaches only **1.72:1** where AA needs 4.5:1 — at the point in a hero where the text actually sits it is **2.34:1**. A band that holds text therefore has to stay in the dark range. Modern sweeps navy → Primary → Mid Blue instead, holding **5.67:1 or better** everywhere text can reach. Accent and Highlight stay in the palette for buttons, icon tiles and badges, where they are never the background of a text block.
 
-**Headings inside a text-bearing band go white automatically.** The band sets `--bs-heading-color: #fff`, which every heading inside inherits. Putting `.text-white` on the band does *not* work — Bootstrap declares `color` directly on `h1`–`h6`, and a direct declaration always beats an inherited value. Only `.bg-grad-primary` and `.bg-grad-modern` whiten headings, because only those two are dark enough to carry white text.
+**Accent ends at Accent Dark `#2878B8`, not Accent `#50B8E8`, for the same reason.** The gradient behind a primary button runs underneath its own label, so its light end has to carry white text: at `#50B8E8` the far end of the label measured **2.55:1**. Capping it at `#2878B8` lifts the worst case inside the label to **4.94:1**. Accent `#50B8E8` remains in the palette for icon tiles and decoration, where it is not a text background.
+
+**Headings inside a text-bearing band go white automatically.** The band sets `--bs-heading-color: #fff`, which every heading inside inherits. Putting `.text-white` on the band does *not* work — Bootstrap declares `color` directly on `h1`–`h6`, and a direct declaration always beats an inherited value. `.bg-grad-primary`, `.bg-grad-accent` and `.bg-grad-modern` all whiten headings; `.bg-grad-highlight` deliberately does not, because it is too light to carry white text at all.
 
 ### Bootstrap theme
 
@@ -68,6 +71,7 @@ Load order matters — Bootstrap first, `jnd.css` last so overrides win:
   --jnd-primary: #1455A0;
   --jnd-secondary: #123B73;
   --jnd-accent: #50B8E8;
+  --jnd-accent-dark: #2878B8;
   --jnd-highlight: #62D5E8;
   --jnd-midblue: #2E83C5;
   --jnd-surface: #F2F5F8;
@@ -104,12 +108,13 @@ small, .small { font-size: 14px; }
 /* Surface + gradient utilities */
 .bg-surface        { background-color: var(--jnd-surface); }
 .bg-grad-primary   { background-image: linear-gradient(135deg, #123B73, #1455A0); }
-.bg-grad-accent    { background-image: linear-gradient(135deg, #1455A0, #50B8E8); }
+.bg-grad-accent    { background-image: linear-gradient(135deg, #1455A0, #2878B8); }
 .bg-grad-highlight { background-image: linear-gradient(135deg, #2E83C5, #62D5E8); }
 .bg-grad-modern    { background-image: linear-gradient(135deg, #123B73 0%, #1455A0 65%, #2E83C5 100%); }
 
 /* Bands that carry text whiten their headings via the inherited token */
 .bg-grad-primary,
+.bg-grad-accent,
 .bg-grad-modern    { --bs-heading-color: #fff; }
 
 @media (prefers-reduced-motion: reduce) {
