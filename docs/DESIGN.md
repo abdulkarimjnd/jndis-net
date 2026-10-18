@@ -24,26 +24,27 @@ Modern, clean, professional. Trustworthy and technical without feeling cold. Gen
 |---|---|---|
 | Primary | `#1455A0` | Buttons, links, key UI |
 | Secondary | `#123B73` | Headings, header, footer, dark sections |
-| Accent | `#50B8E8` | Icon tiles, decorative accents |
-| Accent Dark | `#2878B8` | End of the Accent gradient — the lightest blue that still carries white text |
+| Accent | `#50B8E8` | Icon tiles, borders, decoration — **never text on white** |
 | Highlight | `#62D5E8` | Badges and small decorative emphasis — never behind text |
-| Mid Blue | `#2E83C5` | Hover states, secondary links |
+| Mid Blue | `#2878B8` | Hover states, secondary links, text on white, light end of the Accent gradient |
 | Background | `#FFFFFF` | Page background |
 | Text | `#080B10` | Body text |
 | Surface | `#F2F5F8` | Alternate sections, card backgrounds |
 
+**Mid Blue was darkened from `#2E83C5` to `#2878B8`.** At `#2E83C5` it reaches only **4.06:1** on white, which failed AA for three things that depend on it: link hover, the `.text-midblue` utility, and the header's "Integrated Solutions" line — which is on every page. At `#2878B8` it clears AA on white at **4.70:1**, so one colour now serves as text, as hover colour, and as the light end of the Accent gradient.
+
 ### Gradients
 
 - Primary: `#123B73 → #1455A0` (header, footer)
-- Modern: `#123B73 → #1455A0 65% → #2E83C5` (hero, CTA banners)
+- Modern: `#123B73 → #1455A0 65% → #2878B8` (hero, CTA banners)
 - Accent: `#1455A0 → #2878B8` (buttons, icon tiles)
-- Highlight: `#2E83C5 → #62D5E8` (badges — **never behind text**)
+- Highlight: `#2878B8 → #62D5E8` (badges — **never behind text**)
 
 Use direction 135deg. Text on gradients is white. Do not place gradients behind long body text.
 
-**Why Modern does not end in Highlight.** Highlight `#62D5E8` is far too light to carry white text: measured against it, white reaches only **1.72:1** where AA needs 4.5:1 — at the point in a hero where the text actually sits it is **2.34:1**. A band that holds text therefore has to stay in the dark range. Modern sweeps navy → Primary → Mid Blue instead, holding **5.67:1 or better** everywhere text can reach. Accent and Highlight stay in the palette for buttons, icon tiles and badges, where they are never the background of a text block.
+**Why Modern does not end in Highlight.** Highlight `#62D5E8` is far too light to carry white text: measured against it, white reaches only **1.72:1** where AA needs 4.5:1 — at the point in a hero where the text actually sits it is **2.34:1**. A band that holds text therefore has to stay in the dark range. Modern sweeps navy → Primary → Mid Blue instead, holding **5.67:1 or better** everywhere text can reach. Highlight stays for badges and small decorative emphasis, where it is not the background of a text block.
 
-**Accent ends at Accent Dark `#2878B8`, not Accent `#50B8E8`, for the same reason.** The gradient behind a primary button runs underneath its own label, so its light end has to carry white text: at `#50B8E8` the far end of the label measured **2.55:1**. Capping it at `#2878B8` lifts the worst case inside the label to **4.94:1**. Accent `#50B8E8` remains in the palette for icon tiles and decoration, where it is not a text background.
+**Accent gradients end at Mid Blue `#2878B8`, not Accent `#50B8E8`, for the same reason.** The gradient behind a primary button runs underneath its own label, so its light end has to carry white text: at `#50B8E8` the far end of the label measured **2.55:1**. Capping it at `#2878B8` lifts the worst case inside the label to **4.94:1**. The same cap fixes the card icon tile, where the white glyph reached **2.93:1** against the 3:1 a meaningful graphic needs. Accent `#50B8E8` stays for borders and decoration, where it is not behind text.
 
 **Headings inside a text-bearing band go white automatically.** The band sets `--bs-heading-color: #fff`, which every heading inside inherits. Putting `.text-white` on the band does *not* work — Bootstrap declares `color` directly on `h1`–`h6`, and a direct declaration always beats an inherited value. `.bg-grad-primary`, `.bg-grad-accent` and `.bg-grad-modern` all whiten headings; `.bg-grad-highlight` deliberately does not, because it is too light to carry white text at all.
 
@@ -71,9 +72,8 @@ Load order matters — Bootstrap first, `jnd.css` last so overrides win:
   --jnd-primary: #1455A0;
   --jnd-secondary: #123B73;
   --jnd-accent: #50B8E8;
-  --jnd-accent-dark: #2878B8;
   --jnd-highlight: #62D5E8;
-  --jnd-midblue: #2E83C5;
+  --jnd-midblue: #2878B8;
   --jnd-surface: #F2F5F8;
   --jnd-ink: #080B10;
   --jnd-border: #E3E8EE;
@@ -86,7 +86,7 @@ Load order matters — Bootstrap first, `jnd.css` last so overrides win:
   --bs-primary: #1455A0;
   --bs-primary-rgb: 20, 85, 160;
   --bs-link-color: #1455A0;
-  --bs-link-hover-color: #2E83C5;
+  --bs-link-hover-color: #2878B8;
   --bs-border-color: #E3E8EE;
   --bs-border-radius: 12px;
   --bs-border-radius-sm: 8px;
@@ -109,8 +109,8 @@ small, .small { font-size: 14px; }
 .bg-surface        { background-color: var(--jnd-surface); }
 .bg-grad-primary   { background-image: linear-gradient(135deg, #123B73, #1455A0); }
 .bg-grad-accent    { background-image: linear-gradient(135deg, #1455A0, #2878B8); }
-.bg-grad-highlight { background-image: linear-gradient(135deg, #2E83C5, #62D5E8); }
-.bg-grad-modern    { background-image: linear-gradient(135deg, #123B73 0%, #1455A0 65%, #2E83C5 100%); }
+.bg-grad-highlight { background-image: linear-gradient(135deg, #2878B8, #62D5E8); }
+.bg-grad-modern    { background-image: linear-gradient(135deg, #123B73 0%, #1455A0 65%, #2878B8 100%); }
 
 /* Bands that carry text whiten their headings via the inherited token */
 .bg-grad-primary,
@@ -140,7 +140,7 @@ Use the semantic `.bg-grad-*` utilities rather than Bootstrap's `.bg-primary` fo
 
 ## Buttons
 
-All buttons: 8px radius, 12px 24px padding, 600 weight, min height 44px, visible focus ring (`#50B8E8`, 2px offset).
+All buttons: 8px radius, 12px 24px padding, 600 weight, min height 44px, and the shared two-tone focus ring (see UX Requirements).
 
 - **Primary**: Accent gradient background, white text. Hover: Primary solid with slight lift.
 - **Secondary**: White background, 2px Primary border, Primary text. Hover: Surface background.
@@ -320,7 +320,8 @@ Exit 0 means every page matches; exit 1 lists the drifted pages and quotes where
 - Error states (inline form errors, form failure banner, custom 404 page)
 - Accessible forms: visible labels, `aria-describedby` for errors, clear focus order
 - Use Bootstrap validation (`.was-validated`, `.invalid-feedback`) driven by our own JS; keep `novalidate` on the form so messages are consistent across browsers
-- Color contrast WCAG AA minimum (white on Primary and Secondary passes; avoid white text on Highlight alone)
+- Color contrast WCAG AA minimum, measured rather than assumed. White clears AA on Primary (**7.40:1**), Secondary (**11.06:1**) and the Modern band (**5.67:1** at the lightest point text reaches). White on Highlight (**1.72:1**) and white on Accent (**2.24:1**) never do, so neither is ever a text background.
+- The focus indicator is **two-tone**: a 2px navy outline with a 2px white ring filling the offset gap. A single Accent ring measured 2.24:1 on white and 2.05:1 on Surface — both below the 3:1 WCAG 1.4.11 asks of a focus indicator. The navy outline carries light bands; the white ring carries the dark hero and footer bands.
 - Skip-to-content link, semantic landmarks, keyboard navigable dropdown and menu
 - Skip link is `.skip-link` in `jnd.css` §7: off-screen until focused, then pinned to the top-left in Secondary with white text. It targets `#main`, which carries `tabindex="-1"` so focus genuinely moves rather than only scrolling
 - Touch targets at least 44x44px
@@ -355,6 +356,6 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Skip link | `.skip-link` | `jnd.css` §9 |
 | Placeholder text — **temporary** | `.site-placeholder` | `jnd.css` §8 |
 
-Colour and gradient helpers, all in `jnd.css` §4: `.bg-grad-primary`, `.bg-grad-accent`, `.bg-grad-highlight`, `.bg-grad-modern`, `.bg-surface`, `.text-midblue`, `.text-accent`.
+Colour and gradient helpers, all in `jnd.css` §4: `.bg-grad-primary`, `.bg-grad-accent`, `.bg-grad-highlight`, `.bg-grad-modern`, `.bg-surface`, `.text-midblue`. There is deliberately **no** `.text-accent` — Accent cannot carry text on white.
 
 Behavioural JavaScript, in `assets/js/`: `nav.js` (mobile menu), `footer.js` (copyright year).

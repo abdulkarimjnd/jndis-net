@@ -24,9 +24,8 @@
   --jnd-primary:   #1455A0;
   --jnd-secondary: #123B73;
   --jnd-accent:    #50B8E8;
-  --jnd-accent-dark: #2878B8;  /* Accent, darkened until white clears AA */
   --jnd-highlight: #62D5E8;
-  --jnd-midblue:   #2E83C5;
+  --jnd-midblue:   #2878B8;  /* darkened from #2E83C5 so white text clears AA on white */
   --jnd-surface:   #F2F5F8;
   --jnd-ink:       #080B10;
   --jnd-border:    #E3E8EE;
@@ -118,7 +117,7 @@ small, .small { font-size: 14px; }
 .bg-surface { background-color: var(--jnd-surface) !important; }
 
 .bg-grad-primary   { background-image: linear-gradient(135deg, var(--jnd-secondary), var(--jnd-primary)); }
-.bg-grad-accent    { background-image: linear-gradient(135deg, var(--jnd-primary),   var(--jnd-accent-dark)); }
+.bg-grad-accent    { background-image: linear-gradient(135deg, var(--jnd-primary),   var(--jnd-midblue)); }
 .bg-grad-highlight { background-image: linear-gradient(135deg, var(--jnd-midblue),   var(--jnd-highlight)); }
 
 /* Modern is the band behind the hero and the CTA banner, both of which carry
@@ -135,8 +134,10 @@ small, .small { font-size: 14px; }
   --bs-heading-color: #fff;
 }
 
+/* Accent (#50B8E8) deliberately has NO text utility: it reaches only 2.24:1 on
+   white, so an accent-coloured text class would be a trap. Accent is for icon
+   tiles, borders and decoration. Mid Blue is the safe blue for text. */
 .text-midblue { color: var(--jnd-midblue) !important; }
-.text-accent  { color: var(--jnd-accent) !important; }
 
 /* 5. Buttons -------------------------------------------------------------- */
 /* All variants: 8px radius, 12/24 padding, 600 weight, 44px min height.
@@ -176,10 +177,10 @@ small, .small { font-size: 14px; }
   --bs-btn-disabled-border-color: transparent;
   --bs-btn-focus-shadow-rgb: 80, 184, 232;
 
-  /* Ends at Accent Dark, not Accent. White on Accent (#50B8E8) is only 2.24:1,
+  /* Ends at Mid Blue, not Accent. White on Accent (#50B8E8) is only 2.24:1,
      and the far end of a button label sits over exactly that area. Capping the
      gradient at #2878B8 lifts the worst case inside the label to 4.94:1. */
-  background-image: linear-gradient(135deg, var(--jnd-primary), var(--jnd-accent-dark));
+  background-image: linear-gradient(135deg, var(--jnd-primary), var(--jnd-midblue));
 }
 .btn-primary:hover,
 .btn-primary:focus,
@@ -253,14 +254,17 @@ small, .small { font-size: 14px; }
 
 .card-body { padding: 24px; }
 
-/* Service-card icon tile: 48px, accent gradient, white glyph */
+/* Service-card icon tile: 48px, accent gradient, white glyph.
+   Capped at Mid Blue, not Accent: the glyph reaches the light end, and white on
+   Accent measures 2.93:1 against the 3:1 needed for a meaningful graphic.
+   Capped, the worst point the glyph can reach is 5.27:1. */
 .card-icon {
   display: grid;
   place-items: center;
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background-image: linear-gradient(135deg, var(--jnd-primary), var(--jnd-accent));
+  background-image: linear-gradient(135deg, var(--jnd-primary), var(--jnd-midblue));
   color: #fff;
   flex: 0 0 auto;
 }
@@ -406,12 +410,19 @@ small, .small { font-size: 14px; }
 }
 
 /* Visible focus ring per DESIGN.md. Bootstrap already handles form controls,
-   so this covers links and buttons only to avoid doubling the indicator. */
+   so this covers links and buttons only to avoid doubling the indicator.
+
+   Two-tone on purpose. A single Accent ring measures 2.24:1 on white and
+   2.05:1 on Surface — both below the 3:1 WCAG 1.4.11 asks of a focus
+   indicator. The navy outline carries light backgrounds (7.4:1 on white);
+   the white shadow fills the 2px offset gap so the indicator stays visible on
+   the dark hero and footer bands (7.4:1 there). Whichever band it lands on,
+   one of the two rings contrasts. */
 a:focus-visible,
 .btn:focus-visible {
-  outline: 2px solid var(--jnd-accent);
+  outline: 2px solid var(--jnd-secondary);
   outline-offset: 2px;
-  box-shadow: none;
+  box-shadow: 0 0 0 2px #fff;
 }
 
 /* Disable all non-essential motion. Transforms are switched off too, not just
