@@ -223,51 +223,35 @@
   <main id="main" tabindex="-1">
 
     <!-- =================================================================
-         TEMPORARY VERIFICATION BLOCK (TASK-003 / TASK-004)
-         Confirms Bootstrap CSS, Bootstrap JS, Inter and assets/css/jnd.css
-         are all loading, and that the skip link works.
-         Delete this block at TASK-011.
+         HERO (TASK-011)
+         Composed entirely from documented components: .section for rhythm,
+         .bg-grad-modern for the brand sweep, .text-white for the paragraph.
+         The <h1> whitens itself via the gradient's --bs-heading-color token.
+
+         The headline and lead are DRAFT COPY, written to be replaced with
+         the client's own wording.
          ================================================================= -->
-    <div class="container py-5">
-      <h1>Bootstrap + Inter + brand layer</h1>
+    <section class="section bg-grad-modern text-white">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-lg-8">
 
-      <p class="lead">
-        Headings should now be JND navy, the button JND blue with an accent
-        gradient, and this paragraph in Inter at 16px / 1.6.
-      </p>
+            <h1 class="mb-3">IT that keeps your business running</h1>
 
-      <div class="row g-4 my-2">
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card"><div class="card-body">Grid column 1</div></div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card"><div class="card-body">Grid column 2</div></div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card"><div class="card-body">Grid column 3</div></div>
-        </div>
-      </div>
+            <p class="lead mb-4">
+              Support, networking, cloud, cybersecurity and CCTV &mdash; designed,
+              supplied and maintained by one team.
+            </p>
 
-      <div class="d-flex flex-wrap gap-3 align-items-center">
-        <a class="btn btn-primary" href="#">Primary</a>
-        <a class="btn btn-outline-primary" href="#">Secondary</a>
-        <div class="bg-grad-primary p-3 rounded">
-          <a class="btn btn-outline-light" href="#">Ghost on dark</a>
+            <div class="d-flex flex-wrap gap-3">
+              <a class="btn btn-primary" href="contact.html">Get a Quote</a>
+              <a class="btn btn-outline-light" href="services/index.html">Explore Our Services</a>
+            </div>
+
+          </div>
         </div>
       </div>
-
-      <!-- Exercises the Bootstrap JS bundle: only opens if it loaded. -->
-      <div class="dropdown mt-3">
-        <button class="btn btn-primary dropdown-toggle" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-          JS bundle check
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Opens means Bootstrap JS works</a></li>
-          <li><a class="dropdown-item" href="#">Second item</a></li>
-        </ul>
-      </div>
-    </div>
+    </section>
 
   </main>
 

@@ -64,8 +64,10 @@ h2, .h2 { font-weight: 600; font-size: clamp(1.75rem, 3.5vw, 2.5rem); }  /* 28 -
 h3, .h3 { font-weight: 600; font-size: clamp(1.25rem, 2vw, 1.5rem); }    /* 20 -> 24px */
 h4, .h4, h5, .h5, h6, .h6 { font-weight: 600; }
 
-/* Heading colour comes from --bs-heading-color above. Inside a gradient or
-   dark section, add .text-white — Bootstrap's !important beats the token. */
+/* Heading colour comes from --bs-heading-color above. A gradient band sets that
+   token to white itself (section 4), so headings inside one need no extra class.
+   Adding .text-white to the band would NOT work: Bootstrap declares color
+   directly on heading elements, and a direct declaration beats an inherited one. */
 
 p { line-height: 1.6; }
 .lead { font-size: 1.125rem; font-weight: 400; line-height: 1.6; }
@@ -117,7 +119,19 @@ small, .small { font-size: 14px; }
 .bg-grad-primary   { background-image: linear-gradient(135deg, var(--jnd-secondary), var(--jnd-primary)); }
 .bg-grad-accent    { background-image: linear-gradient(135deg, var(--jnd-primary),   var(--jnd-accent)); }
 .bg-grad-highlight { background-image: linear-gradient(135deg, var(--jnd-midblue),   var(--jnd-highlight)); }
-.bg-grad-modern    { background-image: linear-gradient(135deg, var(--jnd-secondary), var(--jnd-highlight)); }
+
+/* Modern is the band behind the hero and the CTA banner, both of which carry
+   white text, so it ends at Mid Blue rather than Highlight. White on Highlight
+   (#62D5E8) measures only 1.72:1 against AA's 4.5:1 floor; this sweep holds
+   5.67:1 or better across the whole area text can occupy. See DESIGN.md. */
+.bg-grad-modern    { background-image: linear-gradient(135deg, var(--jnd-secondary) 0%, var(--jnd-primary) 65%, var(--jnd-midblue) 100%); }
+
+/* Bands that carry text whiten their headings through the inherited token.
+   Only these two — Accent and Highlight are far too light for white text. */
+.bg-grad-primary,
+.bg-grad-modern {
+  --bs-heading-color: #fff;
+}
 
 .text-midblue { color: var(--jnd-midblue) !important; }
 .text-accent  { color: var(--jnd-accent) !important; }

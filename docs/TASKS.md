@@ -60,7 +60,7 @@ Services hub: `services/index.html`. About: `about.html`. Contact: `contact.html
 
 ## Phase 3: Home Page
 
-- [ ] TASK-011: Hero section with tagline and call-to-action buttons
+- [x] TASK-011: Hero section with tagline and call-to-action buttons — composed from existing components only; the Modern gradient was redefined AA-safe (see DESIGN.md)
 - [ ] TASK-012: Services overview grid (10 services, linked to detail pages)
 - [ ] TASK-013: Why choose JND section (Reliable Support, Professional Service)
 - [ ] TASK-014: Call-to-action banner (Modern Gradient)

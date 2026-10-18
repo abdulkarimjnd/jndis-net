@@ -34,11 +34,15 @@ Modern, clean, professional. Trustworthy and technical without feeling cold. Gen
 ### Gradients
 
 - Primary: `#123B73 → #1455A0` (header, footer)
-- Accent: `#1455A0 → #50B8E8` (primary CTAs, feature cards)
-- Highlight: `#2E83C5 → #62D5E8` (badges, small accents)
-- Modern: `#123B73 → #62D5E8` (hero, CTA banners)
+- Modern: `#123B73 → #1455A0 65% → #2E83C5` (hero, CTA banners)
+- Accent: `#1455A0 → #50B8E8` (buttons, icon tiles — **never behind text**)
+- Highlight: `#2E83C5 → #62D5E8` (badges — **never behind text**)
 
 Use direction 135deg. Text on gradients is white. Do not place gradients behind long body text.
+
+**Why Modern does not end in Highlight.** Highlight `#62D5E8` is far too light to carry white text: measured against it, white reaches only **1.72:1** where AA needs 4.5:1 — at the point in a hero where the text actually sits it is **2.34:1**. A band that holds text therefore has to stay in the dark range. Modern sweeps navy → Primary → Mid Blue instead, holding **5.67:1 or better** everywhere text can reach. Accent and Highlight stay in the palette for buttons, icon tiles and badges, where they are never the background of a text block.
+
+**Headings inside a text-bearing band go white automatically.** The band sets `--bs-heading-color: #fff`, which every heading inside inherits. Putting `.text-white` on the band does *not* work — Bootstrap declares `color` directly on `h1`–`h6`, and a direct declaration always beats an inherited value. Only `.bg-grad-primary` and `.bg-grad-modern` whiten headings, because only those two are dark enough to carry white text.
 
 ### Bootstrap theme
 
@@ -74,6 +78,7 @@ Load order matters — Bootstrap first, `jnd.css` last so overrides win:
   --bs-body-font-family: 'Inter', system-ui, sans-serif;
   --bs-body-color: #080B10;
   --bs-body-bg: #FFFFFF;
+  --bs-heading-color: #123B73;
   --bs-primary: #1455A0;
   --bs-primary-rgb: 20, 85, 160;
   --bs-link-color: #1455A0;
@@ -88,8 +93,8 @@ Load order matters — Bootstrap first, `jnd.css` last so overrides win:
   .container { max-width: 1200px; }
 }
 
-/* Type scale: mobile → desktop via clamp */
-h1, .h1, h2, .h2, h3, .h3 { color: var(--jnd-secondary); }
+/* Type scale: mobile → desktop via clamp. Heading colour comes from
+   --bs-heading-color on :root, not from a rule here. */
 h1, .h1 { font-weight: 700; font-size: clamp(2.25rem, 5vw, 3.5rem); }   /* 36 → 56px */
 h2, .h2 { font-weight: 600; font-size: clamp(1.75rem, 3.5vw, 2.5rem); } /* 28 → 40px */
 h3, .h3 { font-weight: 600; font-size: clamp(1.25rem, 2vw, 1.5rem); }   /* 20 → 24px */
@@ -101,7 +106,11 @@ small, .small { font-size: 14px; }
 .bg-grad-primary   { background-image: linear-gradient(135deg, #123B73, #1455A0); }
 .bg-grad-accent    { background-image: linear-gradient(135deg, #1455A0, #50B8E8); }
 .bg-grad-highlight { background-image: linear-gradient(135deg, #2E83C5, #62D5E8); }
-.bg-grad-modern    { background-image: linear-gradient(135deg, #123B73, #62D5E8); }
+.bg-grad-modern    { background-image: linear-gradient(135deg, #123B73 0%, #1455A0 65%, #2E83C5 100%); }
+
+/* Bands that carry text whiten their headings via the inherited token */
+.bg-grad-primary,
+.bg-grad-modern    { --bs-heading-color: #fff; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -180,6 +189,33 @@ Restyled in `jnd.css` §6: 12px radius, 1px border, brand-tinted shadow that dee
 ```
 
 On Surface sections cards are White by default; on White sections add `.bg-surface` to the card to invert them.
+
+## Hero
+
+The home page hero is **one band built from existing components — no hero-specific CSS**:
+
+```html
+<section class="section bg-grad-modern text-white">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <h1 class="mb-3">…</h1>
+        <p class="lead mb-4">…</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a class="btn btn-primary" href="contact.html">Get a Quote</a>
+          <a class="btn btn-outline-light" href="services/index.html">Explore Our Services</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+- `.section` supplies 64px / 96px of vertical rhythm, `.container` the width and padding.
+- Text is capped at `col-lg-8` — 800px inside the 1200px container — so the headline holds at two lines and the lead stays readable.
+- The buttons wrap because of `flex-wrap` + `gap-3`, so they stack at 360px with no extra CSS.
+- `.text-white` is there for the paragraph; the `<h1>` whitens itself through the band's `--bs-heading-color`.
+- The hero is one of only **two** places the brand gradient appears (the other is the CTA banner, TASK-014). It is not repeated on every band.
 
 ## Header and Footer
 
@@ -308,6 +344,7 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Card | `.card` + `.card-body` | `jnd.css` §6 |
 | Card icon tile | `.card-icon` | `jnd.css` §6 |
 | Card "Learn more" link | `.card-link` | `jnd.css` §6 |
+| Hero band | `.section.bg-grad-modern.text-white` | `jnd.css` §3, §4 |
 | Header | `header.site-header` | `jnd.css` §7 |
 | Footer | `footer.site-footer` | `jnd.css` §8 |
 | Skip link | `.skip-link` | `jnd.css` §9 |
