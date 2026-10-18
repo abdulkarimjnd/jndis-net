@@ -6,7 +6,7 @@
    Contents
      1. Design tokens
      2. Typography
-     3. Layout: container
+     3. Layout: container and section
      4. Utilities: surface and gradients
      5. Buttons
      6. Cards
@@ -75,7 +75,7 @@ p { line-height: 1.6; }
 
 small, .small { font-size: 14px; }
 
-/* 3. Layout: container ---------------------------------------------------- */
+/* 3. Layout: container and section ---------------------------------------- */
 /* Bootstrap gives containers 12px of side padding. Bump it to 16px and keep
    .row in sync — rows pull back by half the gutter, so the two values must
    match or column edges drift out of line with the padding. */
@@ -92,6 +92,22 @@ small, .small { font-size: 14px; }
 /* Max content width: 1200px, centered */
 @media (min-width: 1200px) {
   .container { max-width: 1200px; }
+}
+
+/* Vertical rhythm for every page band. DESIGN.md specifies 64px / 96px, which
+   is 4rem / 6rem — beyond Bootstrap's spacing utilities, which stop at 5 (3rem).
+   Sections sit on White by default; add .bg-surface to alternate.
+   Put a .container inside the section, never the other way round. */
+.section {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 992px) {
+  .section {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
 }
 
 /* 4. Utilities: surface and gradients ------------------------------------- */
@@ -304,24 +320,12 @@ small, .small { font-size: 14px; }
 }
 
 /* 8. Footer --------------------------------------------------------------- */
-/* Sits on the Primary gradient (.bg-grad-primary) with white text.
-   Section spacing here is 64px / 96px per DESIGN.md; TASK-009 will extract a
-   shared .section class using the same values. */
-
-.site-footer {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-}
-
-@media (min-width: 992px) {
-  .site-footer {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
-}
+/* Sits on the Primary gradient (.bg-grad-primary) with white text. Vertical
+   rhythm comes from the shared .section component, which the footer element
+   carries alongside this class. No padding is declared here. */
 
 /* Links must be inverted: Bootstrap's --bs-link-color (#1455A0) is almost
-   invisible on this gradient. 85% white measures 5.9:1 against the lighter
+   invisible on this gradient. 85% white measures 5.86:1 against the lighter
    end of the gradient, so it clears AA. */
 .site-footer a {
   color: rgba(255, 255, 255, .85);

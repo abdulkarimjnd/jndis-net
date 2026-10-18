@@ -119,10 +119,10 @@ Use the semantic `.bg-grad-*` utilities rather than Bootstrap's `.bg-primary` fo
 
 - Max content width: 1200px, centered
 - Side padding: 16px each side (`--bs-gutter-x: 2rem` on `.container` and `.row`). Above the 1200px cap, centering margins provide the extra breathing room.
-- Section spacing: 64px mobile, 96px desktop
+- Section spacing: 64px mobile, 96px desktop, via `.section` (`padding-block`). Put a `.container` inside the section, never the reverse
 - Grid: 1 column mobile, 2 tablet, 3 desktop for service cards (`.col-12 .col-md-6 .col-lg-4`)
 - Breakpoints: Bootstrap defaults (`sm` ≥576, `md` ≥768, `lg` ≥992, `xl` ≥1200, `xxl` ≥1400)
-- Alternate section backgrounds between White and Surface
+- Alternate section backgrounds between White and Surface — `.section` plus `.bg-surface`
 
 ## Buttons
 
@@ -160,21 +160,26 @@ Class mapping:
 - Padding: 24px
 - Service cards: icon in a 48px rounded square (Accent gradient), title, 2-line description, "Learn more →" link
 
-Built on Bootstrap `.card` / `.card-body` inside `.row` + `.col-*` grids, restyled in `jnd.css`:
+Restyled in `jnd.css` §6: 12px radius, 1px border, brand-tinted shadow that deepens with a 2px hover lift, and 24px `.card-body` padding.
 
-```css
-.card {
-  border: 1px solid var(--jnd-border);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(18,59,115,0.08);
-  transition: box-shadow .2s ease-out, transform .2s ease-out;
-}
-.card:hover { box-shadow: 0 8px 24px rgba(18,59,115,0.14); transform: translateY(-2px); }
-.card-body { padding: 24px; }
-.card-icon { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background-image: linear-gradient(135deg, #1455A0, #50B8E8); color: #fff; }
+**Cards in a grid need `.h-100`,** otherwise each card sizes to its own content and a row looks ragged. `mt-auto` on the link pins "Learn more →" to the bottom.
+
+```html
+<div class="row g-4">
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <div class="card-icon mb-3"><!-- 24px icon, white --></div>
+        <h3 class="mb-2">Service name</h3>
+        <p class="mb-3">Two lines of description.</p>
+        <a class="card-link mt-auto" href="services/….html">Learn more &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
-On Surface sections cards are White; on White sections cards are Surface (`bg-body` / `.bg-surface`).
+On Surface sections cards are White by default; on White sections add `.bg-surface` to the card to invert them.
 
 ## Header and Footer
 
@@ -260,3 +265,28 @@ Column headings are real `<h2>` elements, not styled paragraphs, so screen reade
 3. One H1 per page, headings in order
 4. All spacing from the Bootstrap spacing scale (4px steps)
 5. New components get documented here before reuse
+
+## Component index
+
+Every shared component, where it is styled, and the class to reach for. If something is needed that is not listed here, it gets designed and documented first — then reused.
+
+| Component | Class | Styles |
+|---|---|---|
+| Section band | `.section` | `jnd.css` §3 |
+| Section, alternate background | `.section.bg-surface` | `jnd.css` §3, §4 |
+| Container | `.container` | `jnd.css` §3 |
+| Button — primary | `.btn.btn-primary` | `jnd.css` §5 |
+| Button — secondary | `.btn.btn-outline-primary` | `jnd.css` §5 |
+| Button — ghost on dark | `.btn.btn-outline-light` | `jnd.css` §5 |
+| Button — destructive | `.btn.btn-danger` | `jnd.css` §5 |
+| Card | `.card` + `.card-body` | `jnd.css` §6 |
+| Card icon tile | `.card-icon` | `jnd.css` §6 |
+| Card "Learn more" link | `.card-link` | `jnd.css` §6 |
+| Header | `header.site-header` | `jnd.css` §7 |
+| Footer | `footer.site-footer` | `jnd.css` §8 |
+| Skip link | `.skip-link` | `jnd.css` §9 |
+| Placeholder text — **temporary** | `.site-placeholder` | `jnd.css` §8 |
+
+Colour and gradient helpers, all in `jnd.css` §4: `.bg-grad-primary`, `.bg-grad-accent`, `.bg-grad-highlight`, `.bg-grad-modern`, `.bg-surface`, `.text-midblue`, `.text-accent`.
+
+Behavioural JavaScript, in `assets/js/`: `nav.js` (mobile menu), `footer.js` (copyright year).
