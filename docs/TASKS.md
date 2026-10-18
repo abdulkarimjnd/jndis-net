@@ -19,6 +19,29 @@ Definition of done for every task:
 
 ---
 
+## Service list (single source of truth)
+
+Every place that lists services — header dropdown (TASK-006), footer (TASK-008),
+services hub cards (TASK-017), related services (TASK-031) — must use this exact
+list, order and filenames.
+
+| # | Service | File |
+|---|---|---|
+| 1 | IT Support & Maintenance | `services/it-support-maintenance.html` |
+| 2 | Network Infrastructure & Solutions | `services/network-infrastructure.html` |
+| 3 | Server Management & Hosting | `services/server-management-hosting.html` |
+| 4 | Cloud & Virtualization Solutions | `services/cloud-virtualization.html` |
+| 5 | Cybersecurity & Network Security | `services/cybersecurity.html` |
+| 6 | CCTV & Surveillance Solutions | `services/cctv-surveillance.html` |
+| 7 | Web Development & Digital Solutions | `services/web-development.html` |
+| 8 | IT Consultancy & Project Implementation | `services/it-consultancy.html` |
+| 9 | Managed IT Services | `services/managed-it-services.html` |
+| 10 | IT Equipment Supply & Installation | `services/equipment-supply-installation.html` |
+
+Services hub: `services/index.html`. About: `about.html`. Contact: `contact.html`.
+
+---
+
 ## Phase 1: Setup
 
 - [x] TASK-001: Create folder structure (`/`, `/services/`, `/assets/css`, `/assets/js`, `/assets/img`)
@@ -29,7 +52,7 @@ Definition of done for every task:
 
 ## Phase 2: Shared Layout
 
-- [ ] TASK-006: Build header with logo, nav and Services dropdown
+- [x] TASK-006: Build header with logo, nav and Services dropdown
 - [ ] TASK-007: Build mobile menu (hamburger toggle, focus handling, close on link click)
 - [ ] TASK-008: Build footer (company info, service links, contact, copyright year via JS)
 - [ ] TASK-009: Create shared button, card and section components (documented in DESIGN.md)

@@ -185,10 +185,24 @@ On Surface sections cards are White; on White sections cards are Surface (`bg-bo
 
 Built on Bootstrap components — no custom JS required for any of this:
 
-- Header: `.navbar.navbar-expand-lg.sticky-top.bg-white` with a `shadow-sm`
+- Header: `<header class="site-header sticky-top">` wrapping `.navbar.navbar-expand-lg` inside `<nav aria-label="Main">`. Within `.navbar`, all colours come from Bootstrap's `--bs-navbar-*` variables (see `jnd.css` §7)
 - Services nav item: `.nav-item.dropdown` + `.dropdown-toggle` / `.dropdown-menu`
 - Mobile: `.navbar-toggler` + `.collapse.navbar-collapse` (full-width panel)
 - Footer: `.bg-grad-primary.text-white`, 4 columns via `row` / `col-12 col-md-6 col-lg-3`
+
+Header classes defined in `jnd.css` §7:
+
+| Class | Purpose |
+|---|---|
+| `.site-header` | White background + brand-tinted bottom shadow (`rgba(18,59,115,.08)`) instead of Bootstrap's grey `.shadow-sm` |
+| `.site-brand-name` | Wordmark "JND" — 1.25rem (H3), 700, Secondary |
+| `.site-brand-tagline` | Wordmark "Integrated Solutions" — .875rem (Small), 500, Mid Blue |
+| `.nav-cta` | The "Get a Quote" item; `margin-left: 1rem` at ≥992px only, so it isn't indented when the menu stacks |
+
+Two deliberate header decisions:
+
+1. The Services toggle is an `<a href="services/index.html">`, not a `<button>`. If the CDN JavaScript ever fails, the click still navigates to the services hub rather than silently doing nothing.
+2. Because JavaScript suppresses that navigation when it *is* working, the dropdown ends with a divider and an **"All services →"** item — the keyboard route to the hub page.
 
 ## Icons and Imagery
 

@@ -10,7 +10,8 @@
      4. Utilities: surface and gradients
      5. Buttons
      6. Cards
-     7. Skip link, focus and reduced motion (accessibility)
+     7. Header
+     8. Skip link, focus and reduced motion (accessibility)
 
    Source of truth: docs/DESIGN.md. Keep the two in sync when either changes.
    ========================================================================== */
@@ -235,7 +236,73 @@ small, .small { font-size: 14px; }
 }
 .card-link:hover { text-decoration: underline; }
 
-/* 7. Skip link, focus and reduced motion ---------------------------------- */
+/* 7. Header --------------------------------------------------------------- */
+
+/* Sticky white bar with a brand-tinted bottom shadow (DESIGN.md: "subtle").
+   Shadow colour matches the card shadows rather than Bootstrap's grey .shadow-sm. */
+.site-header {
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(18, 59, 115, .08);
+}
+
+/* Navbar is themed entirely through Bootstrap's --bs-navbar-* variables, so no
+   rule here fights Bootstrap's own specificity. */
+.navbar {
+  --bs-navbar-padding-y: .75rem;
+  --bs-navbar-nav-link-padding-x: .875rem;
+  --bs-navbar-color: var(--jnd-ink);
+  --bs-navbar-hover-color: var(--jnd-primary);
+  --bs-navbar-active-color: var(--jnd-primary);
+  --bs-navbar-brand-color: var(--jnd-secondary);
+  --bs-navbar-brand-hover-color: var(--jnd-primary);
+  --bs-navbar-toggler-border-color: var(--jnd-border);
+  --bs-navbar-toggler-focus-width: 2px;
+}
+
+/* 500 weight for nav links, 600 for the current page (DESIGN.md weights) */
+.navbar .nav-link { font-weight: 500; }
+.navbar .nav-link.active { font-weight: 600; }
+
+/* Wordmark. Sizes stay on the documented scale: 1.25rem is H3, .875rem is Small. */
+.site-brand-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--jnd-secondary);
+}
+.site-brand-tagline {
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--jnd-midblue);
+}
+
+/* Services dropdown: wide enough for the longest service name, brand-tinted
+   shadow, Surface hover instead of Bootstrap's default light grey. */
+.navbar .dropdown-menu {
+  --bs-dropdown-min-width: 21rem;
+  --bs-dropdown-border-color: var(--jnd-border);
+  --bs-dropdown-border-radius: 12px;
+  --bs-dropdown-link-hover-bg: var(--jnd-surface);
+  --bs-dropdown-link-hover-color: var(--jnd-primary);
+  --bs-dropdown-link-active-bg: var(--jnd-primary);
+  --bs-dropdown-link-active-color: #fff;
+  --bs-dropdown-item-padding-y: .5rem;
+
+  box-shadow: 0 8px 24px rgba(18, 59, 115, .14);
+}
+
+/* Bootstrap sets white-space: nowrap on dropdown items, which would push
+   "IT Consultancy & Project Implementation" past the menu edge. */
+.navbar .dropdown-menu .dropdown-item { white-space: normal; }
+
+/* "Get a Quote" CTA sits beside the nav links on desktop only — stacked on
+   mobile it should not be indented. */
+@media (min-width: 992px) {
+  .navbar .nav-cta { margin-left: 1rem; }
+}
+
+/* 8. Skip link, focus and reduced motion ---------------------------------- */
 
 /* Skip link: off-screen until focused, then pinned to the top-left. Uses
    :focus rather than :focus-visible so it can never be focused but invisible. */

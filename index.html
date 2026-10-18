@@ -54,9 +54,79 @@
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <!--
-    Site header — built in TASK-006, moved to a shared JS partial in TASK-010.
+    Site header (TASK-006). Moves to a shared JS partial at TASK-010.
+    Mobile menu behaviour (focus handling, close on link click) is refined at TASK-007.
+  -->
+  <header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-lg" aria-label="Main">
+      <div class="container">
+
+        <!-- Wordmark. The mark is decorative (alt=""), the text carries the name. -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+          <img src="assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+          <span class="d-flex flex-column">
+            <span class="site-brand-name">JND</span>
+            <span class="site-brand-tagline">Integrated Solutions</span>
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#primaryNav"
+                aria-controls="primaryNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="primaryNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <!--
+                An anchor (not a button) so that if the CDN JS ever fails to load,
+                clicking still navigates to the services hub instead of doing nothing.
+                With JS active the click toggles the menu, so "All services" below
+                provides the keyboard route to that hub page.
+              -->
+              <a class="nav-link dropdown-toggle" href="services/index.html" role="button"
+                 data-bs-toggle="dropdown" aria-expanded="false">Services</a>
+
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="services/it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
+                <li><a class="dropdown-item" href="services/network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
+                <li><a class="dropdown-item" href="services/server-management-hosting.html">Server Management &amp; Hosting</a></li>
+                <li><a class="dropdown-item" href="services/cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
+                <li><a class="dropdown-item" href="services/cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
+                <li><a class="dropdown-item" href="services/cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
+                <li><a class="dropdown-item" href="services/web-development.html">Web Development &amp; Digital Solutions</a></li>
+                <li><a class="dropdown-item" href="services/it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
+                <li><a class="dropdown-item" href="services/managed-it-services.html">Managed IT Services</a></li>
+                <li><a class="dropdown-item" href="services/equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item fw-semibold" href="services/index.html">All services &rarr;</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+
+            <li class="nav-item nav-cta">
+              <a class="btn btn-primary" href="contact.html">Get a Quote</a>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+    </nav>
+  </header>
+
+  <!--
     Site footer — built in TASK-008, moved to a shared JS partial in TASK-010.
-    Both are landmarks (<header> / <footer>) so screen readers can jump to them.
+    It is a <footer> landmark so screen readers can jump to it.
   -->
 
   <!-- tabindex="-1" lets the skip link move focus here, not just scroll to it -->
