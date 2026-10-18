@@ -403,15 +403,6 @@ small, .small { font-size: 14px; }
 .site-footer .site-brand-name { color: #fff; }
 .site-footer .site-brand-tagline { color: rgba(255, 255, 255, .85); }
 
-/* TEMPORARY — flags contact details that have not been supplied yet.
-   currentColor rather than white, because the placeholder appears on the dark
-   footer AND on the light contact-page card; the underline has to read on both.
-   Delete this rule and the .site-placeholder spans at TASK-042. */
-.site-placeholder {
-  font-style: italic;
-  border-bottom: 1px dashed currentColor;
-}
-
 /* Accent hairline across the top edge: a small brand gesture that separates
    the footer from whatever band sits above it. Decorative only — no text ever
    sits over it — so Accent/Highlight are safe here. Accent is deliberately

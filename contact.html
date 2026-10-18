@@ -215,8 +215,8 @@
          form posts to the endpoint natively, which is enough for a static
          form service to accept it.
 
-         The action and the fallback inbox are placeholders until TASK-042
-         supplies the real ones — see assets/js/contact-form.js. Copy is DRAFT.
+         The fallback inbox is the real info@jndis.net; the action still needs a
+         Formspree form id — see assets/js/contact-form.js. Copy is DRAFT.
          ================================================================= -->
     <section class="section" aria-labelledby="form-heading">
       <div class="container">
@@ -238,17 +238,18 @@
 
             <!--
               action/data-contact-endpoint: a static form service (Formspree).
-              Replace REPLACE_WITH_FORM_ID at TASK-042. Until then contact-form.js
-              treats the form as unconfigured and offers the mailto fallback.
+              The id is still a placeholder: until a real Formspree form exists,
+              contact-form.js treats the endpoint as unconfigured and offers the
+              mailto fallback.
 
-              data-contact-email is the mailto fallback inbox; like the footer's
-              contact details it is a placeholder until TASK-042.
+              data-contact-email is the real mailto fallback inbox, so the
+              fallback works today, before Formspree is set up.
             -->
             <form id="contact-form" class="needs-validation" novalidate
                   method="post"
                   action="https://formspree.io/f/REPLACE_WITH_FORM_ID"
                   data-contact-form
-                  data-contact-email="REPLACE_WITH_EMAIL">
+                  data-contact-email="info@jndis.net">
 
               <div class="row g-3">
 
@@ -342,8 +343,7 @@
 
           </div>
 
-          <!-- Contact details. The same placeholders as the footer: no real
-               details are invented, so nothing ships by accident. -->
+          <!-- Contact details — the same phone, email and address as the footer. -->
           <div class="col-12 col-lg-5">
             <div class="card bg-surface h-100">
               <div class="card-body">
@@ -351,20 +351,17 @@
                 <h2 class="h3 mb-3">Contact details</h2>
 
                 <ul class="list-unstyled mb-4">
-                  <!-- TODO (TASK-042): real phone number -->
                   <li class="mb-3">
                     <span class="d-block fw-semibold">Phone</span>
-                    <span class="site-placeholder">Phone number to be added</span>
+                    <a href="tel:+8801727081347">+880 1727-081347</a>
                   </li>
-                  <!-- TODO (TASK-042): real email address -->
                   <li class="mb-3">
                     <span class="d-block fw-semibold">Email</span>
-                    <span class="site-placeholder">Email address to be added</span>
+                    <a href="mailto:info@jndis.net">info@jndis.net</a>
                   </li>
-                  <!-- TODO (TASK-042): real postal address -->
                   <li class="mb-0">
                     <span class="d-block fw-semibold">Address</span>
-                    <span class="site-placeholder">Street address, City, Country</span>
+                    <span>60/1 Meradia Noyapara, Khilgaon, Dhaka 1219</span>
                   </li>
                 </ul>
 
@@ -463,40 +460,36 @@
           </ul>
         </div>
 
-        <!-- Contact — PLACEHOLDERS. Real details must be supplied before launch.
-             Nothing real-looking is here on purpose, so nothing ships by accident.
-             Each row is ready to become a tel:/mailto: link at TASK-042. -->
+        <!-- Contact — phone and email are live links; the address is plain text
+             until there is a map to point at. -->
         <div class="col-12 col-md-6 col-lg-4">
           <h2 class="site-footer-title mb-3">Contact</h2>
           <ul class="list-unstyled footer-contact mb-0 small">
-            <!-- TODO (TASK-042): real phone number -->
             <li>
               <span class="footer-contact-icon" aria-hidden="true">
                 <svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </span>
               <span>
                 <span class="footer-contact-label">Phone</span>
-                <span class="site-placeholder">Phone number to be added</span>
+                <a href="tel:+8801727081347">+880 1727-081347</a>
               </span>
             </li>
-            <!-- TODO (TASK-042): real email address -->
             <li>
               <span class="footer-contact-icon" aria-hidden="true">
                 <svg class="icon" width="18" height="18" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </span>
               <span>
                 <span class="footer-contact-label">Email</span>
-                <span class="site-placeholder">Email address to be added</span>
+                <a href="mailto:info@jndis.net">info@jndis.net</a>
               </span>
             </li>
-            <!-- TODO (TASK-042): real postal address -->
             <li>
               <span class="footer-contact-icon" aria-hidden="true">
                 <svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
               </span>
               <span>
                 <span class="footer-contact-label">Address</span>
-                <span class="site-placeholder">Street address, City, Country</span>
+                <span>60/1 Meradia Noyapara, Khilgaon, Dhaka 1219</span>
               </span>
             </li>
           </ul>

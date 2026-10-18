@@ -472,7 +472,7 @@ The closing band of a page — on the home page the second half of the hero's pa
       method="post"
       action="https://formspree.io/f/REPLACE_WITH_FORM_ID"
       data-contact-form
-      data-contact-email="REPLACE_WITH_EMAIL">
+      data-contact-email="info@jndis.net">
 ```
 
 - **The form works without JavaScript.** It is a native `method="post"` to a Formspree `action`, so a visitor with scripts blocked — or in a browser where the bundle never loaded — still sends it. The three states below are enhancements, not the mechanism.
@@ -480,7 +480,7 @@ The closing band of a page — on the home page the second half of the hero's pa
 - **Validation is Bootstrap's own** — `.was-validated` on the form, an `.invalid-feedback` message after each required control — with `assets/js/contact-form.js` calling `checkValidity()` and adding the class. Every required control has a `<label for>` pointing at it.
 - **Three states, each announced.** A `role="status"` success panel and a `role="alert"` error panel both ship `hidden` and `tabindex="-1"`; the script writes the message into them (which is what makes the live region speak) and moves focus to them. The submit button is disabled and its label swapped for a `spinner-border` while the message is in flight.
 - **A honeypot, not a substitute for filtering.** A `_gotcha` field, hidden from people and from assistive technology, is dropped by the form service when a bot fills it.
-- **The fallback is honest.** Until TASK-042 supplies the endpoint and inbox (both still `REPLACE_WITH_…`), the script treats the form as unconfigured: it builds a `mailto:` from the fields when an inbox is configured, and otherwise says plainly that the form is not connected and points at the footer. A form that silently swallows a message is worse than one that admits it is not ready.
+- **The fallback is honest.** The `mailto:` inbox is the real `info@jndis.net`, but the Formspree `action` is still a placeholder. Until it holds a real form id, the script treats the endpoint as unconfigured and builds a `mailto:` to that inbox from the fields; if the inbox were missing too, it would say plainly that the form is not connected and point at the footer. A form that silently swallows a message is worse than one that admits it is not ready.
 - **No new CSS.** Labels, controls, `.form-text`, `.invalid-feedback`, the spinner and the two alerts are all Bootstrap, already themed by the token layer.
 
 ## 404 page
@@ -535,7 +535,6 @@ An Accent→Highlight **hairline** (`.site-footer::before`) marks the top edge. 
 | `.footer-contact-icon` | 36px translucent square holding a white contact glyph (decorative — `aria-hidden` on its wrapper) |
 | `.footer-contact-label` | Small uppercase label above each contact value, 85% white |
 | `.footer-top` | "Back to top" link in the bottom bar, with a trailing arrow glyph |
-| `.site-placeholder` | **TEMPORARY** — italic with a dashed underline, flags contact details not yet supplied. Delete at TASK-042 |
 
 Contrast decisions, all measured rather than assumed:
 
@@ -715,7 +714,6 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Header | `header.site-header` | `jnd.css` §7 |
 | Footer | `footer.site-footer` | `jnd.css` §8 |
 | Skip link | `.skip-link` | `jnd.css` §9 |
-| Placeholder text — **temporary** | `.site-placeholder` | `jnd.css` §8 |
 
 Colour and gradient helpers, all in `jnd.css` §4: `.bg-grad-primary`, `.bg-grad-accent`, `.bg-grad-highlight`, `.bg-grad-modern`, `.bg-surface`, `.text-midblue`. There is deliberately **no** `.text-accent` — Accent cannot carry text on white.
 
