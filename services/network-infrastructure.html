@@ -619,10 +619,10 @@
   <footer class="section site-footer bg-grad-primary text-white">
     <div class="container">
 
-      <div class="row g-4">
+      <div class="row g-4 g-lg-5">
 
-        <!-- About -->
-        <div class="col-12 col-md-6 col-lg-3">
+        <!-- Brand -->
+        <div class="col-12 col-lg-5">
           <a class="d-inline-flex align-items-center gap-2 mb-3" href="../index.html">
             <img src="../assets/img/favicon.svg" alt="" width="32" height="32" class="d-block" loading="lazy" decoding="async">
             <span class="d-flex flex-column">
@@ -630,51 +630,59 @@
               <span class="site-brand-tagline">Integrated Solutions</span>
             </span>
           </a>
-          <p class="small mb-0">
+          <p class="small mb-4">
             IT support, networking, cloud, cybersecurity and CCTV solutions for
             businesses. Reliable support, professional service.
           </p>
         </div>
 
-        <!-- Services — same list, order and filenames as the header dropdown -->
+        <!-- Explore -->
         <div class="col-12 col-md-6 col-lg-3">
-          <h2 class="site-footer-title mb-3">Services</h2>
-          <ul class="list-unstyled mb-0 small">
-            <li class="mb-2"><a href="it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
-            <li class="mb-2"><a href="network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
-            <li class="mb-2"><a href="server-management-hosting.html">Server Management &amp; Hosting</a></li>
-            <li class="mb-2"><a href="cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
-            <li class="mb-2"><a href="cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
-            <li class="mb-2"><a href="cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
-            <li class="mb-2"><a href="web-development.html">Web Development &amp; Digital Solutions</a></li>
-            <li class="mb-2"><a href="it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
-            <li class="mb-2"><a href="managed-it-services.html">Managed IT Services</a></li>
-            <li class="mb-0"><a href="equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
-          </ul>
-        </div>
-
-        <!-- Company -->
-        <div class="col-12 col-md-6 col-lg-3">
-          <h2 class="site-footer-title mb-3">Company</h2>
+          <h2 class="site-footer-title mb-3">Explore</h2>
           <ul class="list-unstyled mb-0 small">
             <li class="mb-2"><a href="../about.html">About Us</a></li>
-            <li class="mb-2"><a href="index.html">All Services</a></li>
+            <li class="mb-2"><a href="../services/index.html">All Services</a></li>
             <li class="mb-2"><a href="../contact.html">Contact</a></li>
             <li class="mb-0"><a href="../contact.html">Get a Quote</a></li>
           </ul>
         </div>
 
         <!-- Contact — PLACEHOLDERS. Real details must be supplied before launch.
-             Nothing real-looking is here on purpose, so nothing ships by accident. -->
-        <div class="col-12 col-md-6 col-lg-3">
+             Nothing real-looking is here on purpose, so nothing ships by accident.
+             Each row is ready to become a tel:/mailto: link at TASK-042. -->
+        <div class="col-12 col-md-6 col-lg-4">
           <h2 class="site-footer-title mb-3">Contact</h2>
-          <ul class="list-unstyled mb-0 small">
+          <ul class="list-unstyled footer-contact mb-0 small">
             <!-- TODO (TASK-042): real phone number -->
-            <li class="mb-2"><span class="site-placeholder">Phone number to be added</span></li>
+            <li>
+              <span class="footer-contact-icon" aria-hidden="true">
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </span>
+              <span>
+                <span class="footer-contact-label">Phone</span>
+                <span class="site-placeholder">Phone number to be added</span>
+              </span>
+            </li>
             <!-- TODO (TASK-042): real email address -->
-            <li class="mb-2"><span class="site-placeholder">Email address to be added</span></li>
+            <li>
+              <span class="footer-contact-icon" aria-hidden="true">
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </span>
+              <span>
+                <span class="footer-contact-label">Email</span>
+                <span class="site-placeholder">Email address to be added</span>
+              </span>
+            </li>
             <!-- TODO (TASK-042): real postal address -->
-            <li class="mb-0"><span class="site-placeholder">Street address, City, Country</span></li>
+            <li>
+              <span class="footer-contact-icon" aria-hidden="true">
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <span>
+                <span class="footer-contact-label">Address</span>
+                <span class="site-placeholder">Street address, City, Country</span>
+              </span>
+            </li>
           </ul>
         </div>
 
@@ -684,11 +692,15 @@
            renders as a subtle white divider with no extra classes. -->
       <hr class="my-4">
 
-      <div class="site-footer-meta d-flex flex-column flex-md-row justify-content-between gap-2 small">
+      <div class="site-footer-meta d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 small">
         <p class="mb-0">
           &copy; <span data-current-year>2026</span> JND Integrated Solutions. All rights reserved.
         </p>
         <p class="mb-0">Reliable Support. Professional Service.</p>
+        <a class="footer-top" href="#main">
+          Back to top
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+        </a>
       </div>
 
     </div>

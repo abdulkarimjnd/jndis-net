@@ -496,14 +496,14 @@ The closing band of a page — on the home page the second half of the hero's pa
 - Header: sticky, white with subtle bottom shadow, logo left, nav right, "Get a Quote" Primary button
 - Services nav item opens a dropdown listing all 10 sub-services
 - Mobile: hamburger menu, full-width slide-down panel
-- Footer: Primary gradient background, white text, 4 columns desktop (about, services, company, contact), stacked on mobile
+- Footer: Primary gradient background with an Accent→Highlight hairline across its top edge, white text, 3 columns desktop (brand, Explore, Contact), stacked on mobile
 
 Built on Bootstrap components — no custom JS required for any of this:
 
 - Header: `<header class="site-header sticky-top">` wrapping `.navbar.navbar-expand-lg` inside `<nav aria-label="Main">`. Within `.navbar`, all colours come from Bootstrap's `--bs-navbar-*` variables (see `jnd.css` §7)
 - Services nav item: `.nav-item.dropdown` + `.dropdown-toggle` / `.dropdown-menu`
 - Mobile: `.navbar-toggler` + `.collapse.navbar-collapse` (full-width panel)
-- Footer: `.bg-grad-primary.text-white`, 4 columns via `row` / `col-12 col-md-6 col-lg-3`
+- Footer: `.bg-grad-primary.text-white`, 3 columns via `row` / `col-12 col-lg-5` (brand), `col-12 col-md-6 col-lg-3` (Explore), `col-12 col-md-6 col-lg-4` (Contact); the two link columns stack full-width on a phone and pair side-by-side from `md`
 
 Header classes defined in `jnd.css` §7:
 
@@ -522,13 +522,19 @@ Two deliberate header decisions:
 
 ### Footer
 
-`.site-footer` in `jnd.css` §8, sitting on `.bg-grad-primary.text-white`. Same service list, order and filenames as the header dropdown.
+`.site-footer` in `jnd.css` §8, sitting on `.bg-grad-primary.text-white`. Three zones: the brand lockup and positioning line, an **Explore** column holding the site's four destinations, and a **Contact** column whose phone / email / address rows are icon-led so they scan at a glance. The bottom bar carries the copyright, the tagline and a **Back to top** link to `#main`. It no longer repeats the service list — the header dropdown is the canonical copy.
+
+An Accent→Highlight **hairline** (`.site-footer::before`) marks the top edge. It is decoration only, so the two light accent colours are safe there even though neither can carry text.
 
 | Class | Purpose |
 |---|---|
-| `.site-footer` | Section padding — 64px mobile, 96px desktop |
+| `.site-footer` | Section padding — 64px mobile, 96px desktop; `position: relative` anchors the hairline |
 | `.site-footer-title` | Column heading (`<h2>`) — .875rem, 600, uppercase, letter-spacing .05em, white |
 | `.site-footer-meta` | Bottom bar text at 85% white |
+| `.footer-contact` | Contact list; each row is icon badge + label + value |
+| `.footer-contact-icon` | 36px translucent square holding a white contact glyph (decorative — `aria-hidden` on its wrapper) |
+| `.footer-contact-label` | Small uppercase label above each contact value, 85% white |
+| `.footer-top` | "Back to top" link in the bottom bar, with a trailing arrow glyph |
 | `.site-placeholder` | **TEMPORARY** — italic with a dashed underline, flags contact details not yet supplied. Delete at TASK-042 |
 
 Contrast decisions, all measured rather than assumed:
