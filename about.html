@@ -6,15 +6,16 @@
 
   <!--
     BASE TEMPLATE (TASK-005)
-    Every page starts from this head. TODO markers show what is still pending.
-
-    Pending:
-      - <link rel="canonical">          TASK-042 (needs the live domain)
-      - og:url, og:image, twitter:image  TASK-042 (needs domain + share image)
-      - per-page titles/descriptions     TASK-038
+    Every page starts from this head. Nothing is pending: the per-page title and
+    description, the canonical URL and the Open Graph share image are all in
+    place, and tools/check-seo.js holds every page to that shape.
   -->
   <title>About Us — JND Integrated Solutions</title>
   <meta name="description" content="Who JND Integrated Solutions are, what we do, and the standards we hold to: responsive IT support, networking, cloud, cybersecurity and CCTV for businesses.">
+
+  <!-- Canonical URL (TASK-038, TASK-042): the one address a search engine
+       should index for this page, absolute against the live domain. -->
+  <link rel="canonical" href="https://jndis.net/about.html">
 
   <!-- Colours the browser UI on mobile (address bar / tab strip) -->
   <meta name="theme-color" content="#123B73">
@@ -26,13 +27,23 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="JND Integrated Solutions">
   <meta property="og:locale" content="en">
+  <meta property="og:url" content="https://jndis.net/about.html">
   <meta property="og:title" content="About Us — JND Integrated Solutions">
   <meta property="og:description" content="Who we are, what we do, and the standards we hold to.">
 
-  <!-- Twitter / X. Card type stays "summary" until a share image exists (TASK-042). -->
-  <meta name="twitter:card" content="summary">
+  <!-- Share card (TASK-042): 1200x630, the size link previews are built
+       for. Source and regeneration: assets/img/og-image.svg. -->
+  <meta property="og:image" content="https://jndis.net/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="JND Integrated Solutions — Reliable Support. Professional Service.">
+
+  <!-- Twitter / X. summary_large_image because the share card below is 1200x630. -->
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="About Us — JND Integrated Solutions">
   <meta name="twitter:description" content="Who we are, what we do, and the standards we hold to.">
+  <meta name="twitter:image" content="https://jndis.net/assets/img/og-image.png">
+  <meta name="twitter:image:alt" content="JND Integrated Solutions — Reliable Support. Professional Service.">
 
   <!-- Inter — brand typeface (DESIGN.md: 400/500/600/700) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -96,7 +107,7 @@
 
         <!-- Wordmark. The mark is decorative (alt=""), the text carries the name. -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-          <img src="assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+          <img src="assets/img/favicon.svg" alt="" width="32" height="32" class="d-block" decoding="async">
           <span class="d-flex flex-column">
             <span class="site-brand-name">JND</span>
             <span class="site-brand-tagline">Integrated Solutions</span>
@@ -391,7 +402,7 @@
         <!-- About -->
         <div class="col-12 col-md-6 col-lg-3">
           <a class="d-inline-flex align-items-center gap-2 mb-3" href="index.html">
-            <img src="assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+            <img src="assets/img/favicon.svg" alt="" width="32" height="32" class="d-block" loading="lazy" decoding="async">
             <span class="d-flex flex-column">
               <span class="site-brand-name">JND</span>
               <span class="site-brand-tagline">Integrated Solutions</span>

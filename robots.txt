@@ -1,0 +1,12 @@
+# robots.txt — JND Integrated Solutions (TASK-038)
+#
+# The site is public and there is nothing to keep out, so every crawler may
+# read every page. The one thing this file must do is point at the sitemap,
+# which is how a crawler finds the pages without following every link.
+#
+# Hosted on GitHub Pages behind the custom domain https://jndis.net (CNAME).
+
+User-agent: *
+Allow: /
+
+Sitemap: https://jndis.net/sitemap.xml

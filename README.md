@@ -23,22 +23,28 @@ assets/js/reveal.js       Fade-up scroll reveal (honours prefers-reduced-motion)
 assets/js/services-filter.js  Keyword search on the services hub
 assets/js/service-page.js     Opens the FAQ answer a link points at
 assets/js/contact-form.js     Contact-form validation and states
-assets/img/               Images and favicon
+assets/img/               Favicon and the Open Graph share card
 tools/check-shared.js     Header/footer/process copies have not drifted apart
 tools/check-services.js   Every copy of the service list matches docs/TASKS.md
 tools/check-service-pages.js  Every detail page matches the template
 tools/check-supporting-pages.js  About, contact and 404 are wired up
 tools/check-responsive.js The fluid layout's moving parts are in place
 tools/check-a11y.js       Landmarks, labels, alt text, focus and contrast
+tools/check-seo.js        Titles, descriptions, Open Graph, sitemap, robots
+tools/check-performance.js  Minified assets, lazy images, page-weight budgets
+tools/check-links.js      Every internal link resolves, every #fragment too
 tools/lib/                Shared helpers for the check scripts, and the one
                           parser of the service table in docs/TASKS.md
-docs/                     DESIGN.md, TASKS.md and QUALITY.md
+docs/                     DESIGN.md, TASKS.md, QUALITY.md and DEPLOY.md
 
 services/index.html       Services hub — page header, filterable grid  (built)
 services/*.html           The 10 sub-service pages                      (built)
 about.html                About page                                    (built)
 contact.html              Contact page, with the form                   (built)
 404.html                  Not found page                                (built)
+sitemap.xml               Every indexable page, for crawlers             (built)
+robots.txt                Allows crawling, points at the sitemap         (built)
+CNAME, .nojekyll          GitHub Pages: custom domain, no Jekyll         (built)
 ```
 
 ## Checks
@@ -50,6 +56,9 @@ node tools/check-service-pages.js
 node tools/check-supporting-pages.js
 node tools/check-responsive.js
 node tools/check-a11y.js
+node tools/check-seo.js
+node tools/check-performance.js
+node tools/check-links.js
 ```
 
 Every page carries its own copy of the header and footer — static markup rather than JavaScript partials, so navigation is indexable and survives JavaScript being unavailable. The four-step process band is duplicated the same way on the ten service pages. `check-shared.js` verifies the copies have not drifted apart, that the landmarks are in the right order (`<footer>` after `</main>`), and that any page using `[data-reveal]` also loads the reveal hook and script. It compares pages with each other, and it resolves relative links to a path from the site root first, so a page one level down is not flagged for writing `../assets/` — and the 404 page is not flagged for writing `/assets/`, which it must, being served for a URL at any depth. The process block belongs to the detail pages only, and the script fails in both directions — a detail page that has lost it, and any other page that has picked it up.
@@ -64,6 +73,12 @@ Every page carries its own copy of the header and footer — static markup rathe
 
 `check-a11y.js` covers the accessibility pass: on every page it checks the language, the title, one `<h1>` and headings that do not skip a level, an `alt` on every image, an accessible name on every form control, a hidden-or-named inline `<svg>`, text on every link and button, `aria-*` references that resolve, no positive `tabindex`, a skip link that targets a focusable element, the landmarks and duplicate ids. In `jnd.css` it checks the focus ring and the reduced-motion block. It also **recomputes** the contrast ratios `DESIGN.md` records from the `--jnd-*` tokens, so a palette change cannot quietly break one.
 
+`check-seo.js` covers the head that no page render shows: a title and meta description of a length search engines display, both unique across the site, a canonical URL derived from the page's own path, the full Open Graph and Twitter sets with a 1200×630 share image, and a favicon and theme colour. It then reads `sitemap.xml` and `robots.txt` and asserts the first lists exactly the indexable pages — the 404 is deliberately neither listed nor given a canonical — and the second points at it.
+
+`check-performance.js` covers page weight: that Bootstrap is the pinned minified CDN build and the only third-party script, that the webfont uses `display=swap` behind a preconnect, that nothing is `@import`ed or inlined, that every image carries width, height and `decoding="async"` with the below-the-fold ones lazy, and that every file and every page stays inside a budget.
+
+`check-links.js` follows every internal reference — links, stylesheets, scripts and images — to the file on disk, at the page's own depth, checking directories resolve to their `index.html` and every `#fragment` to an id that exists. It fails on an empty `href` or `href="#"`, on a new tab opened without `rel="noopener"`, and on a `mailto:`/`tel:` with nothing after the scheme. External links are listed rather than fetched, because the check runs offline.
+
 See `docs/DESIGN.md`.
 
 ## Documentation
@@ -71,7 +86,8 @@ See `docs/DESIGN.md`.
 - **`docs/DESIGN.md`** — the design system: colours, typography, layout, components. Every page follows it. New components get documented there before reuse.
 - **`docs/TASKS.md`** — the build plan: 42 tasks in 7 phases, worked one at a time.
 - **`docs/QUALITY.md`** — the Phase 7 passes: which parts a check script proves and which parts were reviewed by eye, with the method and the findings.
+- **`docs/DEPLOY.md`** — hosting and launch: GitHub Pages from `main`, the custom domain, DNS, and the pre-launch checklist.
 
 ## Hosting
 
-Target is GitHub Pages, served from `main`. Because everything is plain static files with no build, the repository output *is* the site.
+Target is GitHub Pages, served from `main` behind the custom domain **https://jndis.net** (held in `CNAME`). Because everything is plain static files with no build, the repository output *is* the site — a push to `main` is the whole deploy. `.nojekyll` keeps Pages from running the files through Jekyll, and `404.html` is what Pages serves for any unmatched URL. `docs/DEPLOY.md` has the setup, the DNS records and the pre-launch checklist.

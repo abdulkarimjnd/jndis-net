@@ -16,7 +16,7 @@ says so rather than implying it was signed off. Those items are collected in
 
 ```
 node tools/check-responsive.js    # TASK-036
-node tools/check-a11y.js          # TASK-037  (added below)
+node tools/check-a11y.js          # TASK-037
 node tools/check-seo.js           # TASK-038
 node tools/check-performance.js   # TASK-039
 node tools/check-links.js         # TASK-041
@@ -171,3 +171,243 @@ pre-launch list in `docs/DEPLOY.md`:
 - **Zoom to 200%** and a text-only zoom: no clipping, no horizontal scroll.
 - **Colour is never the only signal** — the error state carries text, not just
   a red border.
+
+---
+
+## TASK-038 — SEO basics (titles, meta descriptions, Open Graph, sitemap, robots)
+
+### Automated
+
+`tools/check-seo.js` holds every page to the same head:
+
+1. A title of 15–70 characters, and a meta description of 70–160 — the lengths
+   search engines render before they cut the text off.
+2. Titles and descriptions **unique across the site**, so two pages are not
+   competing for the same words.
+3. A canonical URL, absolute against `https://jndis.net` and **derived from the
+   page's own path**, so the tag and the file cannot disagree. `404.html` is
+   exempt: a 404 is not a destination and has nothing to name as its own.
+4. The Open Graph set — `type`, `site_name`, `locale`, `url` (matching the
+   canonical), `title`, `description`, and a 1200x630 `og:image` with
+   dimensions and alt text.
+5. The Twitter/X set — title, description and image.
+6. A favicon and a `theme-color`.
+
+It then reads `sitemap.xml` and asserts it lists **exactly** the indexable pages
+(every page except the 404) with absolute URLs, and reads `robots.txt` to assert
+it allows crawling and points at the sitemap.
+
+### Written
+
+- **Every page** gained a `<link rel="canonical">` and an `og:url` (the 404,
+  deliberately, gained neither), plus the share image and the
+  `summary_large_image` Twitter card.
+- **`sitemap.xml`** — fifteen entries, home as `https://jndis.net/`, service
+  pages at priority 0.8, the 404 absent.
+- **`robots.txt`** — allows everything, points at the sitemap.
+- **`assets/img/og-image.svg`** is the share card's source and
+  **`assets/img/og-image.png`** the 1200x630 render the pages reference. It was
+  rendered and looked at: navy-to-blue gradient, the wordmark, the tagline and a
+  small network motif. The PNG is a 256-colour quantisation, which took it from
+  101KB to 33KB without a visible band in the gradient.
+- Two descriptions (`services/index.html`, `contact.html`) were trimmed below
+  160 characters to fit the ceiling.
+
+### Reviewed
+
+Whether the *words* are good is a human judgement; the titles name the page and
+the brand, the descriptions say what the page offers, and all fifteen were read
+back before being accepted.
+
+**Still open before launch:** submit `https://jndis.net/sitemap.xml` to Google
+Search Console. Optional, and on the pre-launch list.
+
+---
+
+## TASK-039 — Performance pass (image optimisation, lazy loading, Lighthouse 90+)
+
+### Automated
+
+`tools/check-performance.js` holds the decisions that make a good score
+reachable rather than the score itself:
+
+- Bootstrap arrives from the CDN **minified and pinned** (`bootstrap@5.3.8`);
+  the only third-party script a page loads is that bundle — no analytics
+  snippet, no icon script.
+- The typeface is requested once with `display=swap` and a preconnect to the
+  font host, so text is never invisible while a slow font downloads.
+- No `@import` in the stylesheet and no inline `<style>` block, either of which
+  would serialise a second round-trip before first paint.
+- Every `<img>` declares `width`/`height` and `decoding="async"`; the
+  below-the-fold footer wordmark is `loading="lazy"` while the above-the-fold
+  header wordmark is not (lazy-loading what you see first delays what you see
+  first).
+- Every local file and every page's local weight is under a budget.
+
+The measured weights:
+
+| Page | HTML | Local total |
+|---|---|---|
+| `index.html` | 30KB | 60KB |
+| service detail page (each) | 34–35KB | 66–67KB |
+| `services/index.html` | 29KB | 63KB |
+| `about.html` | 24KB | 54KB |
+| `contact.html` | 26KB | 63KB |
+| `404.html` | 16KB | 47KB |
+
+Budgets are 60KB of HTML per page, 140KB of local assets per page, 100KB per
+stylesheet or script, and 200KB per raster image. They are deliberately
+generous relative to what is here, so they fire on an accident — a stray script,
+a pasted screenshot — and not on ordinary growth.
+
+### Reviewed
+
+- **There is nothing to optimise down from.** The site carries no photographs:
+  the only `<img>` is the 786-byte SVG wordmark, repeated in header and footer.
+  The one raster file, the 33KB share card, is fetched by link-preview scrapers,
+  never by a page view.
+- **The heavy work is CSS and fonts, and it is already off the critical path**:
+  one stylesheet, four deferred scripts, and the two CDN files the design calls
+  for.
+- Icons are **inlined SVG with no icon-font or sprite request** (DESIGN.md,
+  "Icons and Imagery"), which is why the HTML is a few kilobytes larger and the
+  page one origin smaller.
+
+**Still open before launch:** a Lighthouse run against the deployed URL, for 90+
+across Performance, Accessibility, Best Practices and SEO. It needs the live
+site, so it is on the pre-launch list in `docs/DEPLOY.md`.
+
+---
+
+## TASK-040 — Cross-browser check (Chrome, Firefox, Safari, Edge, mobile)
+
+This one is a review, not a script; `docs/QUALITY.md` records what was exercised
+and, honestly, what was not.
+
+### What the site relies on
+
+Deliberately ordinary, evergreen-browser features:
+
+- **Layout** — flexbox, CSS grid (Bootstrap's row/columns), custom properties,
+  `clamp()` for fluid type, `min-height`. All supported by every browser in the
+  target set for years.
+- **Behaviour** — an `IntersectionObserver` scroll reveal with a 3s
+  content-visibility failsafe, `fetch` with a native form-POST fallback, and the
+  mobile menu on Bootstrap's own bundle.
+- **No-JavaScript and degraded paths** — the FAQ is native
+  `<details>`/`<summary>`, so answers stay reachable without Bootstrap's
+  collapse; the contact form posts natively; the search control ships `hidden`
+  and is revealed by its script, so there is no dead box if the script fails.
+  These exist for robustness, and they are also the reason the site behaves the
+  same when a browser blocks something.
+
+### What was run
+
+- **Gecko — headless Firefox ESR 140.** All six templates rendered at 360, 768,
+  1024 and 1280px, full page height, reveal off (TASK-036). No horizontal
+  overflow, the nav collapsed at the intended breakpoint, the grids went 1/2/3
+  columns, and the contact form went 8/4. This is a real engine, not a
+  simulation.
+
+### What was not run
+
+The harness has no Chromium or WebKit, so **Chrome, Edge, Safari and mobile
+browsers were not exercised**. The page renders identically because the features
+above are all long-universal, but "identical by reasoning" is not "seen", and
+this file does not pretend otherwise.
+
+**Still open before launch (pre-launch list in `docs/DEPLOY.md`):** open the
+deployed site in Chrome, Edge, Safari and a phone; check the dropdown, the
+reveal, the services filter and the contact form in each; and do the touch pass
+that TASK-036 could not do headlessly.
+
+---
+
+## TASK-041 — Fix broken links and run a link check
+
+### Automated
+
+`tools/check-links.js` collects every internal reference on every page — 734 of
+them across fifteen pages — and checks each against the files on disk:
+
+1. The target **file exists**, resolved from the page's own depth (`../assets/`
+   one level down and `/assets/` on the 404 are the same file).
+2. A link to a **directory** resolves to its `index.html`, which is how GitHub
+   Pages serves it.
+3. A **`#fragment`** points at an id that is genuinely on the target page, so a
+   renamed section cannot leave a link scrolling to nowhere.
+4. No **empty `href`** and no **`href="#"`** placeholder — the two ways a link
+   that looks finished is not.
+5. No `target="_blank"` without `rel="noopener"`/`noreferrer`.
+6. `mailto:` and `tel:` links carry something after the scheme.
+
+All 734 resolve. **No broken links were found, so none needed fixing** — the
+useful result, and the same shape of result as TASK-036.
+
+Nineteen distinct external links are listed rather than fetched, because this
+runs offline. That includes the two CDNs, Google Fonts and the canonical URLs of
+this site itself; they are re-checked against the live site at launch.
+
+### Reviewed
+
+The one thing the script cannot see is a link that resolves but goes to the
+wrong *place*. The links were read alongside their text while TASK-032–035 were
+built, and `check-services.js` already holds every service link to the name it
+should carry.
+
+**Still open before launch:** click the external links from the deployed site
+once, and run an online crawler over `https://jndis.net` after the first deploy.
+
+---
+
+## TASK-042 — Deploy and connect the domain
+
+### What is in the repository
+
+The site is deploy-ready and hosted on **GitHub Pages** from `main`, behind
+**https://jndis.net**:
+
+- **`CNAME`** holds `jndis.net` (committed as far back as TASK-001).
+- **`.nojekyll`** keeps GitHub Pages from running the files through Jekyll.
+- **`404.html`** is what GitHub Pages serves automatically for any unmatched
+  URL, at any depth.
+- **`sitemap.xml`** and **`robots.txt`** sit at the root where crawlers look.
+- **`docs/DEPLOY.md`** is the runbook: one-time setup, DNS records, HTTPS, the
+  per-release step, verification and rollback.
+
+### Done vs open
+
+The repository half is done: the files above exist, the pages are host-agnostic
+static files with relative links, and `docs/DEPLOY.md` records the exact DNS
+records and settings. The parts that need credentials or a live domain are
+**open** and listed as pre-launch items in `docs/DEPLOY.md`:
+
+- Enabling Pages, entering the custom domain, adding the four apex A records and
+  the `www` CNAME, and enforcing HTTPS.
+- Supplying the **real contact details** and a **working contact form** — kept
+  as clearly-marked placeholders on purpose, so nothing fake ships by accident.
+- The touch and real-browser passes, the Lighthouse run and the sitemap
+  submission carried over from TASK-036–041.
+
+**Deliberately not done here:** no deploy was run and nothing was pushed. The
+checkout is one commit ahead of `origin/main`; publishing is a human decision.
+
+---
+
+## Still open before launch (all of it, in one place)
+
+Every item below is also on the checklist in **`docs/DEPLOY.md`**, which is the
+file to work from on launch day:
+
+1. Real contact details in the shared footer (and on the contact page).
+2. A real Formspree id and fallback inbox for the contact form.
+3. A touch pass on a real phone; a real-browser pass in Chrome, Edge, Safari and
+   mobile.
+4. A Lighthouse run against the deployed URL.
+5. A screen-reader pass and a keyboard-only pass; a 200%-zoom reflow check.
+6. Submit the sitemap; click the external links from the live site.
+
+The five checkers listed at the top of this file are green and run without a
+server, a browser or a network. What remains needs a person and, in most cases,
+the live domain.
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  sitemap.xml — every indexable page, and nothing else (TASK-038).
+
+  404.html is deliberately absent: it is served for URLs that do not exist and
+  must never be offered to a crawler as a destination. It also carries no
+  canonical link, for the same reason.
+
+  URLs are absolute against the live domain (https://jndis.net, set by CNAME).
+  Keep this file in step with the pages — node tools/check-seo.js fails if a
+  page is missing from it or a stale URL is listed here.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://jndis.net/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/index.html</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/it-support-maintenance.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/network-infrastructure.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/server-management-hosting.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/cloud-virtualization.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/cybersecurity.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/cctv-surveillance.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/web-development.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/it-consultancy.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/managed-it-services.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/services/equipment-supply-installation.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/about.html</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://jndis.net/contact.html</loc>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>
