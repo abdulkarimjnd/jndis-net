@@ -22,8 +22,12 @@ Definition of done for every task:
 ## Service list (single source of truth)
 
 Every place that lists services — header dropdown (TASK-006), footer (TASK-008),
-services hub cards (TASK-017), related services (TASK-031) — must use this exact
-list, order and filenames.
+services hub cards (TASK-017), related services and the previous/next pager
+(TASK-031) — must use this exact list, order and filenames.
+
+The first three are complete lists. The last two are deliberately partial, and
+are fenced in the markup so that `tools/check-services.js` can tell a partial
+list from a list that has lost an entry.
 
 | # | Service | File |
 |---|---|---|
@@ -75,20 +79,20 @@ Services hub: `services/index.html`. About: `about.html`. Contact: `contact.html
 
 ## Phase 5: Sub-Service Detail Pages
 
-Each page uses the same template: hero, overview, what's included, benefits, process, FAQ, CTA, related services.
+Each page uses the same template, in this band order: page header (Surface) → overview (White) → what's included (Surface) → **how we work** (White, *shared*) → benefits (Surface) → FAQ (White) → related services and previous/next (Surface) → call to action (gradient). Full description in `docs/DESIGN.md`, "Service detail page".
 
-- [ ] TASK-020: Create detail page template and shared JS (FAQ accordion, breadcrumb)
-- [ ] TASK-021: IT Support & Maintenance
-- [ ] TASK-022: Network Infrastructure & Solutions
-- [ ] TASK-023: Server Management & Hosting
-- [ ] TASK-024: Cloud & Virtualization Solutions
-- [ ] TASK-025: Cybersecurity & Network Security
-- [ ] TASK-026: CCTV & Surveillance Solutions
-- [ ] TASK-027: Web Development & Digital Solutions
-- [ ] TASK-028: IT Consultancy & Project Implementation
-- [ ] TASK-029: Managed IT Services
-- [ ] TASK-030: IT Equipment Supply & Installation
-- [ ] TASK-031: Add previous/next service navigation and related services on each page
+- [x] TASK-020: Create detail page template and shared JS (FAQ accordion, breadcrumb) — `services/it-support-maintenance.html` is the reference page, and `tools/check-service-pages.js` holds the other nine to its shape (bands, order, backgrounds, headings, counts). The FAQ is **native `<details>`/`<summary>`, not Bootstrap's `.accordion`**: a collapse panel is hidden with `display: none`, so if the CDN bundle ever failed the answers would be unreachable, not merely unanimated. The shared JS is `assets/js/service-page.js`, which opens the answer a `#faq-…` link points at; the breadcrumb needs none. New CSS is `jnd.css` §12 (`.faq-*`, `.process-*`, `.service-pager-*`) — the what's-included list needed none. `tools/lib/canonical-services.js` now holds the one parser of the service table, shared by both service checks
+- [x] TASK-021: IT Support & Maintenance — the reference page the other nine are copied from
+- [x] TASK-022: Network Infrastructure & Solutions
+- [x] TASK-023: Server Management & Hosting
+- [x] TASK-024: Cloud & Virtualization Solutions
+- [x] TASK-025: Cybersecurity & Network Security
+- [x] TASK-026: CCTV & Surveillance Solutions
+- [x] TASK-027: Web Development & Digital Solutions
+- [x] TASK-028: IT Consultancy & Project Implementation
+- [x] TASK-029: Managed IT Services
+- [x] TASK-030: IT Equipment Supply & Installation
+- [x] TASK-031: Add previous/next service navigation and related services on each page — three related services, always **in canonical order and never the page's own service**, and a two-link pager to the two neighbours in the canonical order, **wrapping at the ends** so IT Equipment leads back to IT Support and no page is a dead end. The direction is written out ("Previous service …") rather than left to an arrow. Both lists are deliberately partial, so they are fenced in the markup (`BEGIN related services`, `BEGIN service pager`) and `check-services.js` was taught to check each against what it is meant to be — the fence is what opts a list out of the "every list is the full ten" rule, so a service that quietly vanishes from the header, the footer or the hub grid is still caught. Built as part of TASK-021–030 rather than after them: the blocks are per-page content, and adding them in a second pass would have meant editing all ten files twice
 
 ## Phase 6: Supporting Pages
 

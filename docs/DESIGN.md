@@ -292,7 +292,109 @@ Every page except the home page opens on a page header band rather than the grad
 - **Surface is also the cheap choice.** Bootstrap's own breadcrumb colours (Primary links, `--bs-secondary-color` for the current item) and the default navy heading all clear AA on Surface, so the band needs no new CSS. On a dark band every one of them would need overriding.
 - **The breadcrumb mirrors the URL**, one `<li>` per level, inside `<nav aria-label="Breadcrumb">`. The current page is plain text carrying `aria-current="page"`, never a link to itself.
 - **Capped at `col-lg-8`**, like the hero and for the same reason: the lead stays readable.
-- **The hub's band order is Surface → White → gradient**, alternating so no two adjacent bands match, and ending on the quote strip above the footer.
+- **The hub's band order is Surface → White → gradient**, alternating so no two adjacent bands match, and ending on the quote strip above the footer. The ten **service detail pages** open on this same band with one more breadcrumb level — see **Service detail page**.
+
+## Service detail page
+
+The ten service pages are one template, in this band order:
+
+| # | Band | Background | Holds |
+|---|---|---|---|
+| 1 | Page header | Surface | breadcrumb, `<h1>`, lead |
+| 2 | Overview | White | what the service is, in prose |
+| 3 | What's included | Surface | a check list |
+| 4 | How we work | White | four numbered steps — **shared, identical on all ten** |
+| 5 | Benefits | Surface | three icon columns |
+| 6 | FAQ | White | `<details>` questions |
+| 7 | Related services | Surface | three cards, then the previous/next pager |
+| 8 | Call to action | gradient | heading, lead, one primary button |
+
+Bands alternate Surface / White down the page and end on the gradient above the footer. `tools/check-service-pages.js` asserts this table exactly — the number of bands, their order, each one's background, the heading its `aria-labelledby` points at, and the counts inside bands 3, 4 and 5 — so a missing band or a band that lost its background fails a check rather than a review.
+
+The words on every one of these pages are **DRAFT**, like the rest of the site's copy: written to be replaced with the client's own.
+
+### The breadcrumb
+
+Home › Services › *this service*, three items, the last one plain text carrying `aria-current="page"`. **Detail pages reuse the Page header band** with one more crumb rather than inventing a second kind of page top, so the gradient still appears on exactly the home page hero, a page-foot call to action and the footer.
+
+### What's included
+
+A check list in two columns. **Adds no CSS** — `.list-unstyled`, the grid, `.icon.text-primary` and `flex-shrink-0` already carry it.
+
+```html
+<ul class="row g-3 list-unstyled mb-0">
+  <li class="col-12 col-md-6 d-flex gap-2">
+    <svg class="icon text-primary flex-shrink-0 mt-1" width="20" height="20" … aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+    <span>Helpdesk support by phone, email and remote session</span>
+  </li>
+```
+
+- **The tick is decorative**, so it is `aria-hidden="true"` and what a screen reader hears is a six-item list, not six "check mark"s.
+- **`flex-shrink-0`** stops the tick squashing when an entry wraps; **`mt-1`** drops it onto the first line's baseline.
+
+### How we work — the shared process block
+
+Four numbered steps, **identical on all ten detail pages**, so it is fenced like the header and footer and checked by the same script:
+
+```html
+<!-- BEGIN shared process -->   …   <!-- END shared process -->
+```
+
+It is the only block shared by *some* pages. `check-shared.js` knows which pages are expected to carry it and fails in both directions: a detail page that has lost it, and any other page that has gained it.
+
+- **An `<ol>`**, so the sequence is in the semantics. The visible numerals are `aria-hidden` decoration — a screen reader is told "list, 4 items" and hears them in order, which is the whole point of the numbers.
+- **White on Primary for the numerals: 7.40:1**, well past AA.
+- Steps are capped at **`col-lg-8`**: four lines of explanation across 1200px would be a wall.
+
+### FAQ
+
+Native `<details>` / `<summary>`, **not** Bootstrap's `.accordion`:
+
+```html
+<div class="faq" data-faq>
+  <details class="faq-item" id="faq-contract">
+    <summary class="faq-question">
+      <span>Do we have to sign a long contract?</span>
+      <svg class="icon faq-chevron" width="20" height="20" … aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <p class="faq-answer">No. …</p>
+  </details>
+</div>
+```
+
+- **The reason is the failure mode.** Bootstrap's collapse hides an unopened panel with `.collapse:not(.show) { display: none }`, so if the CDN bundle ever failed to load the answers would not merely stop animating — they would be **unreachable**. Losing the animation is acceptable; losing the answers is not. `<details>` is the same widget with no JavaScript and nothing to fail.
+- **The trade-off, stated rather than hidden:** a `<summary>` is not a heading, so these questions cannot be reached with heading navigation the way a Bootstrap accordion's can. Question, answer and open/closed state are all still announced by the browser. That is the better side of the trade.
+- **Every answer carries an `id`** (`#faq-contract`) so a link can point at *one question* instead of the whole page.
+- **The open item takes a Primary border as well as rotating its chevron**, so which one is expanded does not rest on the rotation alone.
+- **Opening one does not close the others** — a visitor comparing two answers should not have to hold the first in their head. They are a list of disclosures, not a slideshow.
+- **`summary` needs the focus ring**, so `.faq-question:focus-visible` is part of the two-tone rule in `jnd.css` §9.
+
+### Related services, and the pager
+
+Both are cross-links out of the page, so they share band 7.
+
+- **Three related services**, always a genuine subset of the canonical list **in canonical order**, and never the page's own service.
+- **The pager is the previous and next service in the canonical order**, wrapping at the ends: IT Support's previous is IT Equipment Supply & Installation and its next is Network Infrastructure. The list is a cycle, so no page is ever a dead end.
+- **The direction is written out in words** — "Previous service IT Equipment Supply & Installation" — rather than a bare service name next to an arrow. An arrow says "somewhere"; the word says which way, and it is what a screen reader reads.
+- **Both lists are deliberately partial**, which is the one thing the canonical-list check has to be told. They are fenced, and the fence is what opts them out of the "every list is all ten" rule:
+
+```html
+<!-- BEGIN related services -->  …  <!-- END related services -->
+<!-- BEGIN service pager -->     …  <!-- END service pager -->
+```
+
+  `check-services.js` then checks each against what it is meant to be: the related list is valid, in canonical order, not self-referential and three long; the pager is the two genuine neighbours, in the right direction. The fences only make a list *allowed* to be partial — outside them a short list is still a fault, so a service that quietly vanishes from the header, the footer or the hub grid is caught.
+- **The pager borrows the card chrome** (`.service-pager-link`, `jnd.css` §12): these are links that behave like cards.
+
+### Opening a FAQ answer from a link
+
+`assets/js/service-page.js`, the only JavaScript on a detail page. A URL ending `#faq-on-site` scrolls to the right part of the page but leaves the answer shut, because browsers disagree about whether to expand the `<details>` an anchor targets. The script opens the matching item and moves focus to its question — the same place the browser just scrolled to.
+
+- **Nothing else on these pages needs JavaScript.** The breadcrumb is plain links and the FAQ opens and closes on its own; if this file never loads, a deep link simply lands on a closed question.
+- **Focus uses `preventScroll: true`**, so taking the focus does not undo the browser's jump.
+- **A malformed hash cannot break the page.** `decodeURIComponent('%')` throws a `URIError`, so the decode is guarded — an unhandled throw here would take the rest of the page's scripts down with it.
+
+`jnd.css` §12 holds the three pieces that did need CSS: `.faq-item` / `.faq-question` / `.faq-answer`, `.process-step` / `.process-number` and `.service-pager-link`.
 
 ## Hero
 
@@ -393,27 +495,30 @@ Contrast decisions, all measured rather than assumed:
 
 Column headings are real `<h2>` elements, not styled paragraphs, so screen reader users can navigate the footer by heading.
 
-## Shared markup (header and footer)
+## Shared markup (header, footer, process)
 
-The header and footer are **duplicated into every page as static markup**, deliberately *not* injected by JavaScript.
+The header and footer are **duplicated into every page as static markup**, deliberately *not* injected by JavaScript. So is the **process block** on the service detail pages (`## Service detail page`).
 
 Rationale:
 
 - Navigation belongs in the HTML. That is how search engines index it directly, and it keeps working when JavaScript is blocked, fails, or a CDN is unreachable.
 - JavaScript partials would also break `file://` preview (browsers block `fetch` there) and cause layout shift as the header appeared after first paint.
 
-The cost is duplication, so both blocks are fenced in every page:
+The cost is duplication, so all three blocks are fenced in the pages that carry them:
 
 ```html
 <!-- BEGIN shared header -->   ...   <!-- END shared header -->
 <!-- BEGIN shared footer -->   ...   <!-- END shared footer -->
+<!-- BEGIN shared process -->  ...   <!-- END shared process -->
 ```
 
 **The only permitted per-page difference is the active nav link** — `class="active"` plus `aria-current="page"`.
 
 **Depth is not a difference.** A page one level down has to write its links differently: `../index.html` and `network-infrastructure.html` where the root writes `index.html` and `services/network-infrastructure.html`. `check-shared.js` resolves every `href` and `src` to a path from the site root before comparing, so the rule is *identical markup pointing at identical destinations*, not identical characters. Everything else inside a fence must still be byte-identical.
 
-**Order matters, and the two fences do not travel together.** The header block goes right after `<body>`; the footer block goes right before `</body>`, i.e. *after* `</main>`:
+**A block can belong to only some kinds of page.** The process block is on the ten service detail pages and nowhere else, so `check-shared.js` is told which pages are expected to carry it and fails in both directions — a detail page that has lost it, and any other page that has picked it up. A copy-paste cannot quietly spread a block across the site.
+
+**Order matters, and the fences do not travel together.** The header block goes right after `<body>`; the footer block goes right before `</body>`, i.e. *after* `</main>`:
 
 ```html
 <body>
@@ -441,7 +546,23 @@ Exit 0 means every page matches; exit 1 lists the drifted pages and quotes where
 node tools/check-services.js
 ```
 
-It also parses the names, so a service renamed in one place and not the others is caught even though the pages agree with each other. Run both scripts before committing.
+It also parses the names, so a service renamed in one place and not the others is caught even though the pages agree with each other.
+
+The ten service detail pages have a shape as well as a list, and two more scripts cover it:
+
+```
+node tools/check-service-pages.js
+```
+
+checks each page against the template in **Service detail page** — the eight bands in order, each one's background, the heading its `aria-labelledby` points at, one `<h1>`, headings that never skip a level, the three-item breadcrumb, the FAQ wiring, the step/benefit/entry counts, and that the page loads the script its FAQ deep links need.
+
+```
+node tools/check-shared.js      # header, footer and process blocks, and landmark order
+node tools/check-services.js    # every copy of the service list
+node tools/check-service-pages.js  # the detail page template
+```
+
+Run all three before committing. (`tools/lib/canonical-services.js` holds the one parser of the table in `docs/TASKS.md`, so the two service checks cannot disagree about what the canonical list is.)
 
 ## Icons and Imagery
 
@@ -482,7 +603,7 @@ Mark a wrapper with `data-reveal`. `reveal.js` adds `.is-visible` the first time
 - Accessible forms: visible labels, `aria-describedby` for errors, clear focus order
 - Use Bootstrap validation (`.was-validated`, `.invalid-feedback`) driven by our own JS; keep `novalidate` on the form so messages are consistent across browsers
 - Color contrast WCAG AA minimum, measured rather than assumed. White clears AA on Primary (**7.40:1**), Secondary (**11.06:1**) and the Modern band (**5.67:1** at the lightest point text reaches). White on Highlight (**1.72:1**) and white on Accent (**2.24:1**) never do, so neither is ever a text background.
-- The focus indicator is **two-tone**: a 2px navy outline with a 2px white ring filling the offset gap. A single Accent ring measured 2.24:1 on white and 2.05:1 on Surface — both below the 3:1 WCAG 1.4.11 asks of a focus indicator. The navy outline carries light bands; the white ring carries the dark hero and footer bands.
+- The focus indicator is **two-tone**: a 2px navy outline with a 2px white ring filling the offset gap. A single Accent ring measured 2.24:1 on white and 2.05:1 on Surface — both below the 3:1 WCAG 1.4.11 asks of a focus indicator. The navy outline carries light bands; the white ring carries the dark hero and footer bands. It is applied to links, buttons and (**because it is focusable and has no underline to give it away**) the FAQ's `<summary>`.
 - **Non-text contrast is measured too, not just text.** The primary button's boundary came out at **1.59:1** against the gradient bands, because the button and the band are painted from the same two blues; on a brand-gradient band it now carries a white border (7.98:1 against the band). WCAG 1.4.11 wants 3:1 for UI component boundaries.
 - Skip-to-content link, semantic landmarks, keyboard navigable dropdown and menu
 - Skip link is `.skip-link` in `jnd.css` §7: off-screen until focused, then pinned to the top-left in Secondary with white text. It targets `#main`, which carries `tabindex="-1"` so focus genuinely moves rather than only scrolling
@@ -496,6 +617,7 @@ Mark a wrapper with `data-reveal`. `reveal.js` adds `.is-visible` the first time
 4. All spacing from the Bootstrap spacing scale (4px steps)
 5. New components get documented here before reuse
 6. Anything that lists the services matches the table in `docs/TASKS.md` — `node tools/check-services.js` checks every copy on every page
+7. A service detail page is the template in **Service detail page** — copy an existing one and change the words, never restructure one page on its own. `node tools/check-service-pages.js` checks every one of them
 
 ## Component index
 
@@ -520,6 +642,11 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Page header band | `.section.bg-surface` + `.breadcrumb` | `jnd.css` §3, §4 |
 | Hero band | `.section.bg-grad-modern.text-white` | `jnd.css` §3, §4 |
 | Call to action / quote strip band | `.section.bg-grad-modern.text-white`, centred | `jnd.css` §3, §4 |
+| What's-included check list | `.row.g-3.list-unstyled` of `.col-12.col-md-6.d-flex` | — (Bootstrap only) |
+| Numbered process step | `.process-step` + `.process-number` | `jnd.css` §12 |
+| FAQ accordion (native) | `.faq` + `.faq-item` + `.faq-question` + `.faq-answer` | `jnd.css` §12 |
+| Previous/next service pager | `.service-pager` + `.service-pager-link` | `jnd.css` §12 |
+| Service detail page band order | 8 bands, Surface/White alternating | `tools/check-service-pages.js` |
 | Scroll reveal wrapper | `[data-reveal]` | `jnd.css` §11 |
 | Header | `header.site-header` | `jnd.css` §7 |
 | Footer | `footer.site-footer` | `jnd.css` §8 |
@@ -528,4 +655,4 @@ Every shared component, where it is styled, and the class to reach for. If somet
 
 Colour and gradient helpers, all in `jnd.css` §4: `.bg-grad-primary`, `.bg-grad-accent`, `.bg-grad-highlight`, `.bg-grad-modern`, `.bg-surface`, `.text-midblue`. There is deliberately **no** `.text-accent` — Accent cannot carry text on white.
 
-Behavioural JavaScript, in `assets/js/`: `nav.js` (mobile menu), `footer.js` (copyright year), `reveal.js` (scroll reveal), `services-filter.js` (service search).
+Behavioural JavaScript, in `assets/js/`: `nav.js` (mobile menu), `footer.js` (copyright year), `reveal.js` (scroll reveal), `services-filter.js` (service search), `service-page.js` (opens the FAQ answer a link points at).

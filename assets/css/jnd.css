@@ -15,6 +15,7 @@
      9. Skip link, focus and reduced motion (accessibility)
     10. Icons
     11. Scroll reveal
+    12. Service detail pages
 
    Source of truth: docs/DESIGN.md. Keep the two in sync when either changes.
    ========================================================================== */
@@ -441,7 +442,8 @@ small, .small { font-size: 14px; }
    the dark hero and footer bands (7.4:1 there). Whichever band it lands on,
    one of the two rings contrasts. */
 a:focus-visible,
-.btn:focus-visible {
+.btn:focus-visible,
+.faq-question:focus-visible {
   outline: 2px solid var(--jnd-secondary);
   outline-offset: 2px;
   box-shadow: 0 0 0 2px #fff;
@@ -460,7 +462,8 @@ a:focus-visible,
   }
 
   .card:hover,
-  .btn-primary:hover {
+  .btn-primary:hover,
+  .service-pager-link:hover {
     transform: none;
   }
 }
@@ -515,4 +518,104 @@ a:focus-visible,
     opacity: 1;
     transform: none;
   }
+}
+
+/* 12. Service detail pages ------------------------------------------------- */
+/* The FAQ accordion, the numbered process list and the previous/next pager.
+   The "what's included" list needs nothing here: .list-unstyled, the Bootstrap
+   grid, .icon and .text-primary already carry it. See DESIGN.md, "Service
+   detail page". */
+
+/* FAQ accordion — native <details> / <summary>.
+
+   Deliberately NOT Bootstrap's .accordion. Bootstrap's collapse hides an
+   unopened panel with .collapse:not(.show) { display: none }, so if the CDN
+   bundle ever failed to load the answers would not merely stop animating —
+   they would be unreachable. <details> is the same widget with no JavaScript
+   and nothing to fail, and the browser announces the question, the answer and
+   the open/closed state itself.
+
+   The trade-off is real and accepted: a <summary> is not a heading, so the
+   questions cannot be reached with heading navigation. Losing that is better
+   than losing the answers. */
+
+.faq-item {
+  border: 1px solid var(--jnd-border);
+  border-radius: 12px;
+  background-color: #fff;
+}
+
+.faq-item + .faq-item { margin-top: .75rem; }
+
+/* The open item takes the Primary border, so which one is expanded still reads
+   without relying on the chevron's rotation. */
+.faq-item[open] { border-color: var(--jnd-primary); }
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  color: var(--jnd-secondary);   /* 11.06:1 on white */
+
+  /* Hides the browser's own disclosure triangle, in every engine. */
+  list-style: none;
+}
+.faq-question::-webkit-details-marker { display: none; }
+
+/* Rotates the inlined chevron rather than swapping two images. */
+.faq-chevron {
+  flex: 0 0 auto;
+  transition: transform .2s ease-out;
+}
+.faq-item[open] .faq-chevron { transform: rotate(180deg); }
+
+.faq-answer {
+  margin: 0;
+  padding: 0 1.25rem 1.25rem;
+}
+
+/* Numbered process steps. The <ol> carries the sequence for assistive
+   technology, so the visible numerals are decoration and are aria-hidden. */
+
+.process-step + .process-step { margin-top: 1.5rem; }
+
+.process-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--jnd-primary);   /* white numeral: 7.40:1 */
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Previous / next service. Same chrome as a card, because that is what it is:
+   a link that behaves like one. */
+.service-pager-link {
+  display: block;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--jnd-border);
+  border-radius: 12px;
+  background-color: #fff;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(18, 59, 115, .08);
+  transition: box-shadow .2s ease-out, transform .2s ease-out;
+}
+.service-pager-link:hover {
+  box-shadow: 0 8px 24px rgba(18, 59, 115, .14);
+  transform: translateY(-2px);
+}
+.service-pager-label {
+  display: block;
+  font-size: .875rem;
+  color: var(--bs-secondary-color);   /* 6.73:1 on white */
+}
+.service-pager-name {
+  display: block;
+  font-weight: 600;
 }

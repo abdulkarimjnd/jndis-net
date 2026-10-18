@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--
+    BASE TEMPLATE (TASK-005)
+
+    Service detail page. Like services/index.html it lives one level down, so
+    every asset and cross-page link is written ../ and its sibling services are
+    referenced with no directory at all. tools/check-shared.js resolves links
+    before comparing, so the shared blocks are still checked against the root
+    pages.
+
+    Pending:
+      - <link rel="canonical">          TASK-042 (needs the live domain)
+      - og:url, og:image, twitter:image  TASK-042 (needs domain + share image)
+      - per-page titles/descriptions     TASK-038
+  -->
+  <title>Cybersecurity &amp; Network Security — JND Integrated Solutions</title>
+  <meta name="description" content="Firewalls, endpoint protection, multi-factor sign-in, staff phishing training and tested backups: practical security for businesses from JND.">
+
+  <!-- Colours the browser UI on mobile (address bar / tab strip) -->
+  <meta name="theme-color" content="#123B73">
+
+  <!-- Declaring an icon stops browsers probing /favicon.ico and logging a 404 -->
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+
+  <!-- Open Graph — controls link previews on Facebook, LinkedIn, WhatsApp, Slack -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JND Integrated Solutions">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="Cybersecurity &amp; Network Security — JND Integrated Solutions">
+  <meta property="og:description" content="Firewalls, endpoint protection, multi-factor sign-in, staff training and tested backups for businesses.">
+
+  <!-- Twitter / X. Card type stays "summary" until a share image exists (TASK-042). -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Cybersecurity &amp; Network Security — JND Integrated Solutions">
+  <meta name="twitter:description" content="Firewalls, endpoint protection, multi-factor sign-in, staff training and tested backups for businesses.">
+
+  <!-- Inter — brand typeface (DESIGN.md: 400/500/600/700) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Bootstrap 5.3.8 — base styles (must load before assets/css/jnd.css) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+  <!-- JND brand layer — tokens, type scale, gradients, button/card overrides -->
+  <link rel="stylesheet" href="../assets/css/jnd.css">
+
+  <!-- Scroll reveal hook. This has to run before the first paint: it puts
+       .js-reveal on the root element, which is what lets jnd.css section 11
+       hide [data-reveal] elements. Doing this from reveal.js instead would let
+       the page paint normally and then hide itself, which flashes.
+
+       With JavaScript unavailable the class is never set and nothing is ever
+       hidden. The timer is the failsafe: if reveal.js never runs — a 404, a
+       syntax error, a blocked request — the class is dropped after 3s and
+       every band is simply visible. Losing the animation is acceptable.
+       Losing the content is not. -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js-reveal');
+      window.__jndRevealFailsafe = window.setTimeout(function () {
+        root.classList.remove('js-reveal');
+      }, 3000);
+    }());
+  </script>
+
+  <!-- Bootstrap 5.3.8 bundle (Popper + Bootstrap) for dropdowns, collapse, etc. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Mobile menu behaviour. Deferred scripts run in document order, so the
+       bundle above is guaranteed to have executed first. -->
+  <script defer src="../assets/js/nav.js"></script>
+
+  <!-- Copyright year in the footer -->
+  <script defer src="../assets/js/footer.js"></script>
+
+  <!-- Scroll reveal: fades [data-reveal] elements up as they enter the viewport -->
+  <script defer src="../assets/js/reveal.js"></script>
+
+  <!-- Opens the FAQ answer named in the URL hash. Everything else on this page
+       works without it. -->
+  <script defer src="../assets/js/service-page.js"></script>
+</head>
+<body>
+
+  <!-- First focusable element on the page: lets keyboard users bypass the nav -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ==========================================================================
+       BEGIN shared header
+       Keep this block identical on every page. The ONLY per-page difference is
+       the active nav link (class="active" plus aria-current="page").
+       Edit here, then copy to every other page.
+       Check for drift:  node tools/check-shared.js
+       ========================================================================== -->
+  <header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-lg" aria-label="Main">
+      <div class="container">
+
+        <!-- Wordmark. The mark is decorative (alt=""), the text carries the name. -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+          <img src="../assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+          <span class="d-flex flex-column">
+            <span class="site-brand-name">JND</span>
+            <span class="site-brand-tagline">Integrated Solutions</span>
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#primaryNav"
+                aria-controls="primaryNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="primaryNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">Home</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <!--
+                An anchor (not a button) so that if the CDN JS ever fails to load,
+                clicking still navigates to the services hub instead of doing nothing.
+                With JS active the click toggles the menu, so "All services" below
+                provides the keyboard route to that hub page.
+              -->
+              <a class="nav-link dropdown-toggle active" href="index.html" role="button"
+                 aria-current="page" data-bs-toggle="dropdown" aria-expanded="false">Services</a>
+
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
+                <li><a class="dropdown-item" href="network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
+                <li><a class="dropdown-item" href="server-management-hosting.html">Server Management &amp; Hosting</a></li>
+                <li><a class="dropdown-item" href="cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
+                <li><a class="dropdown-item" href="cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
+                <li><a class="dropdown-item" href="cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
+                <li><a class="dropdown-item" href="web-development.html">Web Development &amp; Digital Solutions</a></li>
+                <li><a class="dropdown-item" href="it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
+                <li><a class="dropdown-item" href="managed-it-services.html">Managed IT Services</a></li>
+                <li><a class="dropdown-item" href="equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item fw-semibold" href="index.html">All services &rarr;</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contact.html">Contact</a></li>
+
+            <li class="nav-item nav-cta">
+              <a class="btn btn-primary" href="../contact.html">Get a Quote</a>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+    </nav>
+  </header>
+  <!-- END shared header ====================================================== -->
+
+  <!-- tabindex="-1" lets the skip link move focus here, not just scroll to it -->
+  <main id="main" tabindex="-1">
+
+    <!-- =================================================================
+         PAGE HEADER (TASK-016)
+         The same Surface band as the services hub, with one more breadcrumb
+         level. Detail pages do not reuse the home hero: the gradient marks
+         the front door, and the breadcrumb is what tells you where you are.
+         ================================================================= -->
+    <section class="section bg-surface">
+      <div class="container">
+
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb mb-3">
+            <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+            <li class="breadcrumb-item"><a href="index.html">Services</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Cybersecurity &amp; Network Security</li>
+          </ol>
+        </nav>
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h1 class="mb-3">Cybersecurity &amp; Network Security</h1>
+            <p class="lead mb-0">
+              Closing the easy ways into your business: the firewall and what is
+              allowed through it, updates on the devices people use, sign-in that
+              asks for more than a password, and backups you have restored from.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         OVERVIEW
+         Prose, capped at col-lg-8 so the measure stays readable.
+         Copy is DRAFT.
+         ================================================================= -->
+    <section class="section" aria-labelledby="overview-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h2 id="overview-heading" class="mb-3">What this covers</h2>
+            <p>
+              Most of what reaches a business is not sophisticated. It is a login
+              page that looks about right, an invoice whose bank details have
+              changed, a laptop that is a version behind. None of that needs a
+              skilled attacker. It needs one person having a busy morning.
+            </p>
+            <p class="mb-0">
+              So the work is on the ordinary things: the firewall and what you let
+              through it, updates and protection on the devices your team actually
+              uses, and a second factor behind the password. Staff are taught what
+              a suspicious email looks like, access is removed when someone leaves,
+              and backups are restored as a test. It is unglamorous, and it is what
+              most incidents turn on.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         WHAT'S INCLUDED
+         A check list in two columns. No new CSS: .list-unstyled, the grid,
+         .icon and .text-primary already carry it.
+         ================================================================= -->
+    <section class="section bg-surface" aria-labelledby="included-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h2 id="included-heading" class="mb-3">What's included</h2>
+            <p class="lead mb-0">
+              The practical work of making your business harder to walk into.
+            </p>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-12 col-lg-10">
+            <ul class="row g-3 list-unstyled mb-0">
+
+              <li class="col-12 col-md-6 d-flex gap-2">
+                <svg class="icon text-primary flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                <span>Firewall rules reviewed, so only the traffic you need gets through</span>
+              </li>
+
+              <li class="col-12 col-md-6 d-flex gap-2">
+                <svg class="icon text-primary flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                <span>Updates and protection kept current on the devices people use</span>
+              </li>
+
+              <li class="col-12 col-md-6 d-flex gap-2">
+                <svg class="icon text-primary flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                <span>Multi-factor sign-in for email, remote access and your key systems</span>
+              </li>
+
+              <li class="col-12 col-md-6 d-flex gap-2">
+                <svg class="icon text-primary flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                <span>Staff sessions on what a suspicious message looks like, and tests after them</span>
+              </li>
+
+              <li class="col-12 col-md-6 d-flex gap-2">
+                <svg class="icon text-primary flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                <span>Access removed properly when someone leaves or changes role</span>
+              </li>
+
+              <li class="col-12 col-md-6 d-flex gap-2">
+                <svg class="icon text-primary flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                <span>Backups restored as a test, because that is what makes them real</span>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         BEGIN shared process
+         Identical on every service detail page. Edit here, then copy to the
+         other nine. Check for drift:  node tools/check-shared.js
+         ========================================================================== -->
+    <section class="section" aria-labelledby="process-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h2 id="process-heading" class="mb-3">How we work</h2>
+            <p class="lead mb-0">
+              The same four steps whether it is one laptop or a whole site.
+            </p>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-12 col-lg-8">
+            <ol class="process-list list-unstyled mb-0">
+
+              <li class="process-step d-flex gap-3">
+                <span class="process-number" aria-hidden="true">1</span>
+                <div>
+                  <h3 class="h5 mb-1">Tell us about it</h3>
+                  <p class="mb-0">By phone, email or the form on the contact page. We confirm it has been picked up, and say who has it.</p>
+                </div>
+              </li>
+
+              <li class="process-step d-flex gap-3">
+                <span class="process-number" aria-hidden="true">2</span>
+                <div>
+                  <h3 class="h5 mb-1">We diagnose it</h3>
+                  <p class="mb-0">Remote first where that is quicker, on site where it is not. Either way, you are told what we found.</p>
+                </div>
+              </li>
+
+              <li class="process-step d-flex gap-3">
+                <span class="process-number" aria-hidden="true">3</span>
+                <div>
+                  <h3 class="h5 mb-1">We fix it</h3>
+                  <p class="mb-0">The fix, why it happened, and what to do if it comes back — in language that does not need a glossary.</p>
+                </div>
+              </li>
+
+              <li class="process-step d-flex gap-3">
+                <span class="process-number" aria-hidden="true">4</span>
+                <div>
+                  <h3 class="h5 mb-1">We stop it coming back</h3>
+                  <p class="mb-0">Where the same fault keeps returning, we look at the cause rather than the symptom, and tell you what it would take.</p>
+                </div>
+              </li>
+
+            </ol>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- END shared process ====================================================== -->
+
+    <!-- =================================================================
+         BENEFITS
+         The feature-list component (jnd.css section 10), three across.
+         No card chrome, so it does not read as a second services grid.
+         ================================================================= -->
+    <section class="section bg-surface" aria-labelledby="benefits-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h2 id="benefits-heading" class="mb-3">Why it works</h2>
+            <p class="lead mb-0">
+              What you get out of treating security as routine work.
+            </p>
+          </div>
+        </div>
+
+        <div class="row g-4 mt-5">
+
+          <div class="col-12 col-md-6 col-lg-4" data-reveal>
+            <svg class="icon text-primary d-block mb-3" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+            <h3 class="mb-2">Fewer ways in</h3>
+            <p class="mb-0">The firewall, the updates and the sign-in controls are looked at together, so the gaps between them are closed rather than only the ones in front of you.</p>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-reveal>
+            <svg class="icon text-primary d-block mb-3" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            <h3 class="mb-2">Backups you can trust</h3>
+            <p class="mb-0">A restore is run as a test, so you find out whether the backup works on an ordinary afternoon rather than in the middle of an incident.</p>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-reveal>
+            <svg class="icon text-primary d-block mb-3" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m16 9-5.5 5.5L8 12"/></svg>
+            <h3 class="mb-2">Staff who know what to look for</h3>
+            <p class="mb-0">People are the target of most attempts, so they are shown what a suspicious message looks like and then tested on it, as a team picture.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         FAQ
+         Native <details>/<summary>, not Bootstrap's .accordion — see
+         jnd.css section 12 for why. Each answer has an id so a link can
+         point at it; service-page.js opens it.
+         ================================================================= -->
+    <section class="section" aria-labelledby="faq-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h2 id="faq-heading" class="mb-3">Questions we get asked</h2>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-12 col-lg-8">
+            <div class="faq" data-faq>
+
+              <details class="faq-item" id="faq-size">
+                <summary class="faq-question">
+                  <span>Is this only worth doing for large businesses?</span>
+                  <svg class="icon faq-chevron" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <p class="faq-answer">
+                  No. Small businesses are targeted because a single stolen
+                  password can stop a week of trading, and because nobody expects
+                  it to happen to them. The work is scaled to what you actually
+                  run, rather than to a template built for someone else.
+                </p>
+              </details>
+
+              <details class="faq-item" id="faq-mfa">
+                <summary class="faq-question">
+                  <span>What is multi-factor authentication and do we have to use it?</span>
+                  <svg class="icon faq-chevron" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <p class="faq-answer">
+                  It means proving who you are with something beyond a password —
+                  a code from an app, a prompt on your phone, or a small hardware
+                  key. We put it on the accounts that would cause the most trouble
+                  if they were taken: email, remote access and anything holding
+                  client or financial data.
+                </p>
+              </details>
+
+              <details class="faq-item" id="faq-breached">
+                <summary class="faq-question">
+                  <span>What do we do if we think we have been breached?</span>
+                  <svg class="icon faq-chevron" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <p class="faq-answer">
+                  Tell us first, before you start tidying up, because the order of
+                  the first hour matters. We help you work out what was reached,
+                  cut off the access being used, and then decide together what has
+                  to be reported and to whom.
+                </p>
+              </details>
+
+              <details class="faq-item" id="faq-staff-testing">
+                <summary class="faq-question">
+                  <span>Do you test our staff?</span>
+                  <svg class="icon faq-chevron" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <p class="faq-answer">
+                  Yes, with their knowledge, and not to catch anyone out. We send
+                  test messages that look like the real thing, then report the
+                  results as a team picture rather than a list of names, so the
+                  point is finding out whether the teaching landed.
+                </p>
+              </details>
+
+              <details class="faq-item" id="faq-everyday-work">
+                <summary class="faq-question">
+                  <span>Will any of this get in the way of how we work?</span>
+                  <svg class="icon faq-chevron" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <p class="faq-answer">
+                  We aim for the opposite. Controls that make everyday tasks
+                  harder get worked around, and a workaround is a new gap. Where a
+                  measure would slow your team down, we say so and find another way
+                  to cover the risk.
+                </p>
+              </details>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         RELATED SERVICES + PAGER (TASK-031)
+         Both blocks are cross-links out of this page, so they share a band.
+         The three related services are a subset of the canonical list, in
+         canonical order; the pager is the next and previous entries, which
+         wrap around at the ends. tools/check-services.js validates both.
+         ================================================================= -->
+    <section class="section bg-surface" aria-labelledby="related-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h2 id="related-heading" class="mb-3">Related services</h2>
+            <p class="lead mb-0">
+              Security sits on top of everything else you run, so these are the
+              three it is asked for alongside most often.
+            </p>
+          </div>
+        </div>
+
+        <!-- BEGIN related services -->
+        <div class="row g-4 mt-5">
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
+                </div>
+                <h3 class="mb-2">Network Infrastructure &amp; Solutions</h3>
+                <p class="mb-3">Design, installation and management of wired and wireless networks.</p>
+                <a class="card-link mt-auto" href="network-infrastructure.html"
+                   aria-label="Learn more about Network Infrastructure &amp; Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>
+                </div>
+                <h3 class="mb-2">Server Management &amp; Hosting</h3>
+                <p class="mb-3">Servers provisioned, monitored, patched and backed up.</p>
+                <a class="card-link mt-auto" href="server-management-hosting.html"
+                   aria-label="Learn more about Server Management &amp; Hosting">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                </div>
+                <h3 class="mb-2">IT Consultancy &amp; Project Implementation</h3>
+                <p class="mb-3">Independent advice, planning and delivery for IT projects.</p>
+                <a class="card-link mt-auto" href="it-consultancy.html"
+                   aria-label="Learn more about IT Consultancy &amp; Project Implementation">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- END related services -->
+
+        <!-- BEGIN service pager -->
+        <nav class="service-pager d-flex flex-column flex-sm-row gap-3 mt-5" aria-label="Service pagination">
+
+          <a class="service-pager-link" href="cloud-virtualization.html" rel="prev">
+            <span class="service-pager-label">Previous service</span>
+            <span class="service-pager-name">Cloud &amp; Virtualization Solutions</span>
+          </a>
+
+          <a class="service-pager-link ms-sm-auto text-sm-end" href="cctv-surveillance.html" rel="next">
+            <span class="service-pager-label">Next service</span>
+            <span class="service-pager-name">CCTV &amp; Surveillance Solutions</span>
+          </a>
+
+        </nav>
+        <!-- END service pager -->
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         CALL TO ACTION
+         The page-foot CTA band, same as the home page's and the hub's.
+         Copy is DRAFT.
+         ================================================================= -->
+    <section class="section bg-grad-modern text-white" aria-labelledby="cta-heading">
+      <div class="container">
+
+        <div class="row justify-content-center text-center">
+          <div class="col-12 col-md-10 col-lg-8" data-reveal>
+
+            <h2 id="cta-heading" class="mb-3">Talk to us about security</h2>
+
+            <p class="lead mb-4">
+              Tell us what worries you, and we will say plainly what we would do
+              first and why.
+            </p>
+
+            <a class="btn btn-primary" href="../contact.html">Get a Quote</a>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       BEGIN shared footer
+       Identical on every page — there is no per-page variation at all.
+       Check for drift:  node tools/check-shared.js
+       ========================================================================== -->
+  <footer class="section site-footer bg-grad-primary text-white">
+    <div class="container">
+
+      <div class="row g-4">
+
+        <!-- About -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <a class="d-inline-flex align-items-center gap-2 mb-3" href="../index.html">
+            <img src="../assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+            <span class="d-flex flex-column">
+              <span class="site-brand-name">JND</span>
+              <span class="site-brand-tagline">Integrated Solutions</span>
+            </span>
+          </a>
+          <p class="small mb-0">
+            IT support, networking, cloud, cybersecurity and CCTV solutions for
+            businesses. Reliable support, professional service.
+          </p>
+        </div>
+
+        <!-- Services — same list, order and filenames as the header dropdown -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Services</h2>
+          <ul class="list-unstyled mb-0 small">
+            <li class="mb-2"><a href="it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
+            <li class="mb-2"><a href="network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
+            <li class="mb-2"><a href="server-management-hosting.html">Server Management &amp; Hosting</a></li>
+            <li class="mb-2"><a href="cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
+            <li class="mb-2"><a href="cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
+            <li class="mb-2"><a href="cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
+            <li class="mb-2"><a href="web-development.html">Web Development &amp; Digital Solutions</a></li>
+            <li class="mb-2"><a href="it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
+            <li class="mb-2"><a href="managed-it-services.html">Managed IT Services</a></li>
+            <li class="mb-0"><a href="equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Company</h2>
+          <ul class="list-unstyled mb-0 small">
+            <li class="mb-2"><a href="../about.html">About Us</a></li>
+            <li class="mb-2"><a href="index.html">All Services</a></li>
+            <li class="mb-2"><a href="../contact.html">Contact</a></li>
+            <li class="mb-0"><a href="../contact.html">Get a Quote</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact — PLACEHOLDERS. Real details must be supplied before launch.
+             Nothing real-looking is here on purpose, so nothing ships by accident. -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Contact</h2>
+          <ul class="list-unstyled mb-0 small">
+            <!-- TODO (TASK-042): real phone number -->
+            <li class="mb-2"><span class="site-placeholder">Phone number to be added</span></li>
+            <!-- TODO (TASK-042): real email address -->
+            <li class="mb-2"><span class="site-placeholder">Email address to be added</span></li>
+            <!-- TODO (TASK-042): real postal address -->
+            <li class="mb-0"><span class="site-placeholder">Street address, City, Country</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bootstrap's <hr> inherits the footer's colour at 25% opacity, so this
+           renders as a subtle white divider with no extra classes. -->
+      <hr class="my-4">
+
+      <div class="site-footer-meta d-flex flex-column flex-md-row justify-content-between gap-2 small">
+        <p class="mb-0">
+          &copy; <span data-current-year>2026</span> JND Integrated Solutions. All rights reserved.
+        </p>
+        <p class="mb-0">Reliable Support. Professional Service.</p>
+      </div>
+
+    </div>
+  </footer>
+  <!-- END shared footer ====================================================== -->
+
+</body>
+</html>

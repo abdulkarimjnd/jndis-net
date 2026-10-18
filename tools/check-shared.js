@@ -14,6 +14,11 @@
    (and the equivalent footer pair), neutralises the parts that are legitimately
    per-page, and fails if any page differs from the first one found.
 
+   A third block, the process band on the service detail pages, is shared by
+   only those ten pages; check-shared.js knows which pages should carry it and
+   fails both on a page that is missing it and on a page that has it when it
+   should not.
+
    Per-page differences that are expected and ignored:
      - the active nav link:  class="active" and aria-current="page"
      - the copyright year inside data-current-year
@@ -44,7 +49,20 @@ var SKIP_DIRS = ['node_modules', '.git', '.idea', '.vscode'];
 
 var BLOCKS = [
   { name: 'header', begin: 'BEGIN shared header', end: 'END shared header' },
-  { name: 'footer', begin: 'BEGIN shared footer', end: 'END shared footer' }
+  { name: 'footer', begin: 'BEGIN shared footer', end: 'END shared footer' },
+
+  /* The process band is shared, but only by the ten service detail pages. The
+     predicate says who is expected to carry it, in both directions: a detail
+     page missing it fails, and any other page carrying it fails too, so a
+     copy-paste cannot quietly spread it. */
+  {
+    name: 'process',
+    begin: 'BEGIN shared process',
+    end: 'END shared process',
+    required: function (page) {
+      return /^services\/[^/]+\.html$/.test(page) && page !== 'services/index.html';
+    }
+  }
 ];
 
 function findPages(dir, found) {
@@ -147,22 +165,38 @@ BLOCKS.forEach(function (block) {
   var reference = null;
   var referencePage = null;
   var found = [];
+  var checked = 0;
 
   pages.forEach(function (page) {
+    var name = relative(page);
+
     var raw;
     try {
       raw = fs.readFileSync(page, 'utf8');
     } catch (err) {
-      found.push('  ' + relative(page) + ': could not be read');
+      found.push('  ' + name + ': could not be read');
       return;
     }
 
     var snippet = extract(raw, block);
+
+    /* Blocks that belong to only some pages, such as the process band, say who
+       they are for. Anything else is expected everywhere. */
+    if (block.required && !block.required(name)) {
+      if (snippet !== null) {
+        found.push('  ' + name + ': carries the ' + block.name +
+                   ' block, which does not belong on this page');
+      }
+      return;
+    }
+
     if (snippet === null) {
-      found.push('  ' + relative(page) + ': missing "' + block.begin +
+      found.push('  ' + name + ': missing "' + block.begin +
                  '" / "' + block.end + '" markers');
       return;
     }
+
+    checked++;
 
     var value = normalise(resolveFromRoot(snippet, page));
 
@@ -174,7 +208,7 @@ BLOCKS.forEach(function (block) {
 
     var at = firstDifference(reference, value);
     if (at !== -1) {
-      found.push('  ' + relative(page) + ': differs from ' + relative(referencePage) +
+      found.push('  ' + name + ': differs from ' + relative(referencePage) +
                  '\n      near: ...' + excerpt(value, at) + '...');
     }
   });
@@ -185,7 +219,7 @@ BLOCKS.forEach(function (block) {
     console.log('  ' + block.name.toUpperCase() + '  DRIFT');
     found.forEach(function (line) { console.log(line); });
   } else {
-    console.log('  ' + block.name.toUpperCase() + '  in sync across ' + pages.length + ' page(s)');
+    console.log('  ' + block.name.toUpperCase() + '  in sync across ' + checked + ' page(s)');
   }
 });
 
