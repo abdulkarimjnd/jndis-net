@@ -56,7 +56,7 @@ Services hub: `services/index.html`. About: `about.html`. Contact: `contact.html
 - [x] TASK-007: Build mobile menu (hamburger toggle, focus handling, close on link click)
 - [x] TASK-008: Build footer (company info, service links, contact, copyright year via JS)
 - [x] TASK-009: Create shared button, card and section components (documented in DESIGN.md)
-- [ ] TASK-010: Load header and footer via JS partials so they are edited in one place (needs a web server — works on GitHub Pages, not `file://`)
+- [x] TASK-010: Share header and footer as duplicated static markup, not JS partials (see DESIGN.md) — canonical blocks marked in every page, drift guarded by `tools/check-shared.js`
 
 ## Phase 3: Home Page
 

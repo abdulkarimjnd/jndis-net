@@ -229,6 +229,32 @@ Contrast decisions, all measured rather than assumed:
 
 Column headings are real `<h2>` elements, not styled paragraphs, so screen reader users can navigate the footer by heading.
 
+## Shared markup (header and footer)
+
+The header and footer are **duplicated into every page as static markup**, deliberately *not* injected by JavaScript.
+
+Rationale:
+
+- Navigation belongs in the HTML. That is how search engines index it directly, and it keeps working when JavaScript is blocked, fails, or a CDN is unreachable.
+- JavaScript partials would also break `file://` preview (browsers block `fetch` there) and cause layout shift as the header appeared after first paint.
+
+The cost is duplication, so both blocks are fenced in every page:
+
+```html
+<!-- BEGIN shared header -->   ...   <!-- END shared header -->
+<!-- BEGIN shared footer -->   ...   <!-- END shared footer -->
+```
+
+**The only permitted per-page difference is the active nav link** — `class="active"` plus `aria-current="page"`. Everything else inside a fence must stay byte-identical.
+
+**When the nav or footer changes:** edit it in one page, then run
+
+```
+node tools/check-shared.js
+```
+
+Exit 0 means every page matches; exit 1 lists the drifted pages and quotes where they diverge. It ignores the permitted differences (active link, copyright year), so a failure is always a real one.
+
 ## Icons and Imagery
 
 - Icon set: **Lucide** (default), Heroicons or Bootstrap Icons — outline, 1.5px stroke, one set only for the whole site

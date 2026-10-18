@@ -60,10 +60,13 @@
   <!-- First focusable element on the page: lets keyboard users bypass the nav -->
   <a class="skip-link" href="#main">Skip to main content</a>
 
-  <!--
-    Site header (TASK-006). Moves to a shared JS partial at TASK-010.
-    Mobile menu behaviour (focus handling, close on link click) is refined at TASK-007.
-  -->
+  <!-- ==========================================================================
+       BEGIN shared header
+       Keep this block identical on every page. The ONLY per-page difference is
+       the active nav link (class="active" plus aria-current="page").
+       Edit here, then copy to every other page.
+       Check for drift:  node tools/check-shared.js
+       ========================================================================== -->
   <header class="site-header sticky-top">
     <nav class="navbar navbar-expand-lg" aria-label="Main">
       <div class="container">
@@ -130,11 +133,13 @@
       </div>
     </nav>
   </header>
+  <!-- END shared header ====================================================== -->
 
-  <!--
-    Site footer (TASK-008). Moves to a shared JS partial at TASK-010.
-    <footer> is a landmark, so screen readers can jump straight to it.
-  -->
+  <!-- ==========================================================================
+       BEGIN shared footer
+       Identical on every page — there is no per-page variation at all.
+       Check for drift:  node tools/check-shared.js
+       ========================================================================== -->
   <footer class="section site-footer bg-grad-primary text-white">
     <div class="container">
 
@@ -212,6 +217,7 @@
 
     </div>
   </footer>
+  <!-- END shared footer ====================================================== -->
 
   <!-- tabindex="-1" lets the skip link move focus here, not just scroll to it -->
   <main id="main" tabindex="-1">
