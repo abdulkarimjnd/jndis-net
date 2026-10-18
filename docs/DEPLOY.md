@@ -84,14 +84,11 @@ point in the code where it lives.
       email `info@jndis.net` (a `mailto:` link) and the address
       `60/1 Meradia Noyapara, Khilgaon, Dhaka 1219`. The temporary
       `.site-placeholder` style has been removed.
-- [ ] **A working contact form.** `contact.html` posts to
-      `https://formspree.io/f/REPLACE_WITH_FORM_ID`, which is **still a
-      placeholder**: create the Formspree form (or an equivalent) and put its id
-      in the `action`. The `mailto:` fallback inbox is now real
-      (`info@jndis.net`), so until then the script opens the visitor's mail
-      client addressed to it rather than swallowing the message. Put the same
-      inbox in `data-contact-email`. `node tools/check-supporting-pages.js`
-      checks the wiring, not the values.
+- [x] **A working contact form.** Done: `contact.html` posts to the live
+      Formspree form `https://formspree.io/f/xwlvzqrg`, with the real
+      `info@jndis.net` inbox in `data-contact-email` as the fallback. On launch
+      day, send one test submission and confirm it arrives in the Formspree
+      dashboard.
 - [ ] **A touch pass on a real phone.** Tap targets, the Services dropdown on a
       small screen, and iOS Safari's viewport chrome. This cannot be done from a
       headless browser; it is the open item from `docs/QUALITY.md` TASK-036.
@@ -114,9 +111,8 @@ point in the code where it lives.
 - Open a URL that does not exist, e.g. `https://jndis.net/no-such-page`, and
   confirm the 404 page renders **with its stylesheet** — that is the check that
   the root-absolute paths in `404.html` are doing their job.
-- Submit the contact form. Until the Formspree id is real it opens a `mailto:`
-  to `info@jndis.net`; once the id is in, it should report success and the
-  message should arrive.
+- Submit the contact form. It should report success, and the message should
+  arrive in the Formspree inbox.
 - View the page source of a shared link (or paste the URL into a link-preview
   tool) and confirm the Open Graph title, description and 1200x630 card appear.
 

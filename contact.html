@@ -238,16 +238,16 @@
 
             <!--
               action/data-contact-endpoint: a static form service (Formspree).
-              The id is still a placeholder: until a real Formspree form exists,
-              contact-form.js treats the endpoint as unconfigured and offers the
-              mailto fallback.
+              The endpoint is live, so contact-form.js POSTs to it with fetch,
+              while the native method="post" still submits with JavaScript off.
 
-              data-contact-email is the real mailto fallback inbox, so the
-              fallback works today, before Formspree is set up.
+              data-contact-email is the real mailto fallback inbox, kept for the
+              case where the endpoint is ever unset again — it is not used while
+              the Formspree action above is a real URL.
             -->
             <form id="contact-form" class="needs-validation" novalidate
                   method="post"
-                  action="https://formspree.io/f/REPLACE_WITH_FORM_ID"
+                  action="https://formspree.io/f/xwlvzqrg"
                   data-contact-form
                   data-contact-email="info@jndis.net">
 

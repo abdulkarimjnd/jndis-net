@@ -470,7 +470,7 @@ The closing band of a page — on the home page the second half of the hero's pa
 ```html
 <form id="contact-form" class="needs-validation" novalidate
       method="post"
-      action="https://formspree.io/f/REPLACE_WITH_FORM_ID"
+      action="https://formspree.io/f/xwlvzqrg"
       data-contact-form
       data-contact-email="info@jndis.net">
 ```
@@ -480,7 +480,7 @@ The closing band of a page — on the home page the second half of the hero's pa
 - **Validation is Bootstrap's own** — `.was-validated` on the form, an `.invalid-feedback` message after each required control — with `assets/js/contact-form.js` calling `checkValidity()` and adding the class. Every required control has a `<label for>` pointing at it.
 - **Three states, each announced.** A `role="status"` success panel and a `role="alert"` error panel both ship `hidden` and `tabindex="-1"`; the script writes the message into them (which is what makes the live region speak) and moves focus to them. The submit button is disabled and its label swapped for a `spinner-border` while the message is in flight.
 - **A honeypot, not a substitute for filtering.** A `_gotcha` field, hidden from people and from assistive technology, is dropped by the form service when a bot fills it.
-- **The fallback is honest.** The `mailto:` inbox is the real `info@jndis.net`, but the Formspree `action` is still a placeholder. Until it holds a real form id, the script treats the endpoint as unconfigured and builds a `mailto:` to that inbox from the fields; if the inbox were missing too, it would say plainly that the form is not connected and point at the footer. A form that silently swallows a message is worse than one that admits it is not ready.
+- **The submission path is honest.** The endpoint is a live Formspree form, so the script POSTs to it (and the native `method="post"` posts with JavaScript off). The `info@jndis.net` inbox stays in `data-contact-email` as a fallback: if the endpoint were ever unset again, the script would build a `mailto:` to it rather than swallow the message. A form that silently swallows a message is worse than one that admits it is not ready.
 - **No new CSS.** Labels, controls, `.form-text`, `.invalid-feedback`, the spinner and the two alerts are all Bootstrap, already themed by the token layer.
 
 ## 404 page

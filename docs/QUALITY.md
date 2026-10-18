@@ -384,13 +384,11 @@ records and settings. The parts that need credentials or a live domain are
 
 - Enabling Pages, entering the custom domain, adding the four apex A records and
   the `www` CNAME, and enforcing HTTPS.
-- A **working contact form** — the real contact details are in place now, but the
-  form's Formspree `action` is still a placeholder and needs a real form id.
 - The touch and real-browser passes, the Lighthouse run and the sitemap
   submission carried over from TASK-036–041.
 
-**Deliberately not done here:** no deploy was run and nothing was pushed. The
-checkout is one commit ahead of `origin/main`; publishing is a human decision.
+**Publishing:** the repository is pushed to `origin/main`; enabling Pages, the
+DNS change and HTTPS still need host credentials (see `docs/DEPLOY.md`).
 
 ---
 
@@ -399,13 +397,11 @@ checkout is one commit ahead of `origin/main`; publishing is a human decision.
 Every item below is also on the checklist in **`docs/DEPLOY.md`**, which is the
 file to work from on launch day:
 
-1. A real Formspree id for the contact form. (The real contact details and the
-   `mailto:` fallback inbox — `info@jndis.net` — are in place now.)
-2. A touch pass on a real phone; a real-browser pass in Chrome, Edge, Safari and
+1. A touch pass on a real phone; a real-browser pass in Chrome, Edge, Safari and
    mobile.
-3. A Lighthouse run against the deployed URL.
-4. A screen-reader pass and a keyboard-only pass; a 200%-zoom reflow check.
-5. Submit the sitemap; click the external links from the live site.
+2. A Lighthouse run against the deployed URL.
+3. A screen-reader pass and a keyboard-only pass; a 200%-zoom reflow check.
+4. Submit the sitemap; click the external links from the live site.
 
 The five checkers listed at the top of this file are green and run without a
 server, a browser or a network. What remains needs a person and, in most cases,
