@@ -206,6 +206,62 @@ PLACEMENT.forEach(function (rule) {
   }
 });
 
+/* --------------------------------------------------------------------------
+   Reveal wiring.
+
+   The <head> is copied into each page by hand, like the header and the footer,
+   so it can drift the same way. A page that marks up [data-reveal] but never
+   loads the hook or the script loses the effect silently — not a broken page,
+   which someone would notice, but a feature that quietly stops working.
+
+   The script path is matched as a substring so that both assets/js/reveal.js
+   and ../assets/js/reveal.js (pages one level down) count.
+   -------------------------------------------------------------------------- */
+console.log('');
+console.log('Reveal wiring');
+
+var REVEAL_SCRIPT = 'assets/js/reveal.js';
+var HOOK = "classList.add('js-reveal')";
+var revealProblems = 0;
+
+pages.forEach(function (page) {
+  var raw;
+  try {
+    raw = fs.readFileSync(page, 'utf8');
+  } catch (err) {
+    return;
+  }
+
+  var uses = raw.indexOf('data-reveal') !== -1;
+  var hooked = raw.indexOf(HOOK) !== -1;
+  var loaded = raw.indexOf(REVEAL_SCRIPT) !== -1;
+  var issues = [];
+
+  if (uses && !hooked) {
+    issues.push('marks up [data-reveal] but the <head> hook is missing, so it');
+    issues.push('      would never be hidden or animated');
+  }
+  if (uses && !loaded) {
+    issues.push('marks up [data-reveal] but never loads ' + REVEAL_SCRIPT);
+  }
+  if (hooked && !loaded) {
+    issues.push('arms the reveal hook but never loads ' + REVEAL_SCRIPT + ', so the');
+    issues.push('      failsafe falls back to showing everything after 3s');
+  }
+
+  if (issues.length) {
+    revealProblems++;
+    console.log('  ' + relative(page));
+    issues.forEach(function (line) { console.log('      ' + line); });
+  }
+});
+
+if (revealProblems) {
+  problems += revealProblems;
+} else {
+  console.log('  every page that uses [data-reveal] loads the hook and the script');
+}
+
 console.log('');
 
 if (problems) {

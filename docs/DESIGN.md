@@ -142,7 +142,7 @@ Use the semantic `.bg-grad-*` utilities rather than Bootstrap's `.bg-primary` fo
 
 All buttons: 8px radius, 12px 24px padding, 600 weight, min height 44px, and the shared two-tone focus ring (see UX Requirements).
 
-- **Primary**: Accent gradient background, white text. Hover: Primary solid with slight lift.
+- **Primary**: Primary-to-Mid-Blue gradient background, white text. Hover: Primary solid with slight lift. On a brand-gradient band it also takes a white border — see the note below.
 - **Secondary**: White background, 2px Primary border, Primary text. Hover: Surface background.
 - **Ghost / on dark**: Transparent, white border and text. Hover: white background, Secondary text.
 - **Destructive** (forms only): `#C62828` background, white text.
@@ -151,7 +151,7 @@ All buttons: 8px radius, 12px 24px padding, 600 weight, min height 44px, and the
 Built on Bootstrap `.btn`, restyled in `jnd.css` §5. Variants are themed through Bootstrap's `--bs-btn-*` variables rather than `!important` overrides:
 
 - `.btn` sets `--bs-btn-border-width: 2px` and `--bs-btn-disabled-opacity: .5`, so borderless and bordered variants render at identical height and dim consistently
-- `.btn-primary` keeps the accent gradient in `background-image` and removes it on hover, letting the solid Primary `background-color` show through
+- `.btn-primary` keeps its gradient in `background-image` and removes it on hover, letting the solid Primary `background-color` show through
 - `.btn-outline-primary` overrides Bootstrap's fill-on-hover so it goes white → Surface with Primary text
 - `.btn-danger` sets the full hover/active ramp, otherwise it falls back to Bootstrap's stock red on interaction
 - Focus rings come from one shared `a:focus-visible, .btn:focus-visible` rule
@@ -164,6 +164,8 @@ Class mapping:
 | Secondary | `.btn.btn-outline-primary` |
 | Ghost / on dark | `.btn.btn-outline-light` |
 | Destructive | `.btn.btn-danger` |
+
+**The primary button takes a white border on a brand-gradient band.** Its fill is painted from the same two blues as the outer part of `.bg-grad-modern`, running the same way, so on the hero and the CTA banner its edge measures as little as **1.59:1** against the band it sits on. The label stays readable at 5.88:1 — it is the *shape* that disappears. WCAG 1.4.11 asks **3:1** of a UI component's boundary. White clears 7.98:1 against the band and 7.40:1 against the button, so `jnd.css` §5 adds the border to the gradient bands. Nothing else about the button changes, and the rule is scoped there because that is the only place the button's colours can coincide with its background.
 
 ## Cards
 
@@ -248,6 +250,30 @@ The home page hero is **one band built from existing components — no hero-spec
 - The buttons wrap because of `flex-wrap` + `gap-3`, so they stack at 360px with no extra CSS.
 - `.text-white` is there for the paragraph; the `<h1>` whitens itself through the band's `--bs-heading-color`.
 - The hero is one of only **two** places the brand gradient appears (the other is the CTA banner, TASK-014). It is not repeated on every band.
+
+## Call to action
+
+The closing band on the home page — the second half of that pair:
+
+```html
+<section class="section bg-grad-modern text-white">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-12 col-md-10 col-lg-8" data-reveal>
+        <h2 class="mb-3">…</h2>
+        <p class="lead mb-4">…</p>
+        <a class="btn btn-primary" href="contact.html">Get a Quote</a>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+- **Centred, where the hero is left aligned.** Repeating the hero's `col-lg-8` block at the foot of the page made the bottom look like the top again.
+- **`justify-content-center` centres the column; `text-center` centres the text inside it.** Centring alone would leave the text block left-aligned within a centred column.
+- **`col-md-10`** keeps the lead to a readable line length once it is centred.
+- **One button, not the hero's two.** The visitor has just scrolled past all ten services, so a second "explore our services" link sends them back over ground they have already covered; the footer directly below carries the secondary paths anyway.
+- Adds no CSS.
 
 ## Header and Footer
 
@@ -352,9 +378,20 @@ Exit 0 means every page matches; exit 1 lists the drifted pages and quotes where
 ## Motion
 
 - Duration 150-300ms, ease-out
-- Scroll reveal: fade up 16px, once per element
+- Scroll reveal: fade up 16px, once per element, 300ms
 - Must respect `prefers-reduced-motion` (disable all non-essential animation)
 - Scroll reveal via one shared `IntersectionObserver` in `assets/js/reveal.js`; do not re-animate Bootstrap's own dropdown/collapse transitions
+
+### How the reveal is wired
+
+Mark a wrapper with `data-reveal`. `reveal.js` adds `.is-visible` the first time that element intersects the viewport, then unobserves it.
+
+- **`data-reveal` goes on the `.col` wrapper, never on a `.card`.** A card already uses `transform` for its hover lift; putting the reveal transform on the same element would race with it.
+- **The hidden state is gated on `.js-reveal` on `<html>`**, set by a small inline script in `<head>`. With JavaScript unavailable the class is never set, so nothing is ever hidden. A reveal that fails to run must degrade to a visible page, never a blank one.
+- **That script runs before first paint.** Setting the class from `reveal.js` instead would let the page paint normally and then hide itself, which flashes.
+- **It arms a 3s failsafe timer** that removes the class. If `reveal.js` 404s, throws, or is blocked, the animation is lost and the content is not.
+- **Reduced motion removes the effect entirely** rather than cutting it short: `reveal.js` drops the class and shows everything at once. `jnd.css` §11 also asserts `opacity: 1` under reduced motion as a second guard.
+- **`focusin` reveals immediately**, so tabbing to a link inside an unrevealed block never places focus on something invisible.
 
 ## UX Requirements
 
@@ -366,6 +403,7 @@ Exit 0 means every page matches; exit 1 lists the drifted pages and quotes where
 - Use Bootstrap validation (`.was-validated`, `.invalid-feedback`) driven by our own JS; keep `novalidate` on the form so messages are consistent across browsers
 - Color contrast WCAG AA minimum, measured rather than assumed. White clears AA on Primary (**7.40:1**), Secondary (**11.06:1**) and the Modern band (**5.67:1** at the lightest point text reaches). White on Highlight (**1.72:1**) and white on Accent (**2.24:1**) never do, so neither is ever a text background.
 - The focus indicator is **two-tone**: a 2px navy outline with a 2px white ring filling the offset gap. A single Accent ring measured 2.24:1 on white and 2.05:1 on Surface — both below the 3:1 WCAG 1.4.11 asks of a focus indicator. The navy outline carries light bands; the white ring carries the dark hero and footer bands.
+- **Non-text contrast is measured too, not just text.** The primary button's boundary came out at **1.59:1** against the gradient bands, because the button and the band are painted from the same two blues; on a brand-gradient band it now carries a white border (7.98:1 against the band). WCAG 1.4.11 wants 3:1 for UI component boundaries.
 - Skip-to-content link, semantic landmarks, keyboard navigable dropdown and menu
 - Skip link is `.skip-link` in `jnd.css` §7: off-screen until focused, then pinned to the top-left in Secondary with white text. It targets `#main`, which carries `tabindex="-1"` so focus genuinely moves rather than only scrolling
 - Touch targets at least 44x44px
@@ -398,6 +436,8 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Icon, 32px feature list | `.icon.text-primary.d-block` | `jnd.css` §10 |
 | Service card grid | `.row.g-4` of `.card.h-100` | `jnd.css` §6 |
 | Hero band | `.section.bg-grad-modern.text-white` | `jnd.css` §3, §4 |
+| Call to action band | `.section.bg-grad-modern.text-white`, centred | `jnd.css` §3, §4 |
+| Scroll reveal wrapper | `[data-reveal]` | `jnd.css` §11 |
 | Header | `header.site-header` | `jnd.css` §7 |
 | Footer | `footer.site-footer` | `jnd.css` §8 |
 | Skip link | `.skip-link` | `jnd.css` §9 |

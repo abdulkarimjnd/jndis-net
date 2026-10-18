@@ -19,6 +19,7 @@ index.html                Home page                          (built)
 assets/css/jnd.css        Brand layer — loads after Bootstrap, overrides it
 assets/js/nav.js          Mobile menu behaviour
 assets/js/footer.js       Copyright year
+assets/js/reveal.js       Fade-up scroll reveal (honours prefers-reduced-motion)
 assets/img/               Images and favicon
 tools/                    Maintenance scripts
 docs/                     DESIGN.md and TASKS.md
@@ -35,7 +36,7 @@ contact.html              Contact page                              — to come
 node tools/check-shared.js
 ```
 
-Every page carries its own copy of the header and footer — static markup rather than JavaScript partials, so navigation is indexable and survives JavaScript being unavailable. That script verifies the copies have not drifted apart. See `docs/DESIGN.md`.
+Every page carries its own copy of the header and footer — static markup rather than JavaScript partials, so navigation is indexable and survives JavaScript being unavailable. That script verifies the copies have not drifted apart, that the landmarks are in the right order (`<footer>` after `</main>`), and that any page using `[data-reveal]` also loads the reveal hook and script. See `docs/DESIGN.md`.
 
 ## Documentation
 

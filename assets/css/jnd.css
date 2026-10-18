@@ -14,6 +14,7 @@
      8. Footer
      9. Skip link, focus and reduced motion (accessibility)
     10. Icons
+    11. Scroll reveal
 
    Source of truth: docs/DESIGN.md. Keep the two in sync when either changes.
    ========================================================================== */
@@ -189,6 +190,26 @@ small, .small { font-size: 14px; }
   background-image: none; /* reveal the solid background-color */
 }
 .btn-primary:hover { transform: translateY(-1px); }
+
+/* On a band that is itself a brand gradient, the primary button needs a visible
+   edge. Its fill is linear-gradient(135deg, #1455A0, #2878B8) — the same two
+   colours as the outer 35% of .bg-grad-modern, running the same way — and its
+   border is transparent, so where the two line up the button measures as
+   little as 1.59:1 against the band behind it. The label stays readable
+   (5.88:1); it is the shape that disappears.
+
+   WCAG 1.4.11 asks 3:1 of a UI component's boundary. White is 7.98:1 against
+   the band and 7.40:1 against the button, so the edge reads wherever it lands.
+   Scoped to the gradient bands, the only place the button's own colours can
+   coincide with its background. */
+.bg-grad-primary .btn-primary,
+.bg-grad-accent .btn-primary,
+.bg-grad-modern .btn-primary {
+  --bs-btn-border-color: #fff;
+  --bs-btn-hover-border-color: #fff;
+  --bs-btn-active-border-color: #fff;
+  --bs-btn-disabled-border-color: #fff;
+}
 
 /* Secondary — white fill, 2px Primary border, Primary text; hover fills Surface.
    Bootstrap's .btn-outline-primary normally fills with Primary on hover, so the
@@ -459,4 +480,39 @@ a:focus-visible,
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/* 11. Scroll reveal ------------------------------------------------------- */
+/* Elements marked [data-reveal] fade up 16px the first time they enter the
+   viewport, once each. assets/js/reveal.js does the observing.
+
+   The hidden state is gated on .js-reveal, which a small inline script in
+   <head> puts on <html> before the first paint. Two things follow from that:
+   with JavaScript unavailable the class is never set, so nothing is ever
+   hidden; and because it is set in <head> rather than at the end of the body,
+   the page never paints normally and then hides itself.
+
+   Only the revealing content is transformed, never a .card. A card already
+   uses transform for its hover lift, and a transform here would race with it.
+   That is why [data-reveal] goes on the .col wrapper instead. */
+
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.js-reveal [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Belt and braces. reveal.js already declines to run under reduced motion, and
+   the <head> script drops the class if reveal.js never arrives — but a page of
+   invisible content is a bad enough failure to guard twice. */
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
 }
