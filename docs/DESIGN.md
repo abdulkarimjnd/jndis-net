@@ -203,6 +203,7 @@ Two deliberate header decisions:
 
 1. The Services toggle is an `<a href="services/index.html">`, not a `<button>`. If the CDN JavaScript ever fails, the click still navigates to the services hub rather than silently doing nothing.
 2. Because JavaScript suppresses that navigation when it *is* working, the dropdown ends with a divider and an **"All services →"** item — the keyboard route to the hub page.
+3. **Focus stays on the hamburger when the panel opens.** A navbar collapse is a disclosure pattern, not a dialog. See `assets/js/nav.js` — it closes the panel on link click, closes it on Escape (returning focus to the toggle), and drops the open state when the viewport crosses into desktop. Bootstrap handles the toggling itself; `nav.js` only adds those three behaviours.
 
 ## Icons and Imagery
 

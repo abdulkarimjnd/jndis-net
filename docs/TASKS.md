@@ -53,7 +53,7 @@ Services hub: `services/index.html`. About: `about.html`. Contact: `contact.html
 ## Phase 2: Shared Layout
 
 - [x] TASK-006: Build header with logo, nav and Services dropdown
-- [ ] TASK-007: Build mobile menu (hamburger toggle, focus handling, close on link click)
+- [x] TASK-007: Build mobile menu (hamburger toggle, focus handling, close on link click)
 - [ ] TASK-008: Build footer (company info, service links, contact, copyright year via JS)
 - [ ] TASK-009: Create shared button, card and section components (documented in DESIGN.md)
 - [ ] TASK-010: Load header and footer via JS partials so they are edited in one place (needs a web server — works on GitHub Pages, not `file://`)
