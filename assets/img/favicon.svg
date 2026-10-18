@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="JND Integrated Solutions">
+  <!--
+    PLACEHOLDER brand mark. Replace with the real logo when available.
+    Drawn as a path rather than text so it renders the same in every browser
+    regardless of which fonts are installed. Gradient runs 135deg to match the
+    Modern gradient in docs/DESIGN.md (#123B73 -> #62D5E8).
+  -->
+  <defs>
+    <linearGradient id="jnd" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123B73"/>
+      <stop offset="1" stop-color="#62D5E8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="32" height="32" rx="7" fill="url(#jnd)"/>
+  <path d="M20 8 V18 A5 5 0 0 1 10 18"
+        fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+</svg>

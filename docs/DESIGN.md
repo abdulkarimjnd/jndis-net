@@ -216,6 +216,7 @@ Built on Bootstrap components — no custom JS required for any of this:
 - Use Bootstrap validation (`.was-validated`, `.invalid-feedback`) driven by our own JS; keep `novalidate` on the form so messages are consistent across browsers
 - Color contrast WCAG AA minimum (white on Primary and Secondary passes; avoid white text on Highlight alone)
 - Skip-to-content link, semantic landmarks, keyboard navigable dropdown and menu
+- Skip link is `.skip-link` in `jnd.css` §7: off-screen until focused, then pinned to the top-left in Secondary with white text. It targets `#main`, which carries `tabindex="-1"` so focus genuinely moves rather than only scrolling
 - Touch targets at least 44x44px
 
 ## Consistency Rules

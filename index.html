@@ -4,7 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>JND Integrated Solutions</title>
+  <!--
+    BASE TEMPLATE (TASK-005)
+    Every page starts from this head. TODO markers show what is still pending.
+
+    Pending:
+      - <link rel="canonical">          TASK-042 (needs the live domain)
+      - og:url, og:image, twitter:image  TASK-042 (needs domain + share image)
+      - per-page titles/descriptions     TASK-038
+  -->
+  <title>JND Integrated Solutions — IT Support &amp; Networking</title>
+  <meta name="description" content="JND Integrated Solutions provides IT support, networking, cloud, cybersecurity and CCTV services for businesses. Reliable support, professional service.">
+
+  <!-- Colours the browser UI on mobile (address bar / tab strip) -->
+  <meta name="theme-color" content="#123B73">
+
+  <!-- Declaring an icon stops browsers probing /favicon.ico and logging a 404 -->
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+
+  <!-- Open Graph — controls link previews on Facebook, LinkedIn, WhatsApp, Slack -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JND Integrated Solutions">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="JND Integrated Solutions — IT Support &amp; Networking">
+  <meta property="og:description" content="JND Integrated Solutions provides IT support, networking, cloud, cybersecurity and CCTV services for businesses. Reliable support, professional service.">
+
+  <!-- Twitter / X. Card type stays "summary" until a share image exists (TASK-042). -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JND Integrated Solutions — IT Support &amp; Networking">
+  <meta name="twitter:description" content="JND Integrated Solutions provides IT support, networking, cloud, cybersecurity and CCTV services for businesses. Reliable support, professional service.">
 
   <!-- Inter — brand typeface (DESIGN.md: 400/500/600/700) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,50 +50,65 @@
 </head>
 <body>
 
-  <!-- ===================================================================
-       TEMPORARY VERIFICATION BLOCK (TASK-003 / TASK-004)
-       Confirms Bootstrap CSS, Bootstrap JS, Inter and assets/css/jnd.css
-       are all loading. Delete this entire <main> at TASK-011.
-       =================================================================== -->
-  <main class="container py-5">
-    <h1>Bootstrap + Inter + brand layer</h1>
+  <!-- First focusable element on the page: lets keyboard users bypass the nav -->
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-    <p class="lead">
-      Headings should now be JND navy, the button JND blue with an accent
-      gradient, and this paragraph in Inter at 16px / 1.6.
-    </p>
+  <!--
+    Site header — built in TASK-006, moved to a shared JS partial in TASK-010.
+    Site footer — built in TASK-008, moved to a shared JS partial in TASK-010.
+    Both are landmarks (<header> / <footer>) so screen readers can jump to them.
+  -->
 
-    <div class="row g-4 my-2">
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card"><div class="card-body">Grid column 1</div></div>
+  <!-- tabindex="-1" lets the skip link move focus here, not just scroll to it -->
+  <main id="main" tabindex="-1">
+
+    <!-- =================================================================
+         TEMPORARY VERIFICATION BLOCK (TASK-003 / TASK-004)
+         Confirms Bootstrap CSS, Bootstrap JS, Inter and assets/css/jnd.css
+         are all loading, and that the skip link works.
+         Delete this block at TASK-011.
+         ================================================================= -->
+    <div class="container py-5">
+      <h1>Bootstrap + Inter + brand layer</h1>
+
+      <p class="lead">
+        Headings should now be JND navy, the button JND blue with an accent
+        gradient, and this paragraph in Inter at 16px / 1.6.
+      </p>
+
+      <div class="row g-4 my-2">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card"><div class="card-body">Grid column 1</div></div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card"><div class="card-body">Grid column 2</div></div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card"><div class="card-body">Grid column 3</div></div>
+        </div>
       </div>
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card"><div class="card-body">Grid column 2</div></div>
+
+      <div class="d-flex flex-wrap gap-3 align-items-center">
+        <a class="btn btn-primary" href="#">Primary</a>
+        <a class="btn btn-outline-primary" href="#">Secondary</a>
+        <div class="bg-grad-primary p-3 rounded">
+          <a class="btn btn-outline-light" href="#">Ghost on dark</a>
+        </div>
       </div>
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card"><div class="card-body">Grid column 3</div></div>
+
+      <!-- Exercises the Bootstrap JS bundle: only opens if it loaded. -->
+      <div class="dropdown mt-3">
+        <button class="btn btn-primary dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+          JS bundle check
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Opens means Bootstrap JS works</a></li>
+          <li><a class="dropdown-item" href="#">Second item</a></li>
+        </ul>
       </div>
     </div>
 
-    <!-- Exercises the Bootstrap JS bundle: this dropdown only opens if it loaded. -->
-    <div class="d-flex flex-wrap gap-3 align-items-center">
-      <a class="btn btn-primary" href="#">Primary</a>
-      <a class="btn btn-outline-primary" href="#">Secondary</a>
-      <div class="bg-grad-primary p-3 rounded">
-        <a class="btn btn-outline-light" href="#">Ghost on dark</a>
-      </div>
-    </div>
-
-    <div class="dropdown mt-3">
-      <button class="btn btn-primary dropdown-toggle" type="button"
-              data-bs-toggle="dropdown" aria-expanded="false">
-        JS bundle check
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">Opens means Bootstrap JS works</a></li>
-        <li><a class="dropdown-item" href="#">Second item</a></li>
-      </ul>
-    </div>
   </main>
 
 </body>

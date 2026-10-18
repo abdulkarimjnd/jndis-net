@@ -10,7 +10,7 @@
      4. Utilities: surface and gradients
      5. Buttons
      6. Cards
-     7. Focus and reduced motion (accessibility)
+     7. Skip link, focus and reduced motion (accessibility)
 
    Source of truth: docs/DESIGN.md. Keep the two in sync when either changes.
    ========================================================================== */
@@ -235,7 +235,27 @@ small, .small { font-size: 14px; }
 }
 .card-link:hover { text-decoration: underline; }
 
-/* 7. Focus and reduced motion --------------------------------------------- */
+/* 7. Skip link, focus and reduced motion ---------------------------------- */
+
+/* Skip link: off-screen until focused, then pinned to the top-left. Uses
+   :focus rather than :focus-visible so it can never be focused but invisible. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1080;
+  padding: 12px 24px;
+  background-color: var(--jnd-secondary);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0 0 8px 0;
+  transform: translateY(-100%);
+  transition: transform .2s ease-out;
+}
+.skip-link:focus {
+  transform: translateY(0);
+  color: #fff;
+}
 
 /* Visible focus ring per DESIGN.md. Bootstrap already handles form controls,
    so this covers links and buttons only to avoid doubling the indicator. */
