@@ -68,10 +68,10 @@ Services hub: `services/index.html`. About: `about.html`. Contact: `contact.html
 
 ## Phase 4: Services Hub
 
-- [ ] TASK-016: Create `services/index.html` with page header and breadcrumb
-- [ ] TASK-017: Service category cards linking to each sub-service page
-- [ ] TASK-018: Search/filter by keyword in JavaScript, with empty state
-- [ ] TASK-019: Add "Request a quote" strip at the bottom
+- [x] TASK-016: Create `services/index.html` with page header and breadcrumb — new "page header" component: a Surface band (never the gradient hero, which stays the front door), Breadcrumb mirroring the URL, `col-lg-8` H1. Needed no new CSS; `check-shared.js` now resolves relative links before comparing, so a page one level down is not flagged for writing `../assets/`
+- [x] TASK-017: Service category cards linking to each sub-service page — the home grid inverted (White band, `.bg-surface` cards), sibling hrefs, `<h2 class="h3">` titles so the levels never skip under the page's `<h1>`, and no `[data-reveal]` on a filterable grid. Added `tools/check-services.js`, which checks every copy of the service list against the table in this file
+- [x] TASK-018: Search/filter by keyword in JavaScript, with empty state — `assets/js/services-filter.js`. The control ships `hidden` and the script reveals it, so with JS broken there is no dead search box; `role="status"` carries the count, the empty state carries the message and a "Clear search" button. Behaviour covered by a stubbed-DOM test against the real markup
+- [x] TASK-019: Add "Request a quote" strip at the bottom — the documented CTA band with the hub's own copy, above the footer. Reuse, not a second banner
 
 ## Phase 5: Sub-Service Detail Pages
 

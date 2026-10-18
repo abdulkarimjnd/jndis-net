@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--
+    BASE TEMPLATE (TASK-005)
+    Every page starts from this head. TODO markers show what is still pending.
+
+    This page lives in services/, one level below the root, so every asset and
+    page link is written ../ (or, for its own sub-services, with no directory
+    at all). tools/check-shared.js resolves those before comparing, so the
+    shared blocks are still checked link-for-link against the root pages.
+
+    Pending:
+      - <link rel="canonical">          TASK-042 (needs the live domain)
+      - og:url, og:image, twitter:image  TASK-042 (needs domain + share image)
+      - per-page titles/descriptions     TASK-038
+  -->
+  <title>Our Services — JND Integrated Solutions</title>
+  <meta name="description" content="IT support, networking, servers, cloud, cybersecurity, CCTV, web development, consultancy, managed IT and equipment supply — the services JND Integrated Solutions provides.">
+
+  <!-- Colours the browser UI on mobile (address bar / tab strip) -->
+  <meta name="theme-color" content="#123B73">
+
+  <!-- Declaring an icon stops browsers probing /favicon.ico and logging a 404 -->
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+
+  <!-- Open Graph — controls link previews on Facebook, LinkedIn, WhatsApp, Slack -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JND Integrated Solutions">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="Our Services — JND Integrated Solutions">
+  <meta property="og:description" content="IT support, networking, servers, cloud, cybersecurity, CCTV, web development, consultancy, managed IT and equipment supply.">
+
+  <!-- Twitter / X. Card type stays "summary" until a share image exists (TASK-042). -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Our Services — JND Integrated Solutions">
+  <meta name="twitter:description" content="IT support, networking, servers, cloud, cybersecurity, CCTV, web development, consultancy, managed IT and equipment supply.">
+
+  <!-- Inter — brand typeface (DESIGN.md: 400/500/600/700) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Bootstrap 5.3.8 — base styles (must load before assets/css/jnd.css) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+  <!-- JND brand layer — tokens, type scale, gradients, button/card overrides -->
+  <link rel="stylesheet" href="../assets/css/jnd.css">
+
+  <!-- Scroll reveal hook. This has to run before the first paint: it puts
+       .js-reveal on the root element, which is what lets jnd.css section 11
+       hide [data-reveal] elements. Doing this from reveal.js instead would let
+       the page paint normally and then hide itself, which flashes.
+
+       With JavaScript unavailable the class is never set and nothing is ever
+       hidden. The timer is the failsafe: if reveal.js never runs — a 404, a
+       syntax error, a blocked request — the class is dropped after 3s and
+       every band is simply visible. Losing the animation is acceptable.
+       Losing the content is not. -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js-reveal');
+      window.__jndRevealFailsafe = window.setTimeout(function () {
+        root.classList.remove('js-reveal');
+      }, 3000);
+    }());
+  </script>
+
+  <!-- Bootstrap 5.3.8 bundle (Popper + Bootstrap) for dropdowns, collapse, etc. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Mobile menu behaviour. Deferred scripts run in document order, so the
+       bundle above is guaranteed to have executed first. -->
+  <script defer src="../assets/js/nav.js"></script>
+
+  <!-- Copyright year in the footer -->
+  <script defer src="../assets/js/footer.js"></script>
+
+  <!-- Scroll reveal: fades [data-reveal] elements up as they enter the viewport -->
+  <script defer src="../assets/js/reveal.js"></script>
+
+  <!-- Service search/filter for the grid below. Unrelated to the reveal, so it
+       loads independently: if it never runs the search box stays hidden and the
+       full list of services is still on the page. -->
+  <script defer src="../assets/js/services-filter.js"></script>
+</head>
+<body>
+
+  <!-- First focusable element on the page: lets keyboard users bypass the nav -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ==========================================================================
+       BEGIN shared header
+       Keep this block identical on every page. The ONLY per-page difference is
+       the active nav link (class="active" plus aria-current="page").
+       Edit here, then copy to every other page.
+       Check for drift:  node tools/check-shared.js
+       ========================================================================== -->
+  <header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-lg" aria-label="Main">
+      <div class="container">
+
+        <!-- Wordmark. The mark is decorative (alt=""), the text carries the name. -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+          <img src="../assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+          <span class="d-flex flex-column">
+            <span class="site-brand-name">JND</span>
+            <span class="site-brand-tagline">Integrated Solutions</span>
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#primaryNav"
+                aria-controls="primaryNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="primaryNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">Home</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <!--
+                An anchor (not a button) so that if the CDN JS ever fails to load,
+                clicking still navigates to the services hub instead of doing nothing.
+                With JS active the click toggles the menu, so "All services" below
+                provides the keyboard route to that hub page.
+              -->
+              <a class="nav-link dropdown-toggle active" href="index.html" role="button"
+                 aria-current="page" data-bs-toggle="dropdown" aria-expanded="false">Services</a>
+
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
+                <li><a class="dropdown-item" href="network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
+                <li><a class="dropdown-item" href="server-management-hosting.html">Server Management &amp; Hosting</a></li>
+                <li><a class="dropdown-item" href="cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
+                <li><a class="dropdown-item" href="cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
+                <li><a class="dropdown-item" href="cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
+                <li><a class="dropdown-item" href="web-development.html">Web Development &amp; Digital Solutions</a></li>
+                <li><a class="dropdown-item" href="it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
+                <li><a class="dropdown-item" href="managed-it-services.html">Managed IT Services</a></li>
+                <li><a class="dropdown-item" href="equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item fw-semibold" href="index.html">All services &rarr;</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contact.html">Contact</a></li>
+
+            <li class="nav-item nav-cta">
+              <a class="btn btn-primary" href="../contact.html">Get a Quote</a>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+    </nav>
+  </header>
+  <!-- END shared header ====================================================== -->
+
+  <!-- tabindex="-1" lets the skip link move focus here, not just scroll to it -->
+  <main id="main" tabindex="-1">
+
+    <!-- =================================================================
+         PAGE HEADER + BREADCRUMB (TASK-016)
+         Interior pages open on a Surface band rather than the home page's
+         gradient hero: the gradient marks the front door, and repeating it
+         on every page would make it wallpaper. Surface also means the
+         breadcrumb and the navy H1 use Bootstrap's own colours, so this
+         band needs no new CSS.
+
+         The breadcrumb mirrors the URL (Home > Services) and makes the
+         page's place in the site obvious. "Home" links to the root page;
+         the current item is plain text with aria-current="page".
+         ================================================================= -->
+    <section class="section bg-surface">
+      <div class="container">
+
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb mb-3">
+            <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Services</li>
+          </ol>
+        </nav>
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h1 class="mb-3">Our services</h1>
+            <p class="lead mb-0">
+              Ten specialisms, one team &mdash; from day-to-day support to the
+              infrastructure, security and systems it runs on.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SERVICE LIST (TASK-017) + SEARCH (TASK-018)
+         White band so the Surface cards invert against it (DESIGN.md,
+         "Cards"). Names, order and filenames come from the single source
+         of truth in docs/TASKS.md; the descriptions match the home page.
+
+         No [data-reveal] on the cards, deliberately. They are filtered
+         rather than only scrolled past, and a card the reveal had not yet
+         shown would come back from a filter invisible. The band above and
+         the strip below still animate.
+
+         Search is progressive enhancement: the whole control ships with
+         the `hidden` attribute and services-filter.js removes it. If that
+         script is blocked or its CDN fails, the box never appears — no
+         dead control, and the complete list is still on the page.
+
+         Icons are inlined Lucide 1.59.0 (ISC) — see jnd.css section 10.
+         ================================================================= -->
+    <section class="section" aria-label="Service list">
+      <div class="container">
+
+        <div class="row mb-4" data-service-filter hidden>
+          <div class="col-12 col-md-8 col-lg-6">
+            <label class="form-label" for="service-search">Search services</label>
+            <input class="form-control" type="search" id="service-search"
+                   data-service-filter-input autocomplete="off"
+                   placeholder="e.g. network, cloud, CCTV">
+            <p class="form-text mb-0" id="service-search-status"
+               data-service-filter-status role="status"></p>
+          </div>
+        </div>
+
+        <div class="row g-4">
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="helpdesk help desk remote maintenance break fix desktop">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+                </div>
+                <h2 class="h3 mb-2">IT Support &amp; Maintenance</h2>
+                <p class="mb-3">Responsive helpdesk and on-site support that keeps your team working.</p>
+                <a class="card-link mt-auto" href="it-support-maintenance.html"
+                   aria-label="Learn more about IT Support &amp; Maintenance">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="wifi wi-fi wireless cabling routing switching lan structured">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
+                </div>
+                <h2 class="h3 mb-2">Network Infrastructure &amp; Solutions</h2>
+                <p class="mb-3">Design, installation and management of wired and wireless networks.</p>
+                <a class="card-link mt-auto" href="network-infrastructure.html"
+                   aria-label="Learn more about Network Infrastructure &amp; Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="servers hosting monitoring patching backup active directory">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>
+                </div>
+                <h2 class="h3 mb-2">Server Management &amp; Hosting</h2>
+                <p class="mb-3">Servers provisioned, monitored, patched and backed up.</p>
+                <a class="card-link mt-auto" href="server-management-hosting.html"
+                   aria-label="Learn more about Server Management &amp; Hosting">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="cloud virtualisation virtualization vmware hyper-v azure migration">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                </div>
+                <h2 class="h3 mb-2">Cloud &amp; Virtualization Solutions</h2>
+                <p class="mb-3">Move workloads to the cloud, or virtualise what you already run.</p>
+                <a class="card-link mt-auto" href="cloud-virtualization.html"
+                   aria-label="Learn more about Cloud &amp; Virtualization Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="security firewall antivirus endpoint phishing ransomware audit">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                </div>
+                <h2 class="h3 mb-2">Cybersecurity &amp; Network Security</h2>
+                <p class="mb-3">Firewalls, endpoint protection and practical security reviews.</p>
+                <a class="card-link mt-auto" href="cybersecurity.html"
+                   aria-label="Learn more about Cybersecurity &amp; Network Security">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="cameras camera surveillance recording remote viewing access control">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M16.75 12h3.632a1 1 0 0 1 .894 1.447l-2.034 4.069a1 1 0 0 1-1.708.134l-2.124-2.97"/><path d="M17.106 9.053a1 1 0 0 1 .447 1.341l-3.106 6.211a1 1 0 0 1-1.342.447L3.61 12.3a2.92 2.92 0 0 1-1.3-3.91L3.69 5.6a2.92 2.92 0 0 1 3.92-1.3z"/><path d="M2 19h3.76a2 2 0 0 0 1.8-1.1L9 15"/><path d="M2 21v-4"/><path d="M7 9h.01"/></svg>
+                </div>
+                <h2 class="h3 mb-2">CCTV &amp; Surveillance Solutions</h2>
+                <p class="mb-3">Cameras, recording and remote viewing, installed and maintained.</p>
+                <a class="card-link mt-auto" href="cctv-surveillance.html"
+                   aria-label="Learn more about CCTV &amp; Surveillance Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="website web design ecommerce seo hosting domain">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>
+                </div>
+                <h2 class="h3 mb-2">Web Development &amp; Digital Solutions</h2>
+                <p class="mb-3">Business websites and the digital tools behind them.</p>
+                <a class="card-link mt-auto" href="web-development.html"
+                   aria-label="Learn more about Web Development &amp; Digital Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="consultancy consulting advice planning projects roadmap procurement">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                </div>
+                <h2 class="h3 mb-2">IT Consultancy &amp; Project Implementation</h2>
+                <p class="mb-3">Independent advice, planning and delivery for IT projects.</p>
+                <a class="card-link mt-auto" href="it-consultancy.html"
+                   aria-label="Learn more about IT Consultancy &amp; Project Implementation">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="managed contract retainer monthly outsourced it department proactive">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+                </div>
+                <h2 class="h3 mb-2">Managed IT Services</h2>
+                <p class="mb-3">Your IT department, on a fixed monthly agreement.</p>
+                <a class="card-link mt-auto" href="managed-it-services.html"
+                   aria-label="Learn more about Managed IT Services">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-service-item
+               data-keywords="hardware laptops desktops supply procurement installation setup">
+            <div class="card h-100 bg-surface">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>
+                </div>
+                <h2 class="h3 mb-2">IT Equipment Supply &amp; Installation</h2>
+                <p class="mb-3">Hardware sourced, configured and installed on site.</p>
+                <a class="card-link mt-auto" href="equipment-supply-installation.html"
+                   aria-label="Learn more about IT Equipment Supply &amp; Installation">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Empty state for the search above. Not a live region: the count is
+             announced through #service-search-status, and a button inside a
+             live region is read out on every update. Hidden until a search
+             returns nothing. -->
+        <div class="text-center py-5" data-service-empty hidden>
+          <p class="lead mb-3">
+            No services match &ldquo;<span data-service-term></span>&rdquo;.
+          </p>
+          <button class="btn btn-outline-primary" type="button" data-service-clear>
+            Clear search
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         REQUEST A QUOTE (TASK-019)
+         The page-foot call to action, the same band as the home page's CTA:
+         .section, .bg-grad-modern, the grid, text-center and an existing
+         button. Centred, one button, immediately above the footer, which
+         already carries every secondary path.
+
+         Copy is DRAFT.
+         ================================================================= -->
+    <section class="section bg-grad-modern text-white" aria-labelledby="quote-heading">
+      <div class="container">
+
+        <div class="row justify-content-center text-center">
+          <div class="col-12 col-md-10 col-lg-8" data-reveal>
+
+            <h2 id="quote-heading" class="mb-3">Request a quote</h2>
+
+            <p class="lead mb-4">
+              Tell us which services you are interested in, and we will come back
+              with a plan and a price.
+            </p>
+
+            <a class="btn btn-primary" href="../contact.html">Get a Quote</a>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       BEGIN shared footer
+       Identical on every page — there is no per-page variation at all.
+       Check for drift:  node tools/check-shared.js
+       ========================================================================== -->
+  <footer class="section site-footer bg-grad-primary text-white">
+    <div class="container">
+
+      <div class="row g-4">
+
+        <!-- About -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <a class="d-inline-flex align-items-center gap-2 mb-3" href="../index.html">
+            <img src="../assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+            <span class="d-flex flex-column">
+              <span class="site-brand-name">JND</span>
+              <span class="site-brand-tagline">Integrated Solutions</span>
+            </span>
+          </a>
+          <p class="small mb-0">
+            IT support, networking, cloud, cybersecurity and CCTV solutions for
+            businesses. Reliable support, professional service.
+          </p>
+        </div>
+
+        <!-- Services — same list, order and filenames as the header dropdown -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Services</h2>
+          <ul class="list-unstyled mb-0 small">
+            <li class="mb-2"><a href="it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
+            <li class="mb-2"><a href="network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
+            <li class="mb-2"><a href="server-management-hosting.html">Server Management &amp; Hosting</a></li>
+            <li class="mb-2"><a href="cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
+            <li class="mb-2"><a href="cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
+            <li class="mb-2"><a href="cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
+            <li class="mb-2"><a href="web-development.html">Web Development &amp; Digital Solutions</a></li>
+            <li class="mb-2"><a href="it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
+            <li class="mb-2"><a href="managed-it-services.html">Managed IT Services</a></li>
+            <li class="mb-0"><a href="equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Company</h2>
+          <ul class="list-unstyled mb-0 small">
+            <li class="mb-2"><a href="../about.html">About Us</a></li>
+            <li class="mb-2"><a href="index.html">All Services</a></li>
+            <li class="mb-2"><a href="../contact.html">Contact</a></li>
+            <li class="mb-0"><a href="../contact.html">Get a Quote</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact — PLACEHOLDERS. Real details must be supplied before launch.
+             Nothing real-looking is here on purpose, so nothing ships by accident. -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Contact</h2>
+          <ul class="list-unstyled mb-0 small">
+            <!-- TODO (TASK-042): real phone number -->
+            <li class="mb-2"><span class="site-placeholder">Phone number to be added</span></li>
+            <!-- TODO (TASK-042): real email address -->
+            <li class="mb-2"><span class="site-placeholder">Email address to be added</span></li>
+            <!-- TODO (TASK-042): real postal address -->
+            <li class="mb-0"><span class="site-placeholder">Street address, City, Country</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bootstrap's <hr> inherits the footer's colour at 25% opacity, so this
+           renders as a subtle white divider with no extra classes. -->
+      <hr class="my-4">
+
+      <div class="site-footer-meta d-flex flex-column flex-md-row justify-content-between gap-2 small">
+        <p class="mb-0">
+          &copy; <span data-current-year>2026</span> JND Integrated Solutions. All rights reserved.
+        </p>
+        <p class="mb-0">Reliable Support. Professional Service.</p>
+      </div>
+
+    </div>
+  </footer>
+  <!-- END shared footer ====================================================== -->
+
+</body>
+</html>

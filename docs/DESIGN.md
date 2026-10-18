@@ -204,6 +204,8 @@ Card body copy is short by design — roughly two lines at `col-lg-4`. The grid 
 
 On Surface sections cards are White by default; on White sections add `.bg-surface` to the card to invert them.
 
+**Mind the heading level, not just the size.** The template uses `<h3>`, which assumes an `<h2>` band heading above it, as on the home page. Where a grid sits directly under a page's `<h1>` — the services hub — the card title is `<h2 class="h3">`, so the levels never skip while the text keeps its `.h3` size. The element carries the structure; the class carries the look.
+
 ## Feature list
 
 Icon-and-text columns, used for the "Why choose" band. **No card chrome, deliberately** — placed straight after the services grid, cards would read as a second set of services.
@@ -223,6 +225,74 @@ Icon-and-text columns, used for the "Why choose" band. **No card chrome, deliber
 - Icon colour is **Primary `#1455A0`, not Accent.** Accent `#50B8E8` reaches only 2.24:1 on white, so an accent icon would be almost invisible.
 - **`d-block` on the `<svg>` matters.** Without it the icon sits on a text baseline and leaves a stray gap above the heading.
 - **Four items at `col-lg-3`**, so the row divides evenly. Three would leave an empty column at desktop.
+
+## Service list and search
+
+The services hub (`services/index.html`) lists all ten services as cards and filters them by keyword.
+
+```html
+<!-- the control: hidden until services-filter.js has wired it up -->
+<div class="row mb-4" data-service-filter hidden>
+  <div class="col-12 col-md-8 col-lg-6">
+    <label class="form-label" for="service-search">Search services</label>
+    <input class="form-control" type="search" id="service-search"
+           data-service-filter-input autocomplete="off" placeholder="e.g. network, cloud, CCTV">
+    <p class="form-text mb-0" id="service-search-status" role="status"></p>
+  </div>
+</div>
+
+<!-- the cards: same grid as the home page -->
+<div class="col-12 col-md-6 col-lg-4" data-service-item data-keywords="wifi wireless cabling">
+  <div class="card h-100 bg-surface"> … </div>
+</div>
+
+<!-- the no-results state, outside the row -->
+<div class="text-center py-5" data-service-empty hidden>
+  <p class="lead mb-3">No services match &ldquo;<span data-service-term></span>&rdquo;.</p>
+  <button class="btn btn-outline-primary" type="button" data-service-clear>Clear search</button>
+</div>
+```
+
+- The grid is the home page's, on a **White** band with `.bg-surface` on each card — the inverse of the home page's Surface band with White cards. See **Cards**.
+- **Card titles are `<h2 class="h3">` here, not `<h3>`.** The hub's `<h1>` is "Our services" and the grid follows it directly, so an `<h3>` would skip a level.
+- **No `[data-reveal]` on any card.** The grid is filtered rather than only scrolled past, and a card the reveal had not yet reached would come back from a filter still invisible. The bands above and below the grid still animate.
+- **Search is progressive enhancement.** The control ships with the `hidden` attribute and the script removes it only once it has wired itself up. With JavaScript blocked or broken there is no search box — never one that cannot work — and the complete list of services is still on the page.
+- **Matching is per word, all present, any order:** "server backup" finds the server card. The haystack is the card's own text plus its `data-keywords`, so synonyms the copy never spells out ("wifi", "helpdesk") still find the right service.
+- **The count is announced; the empty state is not a live region.** `#service-search-status` is the `role="status"` region ("2 of 10 services match"). The empty state holds a sentence and a **Clear search** button — a button inside a live region would be re-read on every update.
+- **Typed text is inserted with `textContent`, never as markup.**
+- Adds no CSS: `.form-label`, `.form-control`, `.form-text` and a `.btn-outline-primary` are all already themed.
+
+## Page header
+
+Every page except the home page opens on a page header band rather than the gradient hero:
+
+```html
+<section class="section bg-surface">
+  <div class="container">
+
+    <nav aria-label="Breadcrumb">
+      <ol class="breadcrumb mb-3">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Services</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <div class="col-12 col-lg-8" data-reveal>
+        <h1 class="mb-3">Our services</h1>
+        <p class="lead mb-0">…</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+```
+
+- **Surface, not the gradient.** The home page's hero marks the front door; repeating that gradient on every page would make it wallpaper. A Surface band still separates the page from the white sticky header sitting above it.
+- **Surface is also the cheap choice.** Bootstrap's own breadcrumb colours (Primary links, `--bs-secondary-color` for the current item) and the default navy heading all clear AA on Surface, so the band needs no new CSS. On a dark band every one of them would need overriding.
+- **The breadcrumb mirrors the URL**, one `<li>` per level, inside `<nav aria-label="Breadcrumb">`. The current page is plain text carrying `aria-current="page"`, never a link to itself.
+- **Capped at `col-lg-8`**, like the hero and for the same reason: the lead stays readable.
+- **The hub's band order is Surface → White → gradient**, alternating so no two adjacent bands match, and ending on the quote strip above the footer.
 
 ## Hero
 
@@ -249,11 +319,11 @@ The home page hero is **one band built from existing components — no hero-spec
 - Text is capped at `col-lg-8` — 800px inside the 1200px container — so the headline holds at two lines and the lead stays readable.
 - The buttons wrap because of `flex-wrap` + `gap-3`, so they stack at 360px with no extra CSS.
 - `.text-white` is there for the paragraph; the `<h1>` whitens itself through the band's `--bs-heading-color`.
-- The hero is one of only **two** places the brand gradient appears (the other is the CTA banner, TASK-014). It is not repeated on every band.
+- On the home page the hero is one of only **two** places the brand gradient appears (the other is the CTA banner, TASK-014); it is not repeated on every band there. Interior pages do not reuse the hero at all — they open on the Surface **page header** instead, which is what keeps the gradient reading as the site's front door.
 
 ## Call to action
 
-The closing band on the home page — the second half of that pair:
+The closing band of a page — on the home page the second half of the hero's pair, and on the services hub the **Request a quote** strip (TASK-019). Same band, different copy:
 
 ```html
 <section class="section bg-grad-modern text-white">
@@ -269,7 +339,7 @@ The closing band on the home page — the second half of that pair:
 </section>
 ```
 
-- **Centred, where the hero is left aligned.** Repeating the hero's `col-lg-8` block at the foot of the page made the bottom look like the top again.
+- **It is the page-foot CTA, not a home-page band.** TASK-019 asked for a quote strip on the hub; that is this band with the hub's own heading and lead. Reusing one documented component beats inventing a second banner, and the copy is the only thing that changes.- **Centred, where the hero is left aligned.** Repeating the hero's `col-lg-8` block at the foot of the page made the bottom look like the top again.
 - **`justify-content-center` centres the column; `text-center` centres the text inside it.** Centring alone would leave the text block left-aligned within a centred column.
 - **`col-md-10`** keeps the lead to a readable line length once it is centred.
 - **One button, not the hero's two.** The visitor has just scrolled past all ten services, so a second "explore our services" link sends them back over ground they have already covered; the footer directly below carries the secondary paths anyway.
@@ -339,7 +409,9 @@ The cost is duplication, so both blocks are fenced in every page:
 <!-- BEGIN shared footer -->   ...   <!-- END shared footer -->
 ```
 
-**The only permitted per-page difference is the active nav link** — `class="active"` plus `aria-current="page"`. Everything else inside a fence must stay byte-identical.
+**The only permitted per-page difference is the active nav link** — `class="active"` plus `aria-current="page"`.
+
+**Depth is not a difference.** A page one level down has to write its links differently: `../index.html` and `network-infrastructure.html` where the root writes `index.html` and `services/network-infrastructure.html`. `check-shared.js` resolves every `href` and `src` to a path from the site root before comparing, so the rule is *identical markup pointing at identical destinations*, not identical characters. Everything else inside a fence must still be byte-identical.
 
 **Order matters, and the two fences do not travel together.** The header block goes right after `<body>`; the footer block goes right before `</body>`, i.e. *after* `</main>`:
 
@@ -361,7 +433,15 @@ A footer placed before `<main>` is valid, drift-free, and renders the footer **a
 node tools/check-shared.js
 ```
 
-Exit 0 means every page matches; exit 1 lists the drifted pages and quotes where they diverge. It ignores the permitted differences (active link, copyright year), so a failure is always a real one.
+Exit 0 means every page matches; exit 1 lists the drifted pages and quotes where they diverge. It ignores the permitted differences (active link, copyright year, and the relative depth of a link), so a failure is always a real one.
+
+**`check-shared.js` compares pages with each other**, so an edit applied consistently to every page — or one confined to the page-specific grids, which are not inside a fence — passes it. `tools/check-services.js` covers that gap: it reads the canonical list out of `docs/TASKS.md` and checks **every copy of it on every page** — name, order and filename, in the dropdown, the footer and both grids:
+
+```
+node tools/check-services.js
+```
+
+It also parses the names, so a service renamed in one place and not the others is caught even though the pages agree with each other. Run both scripts before committing.
 
 ## Icons and Imagery
 
@@ -415,6 +495,7 @@ Mark a wrapper with `data-reveal`. `reveal.js` adds `.is-visible` the first time
 3. One H1 per page, headings in order
 4. All spacing from the Bootstrap spacing scale (4px steps)
 5. New components get documented here before reuse
+6. Anything that lists the services matches the table in `docs/TASKS.md` — `node tools/check-services.js` checks every copy on every page
 
 ## Component index
 
@@ -435,8 +516,10 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Inline icon | `.icon` | `jnd.css` §10 |
 | Icon, 32px feature list | `.icon.text-primary.d-block` | `jnd.css` §10 |
 | Service card grid | `.row.g-4` of `.card.h-100` | `jnd.css` §6 |
+| Service card grid, filterable | `[data-service-item]` + search | `assets/js/services-filter.js` |
+| Page header band | `.section.bg-surface` + `.breadcrumb` | `jnd.css` §3, §4 |
 | Hero band | `.section.bg-grad-modern.text-white` | `jnd.css` §3, §4 |
-| Call to action band | `.section.bg-grad-modern.text-white`, centred | `jnd.css` §3, §4 |
+| Call to action / quote strip band | `.section.bg-grad-modern.text-white`, centred | `jnd.css` §3, §4 |
 | Scroll reveal wrapper | `[data-reveal]` | `jnd.css` §11 |
 | Header | `header.site-header` | `jnd.css` §7 |
 | Footer | `footer.site-footer` | `jnd.css` §8 |
@@ -445,4 +528,4 @@ Every shared component, where it is styled, and the class to reach for. If somet
 
 Colour and gradient helpers, all in `jnd.css` §4: `.bg-grad-primary`, `.bg-grad-accent`, `.bg-grad-highlight`, `.bg-grad-modern`, `.bg-surface`, `.text-midblue`. There is deliberately **no** `.text-accent` — Accent cannot carry text on white.
 
-Behavioural JavaScript, in `assets/js/`: `nav.js` (mobile menu), `footer.js` (copyright year).
+Behavioural JavaScript, in `assets/js/`: `nav.js` (mobile menu), `footer.js` (copyright year), `reveal.js` (scroll reveal), `services-filter.js` (service search).

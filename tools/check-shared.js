@@ -17,6 +17,11 @@
    Per-page differences that are expected and ignored:
      - the active nav link:  class="active" and aria-current="page"
      - the copyright year inside data-current-year
+     - relative link depth: pages one level down write ../assets/ and
+       href="network-infrastructure.html" where a root page writes assets/ and
+       href="services/network-infrastructure.html". Every href/src is resolved
+       to a root-relative path before comparing, so the check is about where the
+       links GO rather than how they are spelled.
      - HTML comments, line endings, and runs of whitespace
 
    It also checks where the blocks SIT. Identical text in the wrong place is
@@ -56,13 +61,41 @@ function findPages(dir, found) {
 /* Neutralise everything that is allowed to differ between pages. */
 function normalise(html) {
   return html
-    .replace(/<!--[\s\S]*?-->/g, '')                          // comments
-    .replace(/class="nav-link active"/g, 'class="nav-link"')  // active nav link
-    .replace(/\s+aria-current="page"/g, '')                   // its aria flag
-    .replace(/(data-current-year>)\d{4}(<)/g, '$1YEAR$2')     // copyright year
+    .replace(/<!--[\s\S]*?-->/g, '')              // comments
+    .replace(/class="([^"]*)"/g, function (match, classes) {
+      /* The active nav link is the one permitted per-page difference. Strip the
+         `active` token wherever it appears rather than matching one exact class
+         string, so the Services dropdown item can be the active one too. */
+      var kept = classes.split(/\s+/).filter(function (name) {
+        return name && name !== 'active';
+      });
+      return 'class="' + kept.join(' ') + '"';
+    })
+    .replace(/\s+aria-current="page"/g, '')       // and its aria flag
+    .replace(/(data-current-year>)\d{4}(<)/g, '$1YEAR$2')   // copyright year
     .replace(/\r\n/g, '\n')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+/* Rewrite every relative href/src into a path from the site root.
+
+   Pages live at different depths, so the same link is written differently:
+   a root page says href="services/network-infrastructure.html", the hub says
+   href="network-infrastructure.html", and assets/ is ../assets/ one level down.
+   Those are the same destination written three ways. Resolving them first means
+   the comparison is about where the links GO, not how they are spelled, so a
+   block that has genuinely drifted is still caught while a correct depth
+   adjustment is not flagged as drift. */
+function resolveFromRoot(html, page) {
+  var dir = path.dirname(path.relative(ROOT, page)).replace(/\\/g, '/');
+  var prefix = dir === '.' ? '' : dir + '/';
+
+  return html.replace(/\b(href|src)="([^"]*)"/g, function (match, attribute, url) {
+    /* Leave anything already absolute, or not a path at all. */
+    if (/^(#|https?:|mailto:|tel:|data:|\/)/i.test(url)) return match;
+    return attribute + '="' + path.posix.normalize(prefix + url) + '"';
+  });
 }
 
 function extract(html, block) {
@@ -131,7 +164,7 @@ BLOCKS.forEach(function (block) {
       return;
     }
 
-    var value = normalise(snippet);
+    var value = normalise(resolveFromRoot(snippet, page));
 
     if (reference === null) {
       reference = value;

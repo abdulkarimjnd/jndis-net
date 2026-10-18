@@ -20,23 +20,30 @@ assets/css/jnd.css        Brand layer — loads after Bootstrap, overrides it
 assets/js/nav.js          Mobile menu behaviour
 assets/js/footer.js       Copyright year
 assets/js/reveal.js       Fade-up scroll reveal (honours prefers-reduced-motion)
+assets/js/services-filter.js  Keyword search on the services hub
 assets/img/               Images and favicon
 tools/                    Maintenance scripts
 docs/                     DESIGN.md and TASKS.md
 
-services/                 Services hub + the 10 sub-service pages   — to come
-about.html                About page                                — to come
-contact.html              Contact page                              — to come
-404.html                  Not found page                            — to come
+services/index.html       Services hub — page header, filterable grid  (built)
+services/*.html           The 10 sub-service pages                      — to come
+about.html                About page                                    — to come
+contact.html              Contact page                                  — to come
+404.html                  Not found page                                — to come
 ```
 
 ## Checks
 
 ```
 node tools/check-shared.js
+node tools/check-services.js
 ```
 
-Every page carries its own copy of the header and footer — static markup rather than JavaScript partials, so navigation is indexable and survives JavaScript being unavailable. That script verifies the copies have not drifted apart, that the landmarks are in the right order (`<footer>` after `</main>`), and that any page using `[data-reveal]` also loads the reveal hook and script. See `docs/DESIGN.md`.
+Every page carries its own copy of the header and footer — static markup rather than JavaScript partials, so navigation is indexable and survives JavaScript being unavailable. `check-shared.js` verifies the copies have not drifted apart, that the landmarks are in the right order (`<footer>` after `</main>`), and that any page using `[data-reveal]` also loads the reveal hook and script. It compares pages with each other, and it resolves relative links to a path from the site root first, so a page one level down is not flagged for writing `../assets/`.
+
+`check-services.js` covers what that cannot: it reads the canonical service list out of `docs/TASKS.md` and checks every copy of it on every page — name, order and filename, in the header dropdown, the footer and both grids. A service renamed, reordered or dropped in one place fails it even when the pages agree with each other.
+
+See `docs/DESIGN.md`.
 
 ## Documentation
 
