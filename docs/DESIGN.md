@@ -447,6 +447,50 @@ The closing band of a page — on the home page the second half of the hero's pa
 - **One button, not the hero's two.** The visitor has just scrolled past all ten services, so a second "explore our services" link sends them back over ground they have already covered; the footer directly below carries the secondary paths anyway.
 - Adds no CSS.
 
+## About page
+
+`about.html` is built from components already documented here — no new CSS and no new component:
+
+| # | Band | Background | Holds |
+|---|---|---|---|
+| 1 | Page header | Surface | breadcrumb, `<h1>`, lead |
+| 2 | Who we are | White | prose |
+| 3 | What we do | Surface | the canonical service list as a check list |
+| 4 | How we work with you | White | four feature-list columns |
+| 5 | Call to action | gradient | heading, lead, one primary button |
+
+**What we do is the check-list component** (see **Service detail page → What's included**), not the service-card grid: ten plain links with a decorative tick each. It is a complete list of the canonical services, in canonical order, so `tools/check-services.js` holds it to `docs/TASKS.md` exactly as it holds the header dropdown and the footer — a service renamed in one place and not the others fails the check. The band ends with no ordinary link inside the list, so it counts as one run of ten.
+
+**How we work with you is the feature-list component** (four items at `col-lg-3`, no card chrome) rather than three at `col-lg-4`, so it does not read as a second services grid.
+
+## Contact form
+
+`contact.html` carries the only form on the site. It is a real, submittable form first and a JavaScript widget second.
+
+```html
+<form id="contact-form" class="needs-validation" novalidate
+      method="post"
+      action="https://formspree.io/f/REPLACE_WITH_FORM_ID"
+      data-contact-form
+      data-contact-email="REPLACE_WITH_EMAIL">
+```
+
+- **The form works without JavaScript.** It is a native `method="post"` to a Formspree `action`, so a visitor with scripts blocked — or in a browser where the bundle never loaded — still sends it. The three states below are enhancements, not the mechanism.
+- **`novalidate` is deliberate.** Without it the browser's own speech-bubble messages appear and differ between browsers; with it, validation is ours and the wording is identical everywhere (see **UX Requirements**).
+- **Validation is Bootstrap's own** — `.was-validated` on the form, an `.invalid-feedback` message after each required control — with `assets/js/contact-form.js` calling `checkValidity()` and adding the class. Every required control has a `<label for>` pointing at it.
+- **Three states, each announced.** A `role="status"` success panel and a `role="alert"` error panel both ship `hidden` and `tabindex="-1"`; the script writes the message into them (which is what makes the live region speak) and moves focus to them. The submit button is disabled and its label swapped for a `spinner-border` while the message is in flight.
+- **A honeypot, not a substitute for filtering.** A `_gotcha` field, hidden from people and from assistive technology, is dropped by the form service when a bot fills it.
+- **The fallback is honest.** Until TASK-042 supplies the endpoint and inbox (both still `REPLACE_WITH_…`), the script treats the form as unconfigured: it builds a `mailto:` from the fields when an inbox is configured, and otherwise says plainly that the form is not connected and points at the footer. A form that silently swallows a message is worse than one that admits it is not ready.
+- **No new CSS.** Labels, controls, `.form-text`, `.invalid-feedback`, the spinner and the two alerts are all Bootstrap, already themed by the token layer.
+
+## 404 page
+
+`404.html` is served by the host for a URL that does not exist, at whatever depth it was asked for. It opens on the Page header band (breadcrumb Home / Page not found) and offers three routes back: the homepage, the services hub and the contact page.
+
+**Every path on it is root-absolute** (`/assets/css/jnd.css`, `/services/index.html`). A relative path would be resolved against the made-up directory in the failed URL — a 404 for `/services/typo` would ask for `/services/assets/css/jnd.css` — so the stylesheet would 404 as well and the page would render unstyled. This is the one page where the relative spelling every other page uses is wrong.
+
+`tools/check-shared.js` and `tools/check-services.js` resolve a leading slash to the same site-root path as the relative spelling, so the shared header and footer on this page are still compared destination-for-destination with the other pages. `tools/check-supporting-pages.js` additionally asserts that the 404 keeps its root-absolute stylesheet and its three routes.
+
 ## Header and Footer
 
 - Header: sticky, white with subtle bottom shadow, logo left, nav right, "Get a Quote" Primary button
@@ -514,7 +558,7 @@ The cost is duplication, so all three blocks are fenced in the pages that carry 
 
 **The only permitted per-page difference is the active nav link** — `class="active"` plus `aria-current="page"`.
 
-**Depth is not a difference.** A page one level down has to write its links differently: `../index.html` and `network-infrastructure.html` where the root writes `index.html` and `services/network-infrastructure.html`. `check-shared.js` resolves every `href` and `src` to a path from the site root before comparing, so the rule is *identical markup pointing at identical destinations*, not identical characters. Everything else inside a fence must still be byte-identical.
+**Depth is not a difference.** A page one level down has to write its links differently: `../index.html` and `network-infrastructure.html` where the root writes `index.html` and `services/network-infrastructure.html`. `check-shared.js` resolves every `href` and `src` to a path from the site root before comparing, so the rule is *identical markup pointing at identical destinations*, not identical characters. A leading slash resolves to the same destination as the relative spelling too — which is what lets the 404 page use root-absolute paths (see **404 page**) and still be checked like every other page. Everything else inside a fence must still be byte-identical.
 
 **A block can belong to only some kinds of page.** The process block is on the ten service detail pages and nowhere else, so `check-shared.js` is told which pages are expected to carry it and fails in both directions — a detail page that has lost it, and any other page that has picked it up. A copy-paste cannot quietly spread a block across the site.
 
@@ -556,13 +600,22 @@ node tools/check-service-pages.js
 
 checks each page against the template in **Service detail page** — the eight bands in order, each one's background, the heading its `aria-labelledby` points at, one `<h1>`, headings that never skip a level, the three-item breadcrumb, the FAQ wiring, the step/benefit/entry counts, and that the page loads the script its FAQ deep links need.
 
+The three supporting pages — about, contact and 404 — are not one template, so they have their own check:
+
 ```
-node tools/check-shared.js      # header, footer and process blocks, and landmark order
-node tools/check-services.js    # every copy of the service list
-node tools/check-service-pages.js  # the detail page template
+node tools/check-supporting-pages.js
 ```
 
-Run all three before committing. (`tools/lib/canonical-services.js` holds the one parser of the table in `docs/TASKS.md`, so the two service checks cannot disagree about what the canonical list is.)
+It asserts they exist and carry one `<h1>`, headings that never skip a level, a title, a meta description and the Page header band; that the contact form keeps its wiring (`novalidate`, an action, a label and an `.invalid-feedback` for every required control, a submit hook, the honeypot, and both states); and that the 404 keeps its root-absolute stylesheet and its three routes back.
+
+```
+node tools/check-shared.js            # header, footer and process blocks, and landmark order
+node tools/check-services.js          # every copy of the service list
+node tools/check-service-pages.js     # the detail page template
+node tools/check-supporting-pages.js  # the about, contact and 404 pages
+```
+
+Run all four before committing. (`tools/lib/canonical-services.js` holds the one parser of the table in `docs/TASKS.md`, so the two service checks cannot disagree about what the canonical list is.)
 
 ## Icons and Imagery
 
@@ -618,6 +671,7 @@ Mark a wrapper with `data-reveal`. `reveal.js` adds `.is-visible` the first time
 5. New components get documented here before reuse
 6. Anything that lists the services matches the table in `docs/TASKS.md` — `node tools/check-services.js` checks every copy on every page
 7. A service detail page is the template in **Service detail page** — copy an existing one and change the words, never restructure one page on its own. `node tools/check-service-pages.js` checks every one of them
+8. The supporting pages (about, contact, 404) and the contact form's wiring are held in place by `node tools/check-supporting-pages.js`
 
 ## Component index
 
@@ -643,6 +697,10 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Hero band | `.section.bg-grad-modern.text-white` | `jnd.css` §3, §4 |
 | Call to action / quote strip band | `.section.bg-grad-modern.text-white`, centred | `jnd.css` §3, §4 |
 | What's-included check list | `.row.g-3.list-unstyled` of `.col-12.col-md-6.d-flex` | — (Bootstrap only) |
+| About "what we do" list | the check list, of service links | — (Bootstrap only) |
+| Contact form | `form.needs-validation` + `[data-contact-form]` | Bootstrap + `assets/js/contact-form.js` |
+| Form success / error state | `.alert.alert-success` / `.alert.alert-danger` | Bootstrap + `assets/js/contact-form.js` |
+| 404 page | root-absolute paths | `tools/check-supporting-pages.js` |
 | Numbered process step | `.process-step` + `.process-number` | `jnd.css` §12 |
 | FAQ accordion (native) | `.faq` + `.faq-item` + `.faq-question` + `.faq-answer` | `jnd.css` §12 |
 | Previous/next service pager | `.service-pager` + `.service-pager-link` | `jnd.css` §12 |
@@ -655,4 +713,4 @@ Every shared component, where it is styled, and the class to reach for. If somet
 
 Colour and gradient helpers, all in `jnd.css` §4: `.bg-grad-primary`, `.bg-grad-accent`, `.bg-grad-highlight`, `.bg-grad-modern`, `.bg-surface`, `.text-midblue`. There is deliberately **no** `.text-accent` — Accent cannot carry text on white.
 
-Behavioural JavaScript, in `assets/js/`: `nav.js` (mobile menu), `footer.js` (copyright year), `reveal.js` (scroll reveal), `services-filter.js` (service search), `service-page.js` (opens the FAQ answer a link points at).
+Behavioural JavaScript, in `assets/js/`: `nav.js` (mobile menu), `footer.js` (copyright year), `reveal.js` (scroll reveal), `services-filter.js` (service search), `service-page.js` (opens the FAQ answer a link points at), `contact-form.js` (contact-form validation and states).

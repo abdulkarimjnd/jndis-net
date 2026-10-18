@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--
+    BASE TEMPLATE (TASK-005)
+    Every page starts from this head. TODO markers show what is still pending.
+
+    Pending:
+      - <link rel="canonical">          TASK-042 (needs the live domain)
+      - og:url, og:image, twitter:image  TASK-042 (needs domain + share image)
+      - per-page titles/descriptions     TASK-038
+      - the form endpoint and inbox      TASK-042 (see assets/js/contact-form.js)
+  -->
+  <title>Contact Us — JND Integrated Solutions</title>
+  <meta name="description" content="Contact JND Integrated Solutions about IT support, networking, cloud, cybersecurity, CCTV or equipment. Send a message and we will come back with a plan and a quote.">
+
+  <!-- Colours the browser UI on mobile (address bar / tab strip) -->
+  <meta name="theme-color" content="#123B73">
+
+  <!-- Declaring an icon stops browsers probing /favicon.ico and logging a 404 -->
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+
+  <!-- Open Graph — controls link previews on Facebook, LinkedIn, WhatsApp, Slack -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JND Integrated Solutions">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="Contact Us — JND Integrated Solutions">
+  <meta property="og:description" content="Tell us what you need and we will come back with a plan and a quote.">
+
+  <!-- Twitter / X. Card type stays "summary" until a share image exists (TASK-042). -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Contact Us — JND Integrated Solutions">
+  <meta name="twitter:description" content="Tell us what you need and we will come back with a plan and a quote.">
+
+  <!-- Inter — brand typeface (DESIGN.md: 400/500/600/700) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Bootstrap 5.3.8 — base styles (must load before assets/css/jnd.css) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+  <!-- JND brand layer — tokens, type scale, gradients, button/card overrides -->
+  <link rel="stylesheet" href="assets/css/jnd.css">
+
+  <!-- Scroll reveal hook. This has to run before the first paint: it puts
+       .js-reveal on the root element, which is what lets jnd.css section 11
+       hide [data-reveal] elements. Doing this from reveal.js instead would let
+       the page paint normally and then hide itself, which flashes.
+
+       With JavaScript unavailable the class is never set and nothing is ever
+       hidden. The timer is the failsafe: if reveal.js never runs — a 404, a
+       syntax error, a blocked request — the class is dropped after 3s and
+       every band is simply visible. Losing the animation is acceptable.
+       Losing the content is not. -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js-reveal');
+      window.__jndRevealFailsafe = window.setTimeout(function () {
+        root.classList.remove('js-reveal');
+      }, 3000);
+    }());
+  </script>
+
+  <!-- Bootstrap 5.3.8 bundle (Popper + Bootstrap) for dropdowns, collapse, etc. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Mobile menu behaviour. Deferred scripts run in document order, so the
+       bundle above is guaranteed to have executed first. -->
+  <script defer src="assets/js/nav.js"></script>
+
+  <!-- Copyright year in the footer -->
+  <script defer src="assets/js/footer.js"></script>
+
+  <!-- Scroll reveal: fades [data-reveal] elements up as they enter the viewport -->
+  <script defer src="assets/js/reveal.js"></script>
+
+  <!-- Contact form: client-side validation and the loading, success and error
+       states. The form still submits natively if this never loads. -->
+  <script defer src="assets/js/contact-form.js"></script>
+</head>
+<body>
+
+  <!-- First focusable element on the page: lets keyboard users bypass the nav -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ==========================================================================
+       BEGIN shared header
+       Keep this block identical on every page. The ONLY per-page difference is
+       the active nav link (class="active" plus aria-current="page").
+       Edit here, then copy to every other page.
+       Check for drift:  node tools/check-shared.js
+       ========================================================================== -->
+  <header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-lg" aria-label="Main">
+      <div class="container">
+
+        <!-- Wordmark. The mark is decorative (alt=""), the text carries the name. -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+          <img src="assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+          <span class="d-flex flex-column">
+            <span class="site-brand-name">JND</span>
+            <span class="site-brand-tagline">Integrated Solutions</span>
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#primaryNav"
+                aria-controls="primaryNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="primaryNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <!--
+                An anchor (not a button) so that if the CDN JS ever fails to load,
+                clicking still navigates to the services hub instead of doing nothing.
+                With JS active the click toggles the menu, so "All services" below
+                provides the keyboard route to that hub page.
+              -->
+              <a class="nav-link dropdown-toggle" href="services/index.html" role="button"
+                 data-bs-toggle="dropdown" aria-expanded="false">Services</a>
+
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="services/it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
+                <li><a class="dropdown-item" href="services/network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
+                <li><a class="dropdown-item" href="services/server-management-hosting.html">Server Management &amp; Hosting</a></li>
+                <li><a class="dropdown-item" href="services/cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
+                <li><a class="dropdown-item" href="services/cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
+                <li><a class="dropdown-item" href="services/cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
+                <li><a class="dropdown-item" href="services/web-development.html">Web Development &amp; Digital Solutions</a></li>
+                <li><a class="dropdown-item" href="services/it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
+                <li><a class="dropdown-item" href="services/managed-it-services.html">Managed IT Services</a></li>
+                <li><a class="dropdown-item" href="services/equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item fw-semibold" href="services/index.html">All services &rarr;</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="contact.html">Contact</a></li>
+
+            <li class="nav-item nav-cta">
+              <a class="btn btn-primary" href="contact.html">Get a Quote</a>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+    </nav>
+  </header>
+  <!-- END shared header ====================================================== -->
+
+  <!-- tabindex="-1" lets the skip link move focus here, not just scroll to it -->
+  <main id="main" tabindex="-1">
+
+    <!-- =================================================================
+         PAGE HEADER (TASK-016)
+         The same Surface band as every other interior page, with the
+         breadcrumb mirroring the URL (Home > Contact).
+         ================================================================= -->
+    <section class="section bg-surface">
+      <div class="container">
+
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb mb-3">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Contact</li>
+          </ol>
+        </nav>
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h1 class="mb-3">Contact us</h1>
+            <p class="lead mb-0">
+              Tell us what you need &mdash; a fault, a project, or a second
+              opinion &mdash; and we will come back with a plan and a quote.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         CONTACT FORM (TASK-033) + STATIC FORM SERVICE (TASK-034)
+         White band so the Surface details card inverts against it.
+
+         Validation is Bootstrap's .was-validated / .invalid-feedback, driven
+         by assets/js/contact-form.js. The form carries `novalidate` so the
+         browser's own bubbles never appear and the messages stay the same in
+         every browser (DESIGN.md, "UX Requirements"). Without JavaScript the
+         form posts to the endpoint natively, which is enough for a static
+         form service to accept it.
+
+         The action and the fallback inbox are placeholders until TASK-042
+         supplies the real ones — see assets/js/contact-form.js. Copy is DRAFT.
+         ================================================================= -->
+    <section class="section" aria-labelledby="form-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h2 id="form-heading" class="mb-3">Send us a message</h2>
+            <p class="lead mb-0">
+              Fields marked with an asterisk are required. A sentence or two is
+              plenty to start with.
+            </p>
+          </div>
+        </div>
+
+        <div class="row g-5 mt-4">
+
+          <!-- The form -->
+          <div class="col-12 col-lg-7">
+
+            <!--
+              action/data-contact-endpoint: a static form service (Formspree).
+              Replace REPLACE_WITH_FORM_ID at TASK-042. Until then contact-form.js
+              treats the form as unconfigured and offers the mailto fallback.
+
+              data-contact-email is the mailto fallback inbox; like the footer's
+              contact details it is a placeholder until TASK-042.
+            -->
+            <form id="contact-form" class="needs-validation" novalidate
+                  method="post"
+                  action="https://formspree.io/f/REPLACE_WITH_FORM_ID"
+                  data-contact-form
+                  data-contact-email="REPLACE_WITH_EMAIL">
+
+              <div class="row g-3">
+
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="contact-name">Name <span aria-hidden="true">*</span></label>
+                  <input class="form-control" type="text" id="contact-name" name="name"
+                         autocomplete="name" required>
+                  <div class="invalid-feedback">Please tell us your name.</div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="contact-email">Email <span aria-hidden="true">*</span></label>
+                  <input class="form-control" type="email" id="contact-email" name="email"
+                         autocomplete="email" required>
+                  <div class="invalid-feedback">Please enter an email address we can reply to.</div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="contact-company">Company</label>
+                  <input class="form-control" type="text" id="contact-company" name="company"
+                         autocomplete="organization">
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="contact-phone">Phone</label>
+                  <input class="form-control" type="tel" id="contact-phone" name="phone"
+                         autocomplete="tel">
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label" for="contact-topic">What is this about?</label>
+                  <select class="form-select" id="contact-topic" name="topic">
+                    <option value="" selected>Choose one (optional)</option>
+                    <option>Support or a fault</option>
+                    <option>A new project</option>
+                    <option>Equipment or supplies</option>
+                    <option>A quote</option>
+                    <option>Something else</option>
+                  </select>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label" for="contact-message">How can we help? <span aria-hidden="true">*</span></label>
+                  <textarea class="form-control" id="contact-message" name="message" rows="5"
+                            aria-describedby="contact-message-help" required></textarea>
+                  <div class="form-text" id="contact-message-help">The more you can tell us about the site, the systems and the problem, the more useful our first reply will be.</div>
+                  <div class="invalid-feedback">Please tell us a little about what you need.</div>
+                </div>
+
+                <!-- Honeypot. Hidden from people and from assistive technology;
+                     a bot that fills it gets the submission dropped by the form
+                     service. Not a substitute for server-side filtering. -->
+                <div class="visually-hidden" aria-hidden="true">
+                  <label for="contact-website">Leave this field empty</label>
+                  <input type="text" id="contact-website" name="_gotcha" tabindex="-1"
+                         autocomplete="off">
+                </div>
+
+                <!-- Sent to the form service as the message subject. -->
+                <input type="hidden" name="_subject" value="New enquiry from the JND website">
+
+                <div class="col-12 mt-2">
+                  <button class="btn btn-primary" type="submit" data-contact-submit>
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" data-contact-spinner hidden></span>
+                    <span data-contact-submit-label>Send message</span>
+                  </button>
+                </div>
+
+              </div>
+            </form>
+
+            <!-- Success state (TASK-033). role="status" so it is announced
+                 politely; contact-form.js rewrites the message and moves focus
+                 here. tabindex="-1" makes it focusable for that. -->
+            <div class="alert alert-success" role="status" tabindex="-1"
+                 data-contact-success hidden>
+              <h3 class="h5 mb-2">Thank you &mdash; your message is on its way</h3>
+              <p class="mb-0" data-contact-success-message>We have your enquiry and will reply to the email address you gave us. If it is urgent, call the number in the footer.</p>
+            </div>
+
+            <!-- Error state (TASK-033). role="alert" because a failed send needs
+                 to interrupt. -->
+            <div class="alert alert-danger" role="alert" tabindex="-1"
+                 data-contact-error hidden>
+              <h3 class="h5 mb-2">Sorry &mdash; we could not send that</h3>
+              <p class="mb-0" data-contact-error-message>
+                Please try again in a moment, or use the contact details in the
+                footer. If it keeps failing, tell us and we will look at it.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Contact details. The same placeholders as the footer: no real
+               details are invented, so nothing ships by accident. -->
+          <div class="col-12 col-lg-5">
+            <div class="card bg-surface h-100">
+              <div class="card-body">
+
+                <h2 class="h3 mb-3">Contact details</h2>
+
+                <ul class="list-unstyled mb-4">
+                  <!-- TODO (TASK-042): real phone number -->
+                  <li class="mb-3">
+                    <span class="d-block fw-semibold">Phone</span>
+                    <span class="site-placeholder">Phone number to be added</span>
+                  </li>
+                  <!-- TODO (TASK-042): real email address -->
+                  <li class="mb-3">
+                    <span class="d-block fw-semibold">Email</span>
+                    <span class="site-placeholder">Email address to be added</span>
+                  </li>
+                  <!-- TODO (TASK-042): real postal address -->
+                  <li class="mb-0">
+                    <span class="d-block fw-semibold">Address</span>
+                    <span class="site-placeholder">Street address, City, Country</span>
+                  </li>
+                </ul>
+
+                <h3 class="h5 mb-2">Opening hours</h3>
+                <p class="mb-0">
+                  Monday to Friday, 9am to 5pm. Work that has to happen outside
+                  those hours is arranged in advance.
+                </p>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================
+         WHAT HAPPENS NEXT (TASK-033)
+         The feature-list component, three across (the same shape as the
+         benefits band on a service detail page). No new CSS.
+         ================================================================= -->
+    <section class="section bg-surface" aria-labelledby="next-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8" data-reveal>
+            <h2 id="next-heading" class="mb-3">What happens next</h2>
+            <p class="lead mb-0">
+              No forms disappearing into a void. This is what follows a message.
+            </p>
+          </div>
+        </div>
+
+        <div class="row g-4 mt-5">
+
+          <div class="col-12 col-md-6 col-lg-4" data-reveal>
+            <svg class="icon text-primary d-block mb-3" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+            <h3 class="mb-2">We pick it up</h3>
+            <p class="mb-0">A person reads the message and confirms it has been received, usually the same working day.</p>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-reveal>
+            <svg class="icon text-primary d-block mb-3" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/></svg>
+            <h3 class="mb-2">We ask what we need</h3>
+            <p class="mb-0">Usually one short conversation is enough to understand the problem and what a fix would involve.</p>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4" data-reveal>
+            <svg class="icon text-primary d-block mb-3" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m16 9-5.5 5.5L8 12"/></svg>
+            <h3 class="mb-2">You get a plan and a price</h3>
+            <p class="mb-0">What we would do, what it costs, and the options &mdash; in writing, so you can compare it with anything else.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       BEGIN shared footer
+       Identical on every page — there is no per-page variation at all.
+       Check for drift:  node tools/check-shared.js
+       ========================================================================== -->
+  <footer class="section site-footer bg-grad-primary text-white">
+    <div class="container">
+
+      <div class="row g-4">
+
+        <!-- About -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <a class="d-inline-flex align-items-center gap-2 mb-3" href="index.html">
+            <img src="assets/img/favicon.svg" alt="" width="32" height="32" class="d-block">
+            <span class="d-flex flex-column">
+              <span class="site-brand-name">JND</span>
+              <span class="site-brand-tagline">Integrated Solutions</span>
+            </span>
+          </a>
+          <p class="small mb-0">
+            IT support, networking, cloud, cybersecurity and CCTV solutions for
+            businesses. Reliable support, professional service.
+          </p>
+        </div>
+
+        <!-- Services — same list, order and filenames as the header dropdown -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Services</h2>
+          <ul class="list-unstyled mb-0 small">
+            <li class="mb-2"><a href="services/it-support-maintenance.html">IT Support &amp; Maintenance</a></li>
+            <li class="mb-2"><a href="services/network-infrastructure.html">Network Infrastructure &amp; Solutions</a></li>
+            <li class="mb-2"><a href="services/server-management-hosting.html">Server Management &amp; Hosting</a></li>
+            <li class="mb-2"><a href="services/cloud-virtualization.html">Cloud &amp; Virtualization Solutions</a></li>
+            <li class="mb-2"><a href="services/cybersecurity.html">Cybersecurity &amp; Network Security</a></li>
+            <li class="mb-2"><a href="services/cctv-surveillance.html">CCTV &amp; Surveillance Solutions</a></li>
+            <li class="mb-2"><a href="services/web-development.html">Web Development &amp; Digital Solutions</a></li>
+            <li class="mb-2"><a href="services/it-consultancy.html">IT Consultancy &amp; Project Implementation</a></li>
+            <li class="mb-2"><a href="services/managed-it-services.html">Managed IT Services</a></li>
+            <li class="mb-0"><a href="services/equipment-supply-installation.html">IT Equipment Supply &amp; Installation</a></li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Company</h2>
+          <ul class="list-unstyled mb-0 small">
+            <li class="mb-2"><a href="about.html">About Us</a></li>
+            <li class="mb-2"><a href="services/index.html">All Services</a></li>
+            <li class="mb-2"><a href="contact.html">Contact</a></li>
+            <li class="mb-0"><a href="contact.html">Get a Quote</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact — PLACEHOLDERS. Real details must be supplied before launch.
+             Nothing real-looking is here on purpose, so nothing ships by accident. -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <h2 class="site-footer-title mb-3">Contact</h2>
+          <ul class="list-unstyled mb-0 small">
+            <!-- TODO (TASK-042): real phone number -->
+            <li class="mb-2"><span class="site-placeholder">Phone number to be added</span></li>
+            <!-- TODO (TASK-042): real email address -->
+            <li class="mb-2"><span class="site-placeholder">Email address to be added</span></li>
+            <!-- TODO (TASK-042): real postal address -->
+            <li class="mb-0"><span class="site-placeholder">Street address, City, Country</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bootstrap's <hr> inherits the footer's colour at 25% opacity, so this
+           renders as a subtle white divider with no extra classes. -->
+      <hr class="my-4">
+
+      <div class="site-footer-meta d-flex flex-column flex-md-row justify-content-between gap-2 small">
+        <p class="mb-0">
+          &copy; <span data-current-year>2026</span> JND Integrated Solutions. All rights reserved.
+        </p>
+        <p class="mb-0">Reliable Support. Professional Service.</p>
+      </div>
+
+    </div>
+  </footer>
+  <!-- END shared footer ====================================================== -->
+
+</body>
+</html>

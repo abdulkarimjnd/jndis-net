@@ -104,7 +104,14 @@ function resolverFor(page) {
   var prefix = dir === '.' ? '' : dir + '/';
 
   return function (url) {
-    if (/^(#|https?:|mailto:|tel:|data:|\/)/i.test(url)) return url;
+    if (/^(#|https?:|mailto:|tel:|data:)/i.test(url)) return url;
+    if (url.indexOf('//') === 0) return url;
+
+    /* A leading slash resolves to the same site-root path as the relative
+       spelling, so 404.html's root-absolute links are checked like any other
+       page's. See the same note in check-shared.js. */
+    if (url.charAt(0) === '/') return path.posix.normalize(url.replace(/^\/+/, ''));
+
     return path.posix.normalize(prefix + url);
   };
 }

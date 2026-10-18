@@ -110,8 +110,21 @@ function resolveFromRoot(html, page) {
   var prefix = dir === '.' ? '' : dir + '/';
 
   return html.replace(/\b(href|src)="([^"]*)"/g, function (match, attribute, url) {
-    /* Leave anything already absolute, or not a path at all. */
-    if (/^(#|https?:|mailto:|tel:|data:|\/)/i.test(url)) return match;
+    /* Leave anything that is not a site path: fragments, other schemes and
+       protocol-relative URLs. */
+    if (/^(#|https?:|mailto:|tel:|data:)/i.test(url)) return match;
+    if (url.indexOf('//') === 0) return match;
+
+    /* A single leading slash is a path from the site root, which is what the
+       resolver produces for every other page anyway. 404.html has to spell its
+       links that way — it is served for a URL at any depth, so a relative asset
+       would resolve against a directory that does not exist — and normalising
+       it here keeps "/index.html" comparable with "index.html" and
+       "../index.html". */
+    if (url.charAt(0) === '/') {
+      return attribute + '="' + path.posix.normalize(url.replace(/^\/+/, '')) + '"';
+    }
+
     return attribute + '="' + path.posix.normalize(prefix + url) + '"';
   });
 }

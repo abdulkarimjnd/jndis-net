@@ -96,10 +96,10 @@ Each page uses the same template, in this band order: page header (Surface) → 
 
 ## Phase 6: Supporting Pages
 
-- [ ] TASK-032: About page
-- [ ] TASK-033: Contact page with form (client-side validation, success and error states)
-- [ ] TASK-034: Connect form to a static form service (e.g. Formspree) or `mailto` fallback
-- [ ] TASK-035: Custom 404 page
+- [x] TASK-032: About page — opens on the Page header band, then **Who we are** (prose), **What we do** (the canonical service list as the check-list component, so `check-services.js` holds this copy to `docs/TASKS.md` like the dropdown and footer), **How we work with you** (the feature list) and the page-foot CTA. No new CSS
+- [x] TASK-033: Contact page with form (client-side validation, success and error states) — Page header, then **Send us a message** (a `novalidate` form validated in Bootstrap's `.was-validated` / `.invalid-feedback` style by `assets/js/contact-form.js`, with a disabled/spinner loading state, a `role="status"` success panel and a `role="alert"` error panel) beside a details card, then **What happens next**. Adds no CSS — and the temporary `.site-placeholder` underline now uses `currentColor` so it reads on this page's light card as well as the dark footer
+- [x] TASK-034: Connect form to a static form service (e.g. Formspree) or `mailto` fallback — the form is a native `method="post"` to a Formspree `action`, so it submits with JavaScript off; `contact-form.js` enhances it to a `fetch` POST with the three states, and falls back to a `mailto:` built from the fields when the endpoint is still a placeholder. The endpoint (`REPLACE_WITH_FORM_ID`) and fallback inbox (`REPLACE_WITH_EMAIL`) are placeholders until TASK-042, and the script says so rather than swallowing a message
+- [x] TASK-035: Custom 404 page — Home / Page not found, a short apology and three routes back (homepage, services hub, contact). Every path on it is **root-absolute**, because a 404 is served for a URL at any depth and a relative asset would resolve against a directory that does not exist; `check-shared.js` and `check-services.js` were taught to resolve a leading slash to the same site-root path as the relative spelling, and a new `tools/check-supporting-pages.js` guards all three pages (headings, meta, page header, the form's wiring, and the 404's paths)
 
 ## Phase 7: Quality and Launch
 

@@ -404,10 +404,12 @@ small, .small { font-size: 14px; }
 .site-footer .site-brand-tagline { color: rgba(255, 255, 255, .85); }
 
 /* TEMPORARY — flags contact details that have not been supplied yet.
+   currentColor rather than white, because the placeholder appears on the dark
+   footer AND on the light contact-page card; the underline has to read on both.
    Delete this rule and the .site-placeholder spans at TASK-042. */
 .site-placeholder {
   font-style: italic;
-  border-bottom: 1px dashed rgba(255, 255, 255, .5);
+  border-bottom: 1px dashed currentColor;
 }
 
 /* 9. Skip link, focus and reduced motion ---------------------------------- */
