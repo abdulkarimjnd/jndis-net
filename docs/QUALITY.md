@@ -87,3 +87,87 @@ Findings:
 **Still open before launch:** a touch pass on a real device (tap targets, the
 dropdown on a phone, iOS Safari's viewport chrome). It cannot be done from a
 headless browser and is on the pre-launch list in `docs/DEPLOY.md`.
+
+---
+
+## TASK-037 — Accessibility pass
+
+### Automated (`tools/check-a11y.js`)
+
+Fourteen checks, split between the markup and the stylesheet:
+
+**Markup, on every page**
+
+1. `<html lang>` is set to `en`, and there is a non-empty `<title>`.
+2. Exactly one `<h1>`, and headings never skip a level going down.
+3. Every `<img>` has an `alt` attribute — empty is fine, that is how a
+   decorative image is marked.
+4. Every form control has an accessible name (a `<label for>`, or an
+   `aria-label` / `aria-labelledby`); hidden inputs and submit buttons are
+   exempt, as the spec says.
+5. Every inline `<svg>` is either `aria-hidden` — on itself **or on a
+   wrapper**, which is how the service cards mark theirs — or given a name, so
+   an icon is never announced as an unnamed graphic.
+6. Every link and button has discernible text (visible text, an `aria-label`,
+   or the `alt` of an image inside it).
+7. Every `aria-labelledby` / `aria-describedby` / `aria-controls` points at an
+   id that exists on the same page.
+8. No positive `tabindex`, which would hijack the tab order.
+9. A skip link whose target exists and carries `tabindex="-1"`, so focus
+   genuinely moves rather than only scrolling.
+10. Landmarks: one `<main>`, plus a `header`, `footer` and `nav`.
+11. No duplicate id, which would break label and aria references.
+
+**Stylesheet**
+
+12. A `:focus-visible` ring on links and buttons, and no rule that deletes the
+    outline instead of replacing it.
+13. A `prefers-reduced-motion` block.
+
+**Contrast**
+
+14. The token pairs `DESIGN.md` depends on are **recomputed** from the
+    `--jnd-*` values in `jnd.css` and asserted against the WCAG threshold, so a
+    palette change cannot quietly break a ratio that was measured by hand once.
+    Three of them are *ceilings* rather than floors: Accent and Highlight must
+    stay below the AA floor, because that is exactly why neither is ever used as
+    a text background.
+
+| Pair | Measured | Needs |
+| --- | --- | --- |
+| White on Primary | 7.40:1 | ≥ 4.5 |
+| White on Secondary | 11.06:1 | ≥ 4.5 |
+| White on Mid Blue (gradient endpoint, worst case) | 4.70:1 | ≥ 4.5 |
+| Primary on White | 7.40:1 | ≥ 4.5 |
+| Primary on Surface | 6.77:1 | ≥ 4.5 |
+| Mid Blue on White (link hover) | 4.70:1 | ≥ 4.5 |
+| Ink on White | 19.71:1 | ≥ 4.5 |
+| Ink on Surface | 18.01:1 | ≥ 4.5 |
+| Secondary focus ring on White | 11.06:1 | ≥ 3.0 |
+| White focus ring on Secondary | 11.06:1 | ≥ 3.0 |
+| White on Accent | 2.24:1 | < 3.0 (stays non-text) |
+| White on Highlight | 1.72:1 | < 3.0 (stays non-text) |
+| Highlight on Primary | 4.30:1 | < 4.5 (why it is not body text) |
+
+One deliberate difference from the prose in `DESIGN.md`: it quotes **5.67:1**
+for white on the Modern band. That figure is the gradient sampled where the text
+actually sits; against the band's lightest endpoint (`#2878B8`, at 100%) the
+ratio is **4.70:1**. Both clear AA, and the checker holds the worse of the two —
+the endpoint — so the band cannot drift lighter without failing.
+
+### Still to do by hand
+
+These need a person and cannot be proved from the files. They are on the
+pre-launch list in `docs/DEPLOY.md`:
+
+- **Keyboard only:** tab through every page — the skip link first, the dropdown
+  opened and closed by keyboard, the FAQ `<summary>` toggled by Enter/Space, and
+  the contact form validated and submitted without a mouse. Confirm focus is
+  always visible and never lands on something invisible.
+- **Screen reader** (e.g. NVDA or VoiceOver): landmarks and heading navigation,
+  every form label announced, the success panel (`role="status"`) announced when
+  it appears, the error panel (`role="alert"`) interrupting, and the honeypot
+  staying silent.
+- **Zoom to 200%** and a text-only zoom: no clipping, no horizontal scroll.
+- **Colour is never the only signal** — the error state carries text, not just
+  a red border.
