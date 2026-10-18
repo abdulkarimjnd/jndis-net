@@ -103,7 +103,7 @@ Each page uses the same template, in this band order: page header (Surface) → 
 
 ## Phase 7: Quality and Launch
 
-- [ ] TASK-036: Responsive review on all pages (360, 768, 1024, 1280)
+- [x] TASK-036: Responsive review on all pages (360, 768, 1024, 1280) — `tools/check-responsive.js` holds the fluid layout's moving parts (the viewport and that no page caps the zoom, width/height on every image, no inline fixed width or `nowrap`, a `.container` in every band, no unwrapped table, and fixed pixel widths confined to the 48px icon tile and the 44px process numeral). The four widths were then rendered (headless Firefox ESR 140, full page height, reveal off) for all six templates — 1/2/3 column grids, the nav collapsing below 992px, the contact form going 8/4 — with no overflow and no CSS change needed. The matrix and findings are in `docs/QUALITY.md`
 - [ ] TASK-037: Accessibility pass (contrast, labels, focus states, alt text, landmarks)
 - [ ] TASK-038: SEO basics (titles, meta descriptions, Open Graph, `sitemap.xml`, `robots.txt`)
 - [ ] TASK-039: Performance pass (image optimization, lazy loading, Lighthouse 90+; Bootstrap CSS/JS is already minified via CDN)

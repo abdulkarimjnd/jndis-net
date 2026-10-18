@@ -28,8 +28,10 @@ tools/check-shared.js     Header/footer/process copies have not drifted apart
 tools/check-services.js   Every copy of the service list matches docs/TASKS.md
 tools/check-service-pages.js  Every detail page matches the template
 tools/check-supporting-pages.js  About, contact and 404 are wired up
-tools/lib/                The one parser of the service table in docs/TASKS.md
-docs/                     DESIGN.md and TASKS.md
+tools/check-responsive.js The fluid layout's moving parts are in place
+tools/lib/                Shared helpers for the check scripts, and the one
+                          parser of the service table in docs/TASKS.md
+docs/                     DESIGN.md, TASKS.md and QUALITY.md
 
 services/index.html       Services hub — page header, filterable grid  (built)
 services/*.html           The 10 sub-service pages                      (built)
@@ -45,6 +47,7 @@ node tools/check-shared.js
 node tools/check-services.js
 node tools/check-service-pages.js
 node tools/check-supporting-pages.js
+node tools/check-responsive.js
 ```
 
 Every page carries its own copy of the header and footer — static markup rather than JavaScript partials, so navigation is indexable and survives JavaScript being unavailable. The four-step process band is duplicated the same way on the ten service pages. `check-shared.js` verifies the copies have not drifted apart, that the landmarks are in the right order (`<footer>` after `</main>`), and that any page using `[data-reveal]` also loads the reveal hook and script. It compares pages with each other, and it resolves relative links to a path from the site root first, so a page one level down is not flagged for writing `../assets/` — and the 404 page is not flagged for writing `/assets/`, which it must, being served for a URL at any depth. The process block belongs to the detail pages only, and the script fails in both directions — a detail page that has lost it, and any other page that has picked it up.
@@ -55,12 +58,15 @@ Every page carries its own copy of the header and footer — static markup rathe
 
 `check-supporting-pages.js` covers the three pages that are not a template: it asserts about, contact and 404 each keep one `<h1>`, headings in order, a title, a meta description and the page header band; that the contact form keeps its wiring — `novalidate`, an action, a label and an `.invalid-feedback` for every required control, the submit hook, the honeypot and both states; and that the 404 keeps its root-absolute stylesheet and its three routes back.
 
+`check-responsive.js` covers the fluid layout: it asserts the viewport on every page and that none of them caps the zoom, that every `<img>` carries a width and height, that no inline style fixes a width or turns off wrapping, that every `.section` band holds its `.container`, that no `<table>` is unwrapped, and that `jnd.css` keeps its fixed pixel widths to the two small components that need them. The four widths themselves (360, 768, 1024, 1280) are a human review; what was rendered and seen at each is recorded in `docs/QUALITY.md`.
+
 See `docs/DESIGN.md`.
 
 ## Documentation
 
 - **`docs/DESIGN.md`** — the design system: colours, typography, layout, components. Every page follows it. New components get documented there before reuse.
 - **`docs/TASKS.md`** — the build plan: 42 tasks in 7 phases, worked one at a time.
+- **`docs/QUALITY.md`** — the Phase 7 passes: which parts a check script proves and which parts were reviewed by eye, with the method and the findings.
 
 ## Hosting
 
