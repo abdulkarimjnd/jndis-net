@@ -13,6 +13,7 @@
      7. Header
      8. Footer
      9. Skip link, focus and reduced motion (accessibility)
+    10. Icons
 
    Source of truth: docs/DESIGN.md. Keep the two in sync when either changes.
    ========================================================================== */
@@ -441,4 +442,21 @@ a:focus-visible,
   .btn-primary:hover {
     transform: none;
   }
+}
+
+/* 10. Icons --------------------------------------------------------------- */
+/* Lucide (https://lucide.dev, ISC licence) inlined into the markup rather than
+   pulled from a CDN script. Inlining costs about 3KB of HTML for the whole
+   home page and buys three things: no third-party script, nothing that can
+   fail at runtime, and no empty tiles while an icon font or sprite loads.
+
+   Only viewBox and the path data stay in the HTML. The presentation lives
+   here, at DESIGN.md's 1.5px stroke, so each icon is one line of markup. */
+
+.icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }

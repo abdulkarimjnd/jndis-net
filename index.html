@@ -253,6 +253,180 @@
       </div>
     </section>
 
+    <!-- =================================================================
+         SERVICES OVERVIEW (TASK-012)
+         Cards follow DESIGN.md: .card.h-100 on a .bg-surface band, 48px icon
+         tile, H3, short description, and "Learn more" pinned to the bottom
+         with mt-auto. On Surface a card is White by default.
+
+         Service names, order and filenames come from the single source of
+         truth in docs/TASKS.md. Card descriptions are DRAFT copy.
+
+         Each link carries an aria-label because "Learn more" repeats ten
+         times; without it a screen reader hears the same link ten times over.
+         The label starts with the visible wording, so Label-in-Name holds.
+
+         Icons are inlined Lucide 1.59.0 (ISC) — see jnd.css section 10.
+         ================================================================= -->
+    <section class="section bg-surface" aria-labelledby="services-heading">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-12 col-lg-8">
+            <h2 id="services-heading" class="mb-3">Our services</h2>
+            <p class="lead mb-0">
+              Ten specialisms, one team &mdash; from day-to-day support to the
+              infrastructure it runs on.
+            </p>
+          </div>
+        </div>
+
+        <div class="row g-4 mt-5">
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+                </div>
+                <h3 class="mb-2">IT Support &amp; Maintenance</h3>
+                <p class="mb-3">Responsive helpdesk and on-site support that keeps your team working.</p>
+                <a class="card-link mt-auto" href="services/it-support-maintenance.html"
+                   aria-label="Learn more about IT Support &amp; Maintenance">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
+                </div>
+                <h3 class="mb-2">Network Infrastructure &amp; Solutions</h3>
+                <p class="mb-3">Design, installation and management of wired and wireless networks.</p>
+                <a class="card-link mt-auto" href="services/network-infrastructure.html"
+                   aria-label="Learn more about Network Infrastructure &amp; Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>
+                </div>
+                <h3 class="mb-2">Server Management &amp; Hosting</h3>
+                <p class="mb-3">Servers provisioned, monitored, patched and backed up.</p>
+                <a class="card-link mt-auto" href="services/server-management-hosting.html"
+                   aria-label="Learn more about Server Management &amp; Hosting">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                </div>
+                <h3 class="mb-2">Cloud &amp; Virtualization Solutions</h3>
+                <p class="mb-3">Move workloads to the cloud, or virtualise what you already run.</p>
+                <a class="card-link mt-auto" href="services/cloud-virtualization.html"
+                   aria-label="Learn more about Cloud &amp; Virtualization Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                </div>
+                <h3 class="mb-2">Cybersecurity &amp; Network Security</h3>
+                <p class="mb-3">Firewalls, endpoint protection and practical security reviews.</p>
+                <a class="card-link mt-auto" href="services/cybersecurity.html"
+                   aria-label="Learn more about Cybersecurity &amp; Network Security">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M16.75 12h3.632a1 1 0 0 1 .894 1.447l-2.034 4.069a1 1 0 0 1-1.708.134l-2.124-2.97"/><path d="M17.106 9.053a1 1 0 0 1 .447 1.341l-3.106 6.211a1 1 0 0 1-1.342.447L3.61 12.3a2.92 2.92 0 0 1-1.3-3.91L3.69 5.6a2.92 2.92 0 0 1 3.92-1.3z"/><path d="M2 19h3.76a2 2 0 0 0 1.8-1.1L9 15"/><path d="M2 21v-4"/><path d="M7 9h.01"/></svg>
+                </div>
+                <h3 class="mb-2">CCTV &amp; Surveillance Solutions</h3>
+                <p class="mb-3">Cameras, recording and remote viewing, installed and maintained.</p>
+                <a class="card-link mt-auto" href="services/cctv-surveillance.html"
+                   aria-label="Learn more about CCTV &amp; Surveillance Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>
+                </div>
+                <h3 class="mb-2">Web Development &amp; Digital Solutions</h3>
+                <p class="mb-3">Business websites and the digital tools behind them.</p>
+                <a class="card-link mt-auto" href="services/web-development.html"
+                   aria-label="Learn more about Web Development &amp; Digital Solutions">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                </div>
+                <h3 class="mb-2">IT Consultancy &amp; Project Implementation</h3>
+                <p class="mb-3">Independent advice, planning and delivery for IT projects.</p>
+                <a class="card-link mt-auto" href="services/it-consultancy.html"
+                   aria-label="Learn more about IT Consultancy &amp; Project Implementation">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+                </div>
+                <h3 class="mb-2">Managed IT Services</h3>
+                <p class="mb-3">Your IT department, on a fixed monthly agreement.</p>
+                <a class="card-link mt-auto" href="services/managed-it-services.html"
+                   aria-label="Learn more about Managed IT Services">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="card-icon mb-3" aria-hidden="true">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>
+                </div>
+                <h3 class="mb-2">IT Equipment Supply &amp; Installation</h3>
+                <p class="mb-3">Hardware sourced, configured and installed on site.</p>
+                <a class="card-link mt-auto" href="services/equipment-supply-installation.html"
+                   aria-label="Learn more about IT Equipment Supply &amp; Installation">Learn more &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
   </main>
 
 </body>

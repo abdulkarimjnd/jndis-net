@@ -183,15 +183,22 @@ Restyled in `jnd.css` §6: 12px radius, 1px border, brand-tinted shadow that dee
   <div class="col-12 col-md-6 col-lg-4">
     <div class="card h-100">
       <div class="card-body d-flex flex-column">
-        <div class="card-icon mb-3"><!-- 24px icon, white --></div>
+        <div class="card-icon mb-3" aria-hidden="true">
+          <svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="…"/></svg>
+        </div>
         <h3 class="mb-2">Service name</h3>
         <p class="mb-3">Two lines of description.</p>
-        <a class="card-link mt-auto" href="services/….html">Learn more &rarr;</a>
+        <a class="card-link mt-auto" href="services/….html"
+           aria-label="Learn more about Service name">Learn more &rarr;</a>
       </div>
     </div>
   </div>
 </div>
 ```
+
+**Every card link needs an `aria-label`.** "Learn more" repeats once per card, so a screen reader listing the page's links announces the same phrase ten times with nothing to tell them apart. The label begins with the visible wording, so Label-in-Name (WCAG 2.5.3) still holds.
+
+Card body copy is short by design — roughly two lines at `col-lg-4`. The grid is `.row.g-4` with `col-12 / col-md-6 / col-lg-4`, so it is one column at 360px, two at 768px and three at 1280px.
 
 On Surface sections cards are White by default; on White sections add `.bg-surface` to the card to invert them.
 
@@ -298,10 +305,13 @@ Exit 0 means every page matches; exit 1 lists the drifted pages and quotes where
 
 ## Icons and Imagery
 
-- Icon set: **Lucide** (default), Heroicons or Bootstrap Icons — outline, 1.5px stroke, one set only for the whole site
-- Deliver by CDN, no download step:
-  - Lucide: `https://unpkg.com/lucide@1.59.0/dist/umd/lucide.js` + `lucide.createIcons()` on load
-  - Bootstrap Icons (alternative): `https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.min.css`
+- Icon set: **Lucide** (https://lucide.dev, ISC licence) — outline, 1.5px stroke, one set only for the whole site
+- **Inlined into the markup, not loaded from a CDN.** Each icon is an `<svg class="icon" viewBox="0 0 24 24">` carrying only its path data:
+  - No third-party script, so nothing fails at runtime and no tile sits empty while an icon font or sprite loads.
+  - Roughly 3KB of HTML for the home page's ten icons — smaller than the CDN script it replaces, and one less origin to trust.
+  - `.icon` in `jnd.css` §10 holds the presentation (`fill: none`, `stroke: currentColor`, 1.5px, round caps), so each icon is a single line of markup.
+  - Decorative icons get `aria-hidden="true"` on their wrapper; the adjacent text carries the meaning.
+  - To add one: copy the path data from `https://lucide.dev` and set the size with `width`/`height`.
 - Photos: real office, server room and network hardware shots; rounded 12px, lazy loaded, always with alt text
 - Avoid generic stock clichés; prefer simple abstract network/diagram illustrations in brand colors
 
@@ -350,6 +360,8 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Card | `.card` + `.card-body` | `jnd.css` §6 |
 | Card icon tile | `.card-icon` | `jnd.css` §6 |
 | Card "Learn more" link | `.card-link` | `jnd.css` §6 |
+| Inline icon | `.icon` | `jnd.css` §10 |
+| Service card grid | `.row.g-4` of `.card.h-100` | `jnd.css` §6 |
 | Hero band | `.section.bg-grad-modern.text-white` | `jnd.css` §3, §4 |
 | Header | `header.site-header` | `jnd.css` §7 |
 | Footer | `footer.site-footer` | `jnd.css` §8 |
