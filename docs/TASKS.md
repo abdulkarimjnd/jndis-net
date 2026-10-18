@@ -1,6 +1,6 @@
 # Tasks: JND Integrated Solutions Website
 
-Stack: static site, HTML + Tailwind CSS + vanilla JavaScript. No backend.
+Stack: static site, HTML + Bootstrap 5.3.8 (CDN) + vanilla JavaScript. No backend, no build step.
 
 ## Workflow
 
@@ -14,17 +14,18 @@ Definition of done for every task:
 - Matches DESIGN.md (colors, type, buttons, cards)
 - Works at 360px, 768px and 1280px widths
 - Keyboard accessible, no console errors
+- Works served as plain static files — no build step (target: GitHub Pages)
 - Box checked below
 
 ---
 
 ## Phase 1: Setup
 
-- [ ] TASK-001: Create folder structure (`/`, `/services/`, `/assets/css`, `/assets/js`, `/assets/img`)
+- [x] TASK-001: Create folder structure (`/`, `/services/`, `/assets/css`, `/assets/js`, `/assets/img`)
 - [ ] TASK-002: Initialize Git repo and add `.gitignore`
-- [ ] TASK-003: Configure Tailwind (CLI build, `tailwind.config.js` with JND brand colors, gradients and Inter font)
-- [ ] TASK-004: Add npm scripts (`dev` watch build, `build` minified CSS)
-- [ ] TASK-005: Create base HTML template (meta tags, fonts, CSS link, skip link)
+- [ ] TASK-003: Link Bootstrap 5.3.8 and Inter (Google Fonts + jsDelivr CDN, correct load order)
+- [ ] TASK-004: Create `assets/css/jnd.css` (brand tokens, type scale, gradients, button and card overrides)
+- [ ] TASK-005: Create base HTML template (meta tags, fonts, CDN links, skip link)
 
 ## Phase 2: Shared Layout
 
@@ -32,7 +33,7 @@ Definition of done for every task:
 - [ ] TASK-007: Build mobile menu (hamburger toggle, focus handling, close on link click)
 - [ ] TASK-008: Build footer (company info, service links, contact, copyright year via JS)
 - [ ] TASK-009: Create shared button, card and section components (documented in DESIGN.md)
-- [ ] TASK-010: Load header and footer via JS partials so they are edited in one place
+- [ ] TASK-010: Load header and footer via JS partials so they are edited in one place (needs a web server — works on GitHub Pages, not `file://`)
 
 ## Phase 3: Home Page
 
@@ -78,7 +79,7 @@ Each page uses the same template: hero, overview, what's included, benefits, pro
 - [ ] TASK-036: Responsive review on all pages (360, 768, 1024, 1280)
 - [ ] TASK-037: Accessibility pass (contrast, labels, focus states, alt text, landmarks)
 - [ ] TASK-038: SEO basics (titles, meta descriptions, Open Graph, `sitemap.xml`, `robots.txt`)
-- [ ] TASK-039: Performance pass (image optimization, lazy loading, minified CSS/JS, Lighthouse 90+)
+- [ ] TASK-039: Performance pass (image optimization, lazy loading, Lighthouse 90+; Bootstrap CSS/JS is already minified via CDN)
 - [ ] TASK-040: Cross-browser check (Chrome, Firefox, Safari, Edge, mobile)
 - [ ] TASK-041: Fix broken links and run link check
 - [ ] TASK-042: Deploy (Netlify, Vercel, GitHub Pages or cPanel) and connect domain
