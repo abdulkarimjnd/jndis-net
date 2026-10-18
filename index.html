@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>JND Integrated Solutions</title>
+
+  <!-- Inter — brand typeface (DESIGN.md: 400/500/600/700) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Bootstrap 5.3.8 — base styles (must load before assets/css/jnd.css) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+  <!-- assets/css/jnd.css (brand tokens + overrides) is linked in TASK-004 -->
+
+  <!-- Bootstrap 5.3.8 bundle (Popper + Bootstrap) for dropdowns, collapse, etc. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- ===================================================================
+       TEMPORARY TASK-003 VERIFICATION BLOCK
+       Confirms Bootstrap CSS, Bootstrap JS and Inter are all loading.
+       Delete this entire <main> when the real home page starts (TASK-011).
+       =================================================================== -->
+  <main class="container py-5">
+    <h1 style="font-family: 'Inter', system-ui, sans-serif;">
+      Bootstrap + Inter loading check
+    </h1>
+
+    <p class="lead" style="font-family: 'Inter', system-ui, sans-serif;">
+      If this text renders in Inter and the button below is Bootstrap blue,
+      TASK-003 is done. Brand colours arrive in TASK-004.
+    </p>
+
+    <div class="row g-4 my-2">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card"><div class="card-body">Grid column 1</div></div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card"><div class="card-body">Grid column 2</div></div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card"><div class="card-body">Grid column 3</div></div>
+      </div>
+    </div>
+
+    <!-- Exercises the Bootstrap JS bundle: this dropdown only opens if it loaded. -->
+    <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+        JS bundle check
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Opens means Bootstrap JS works</a></li>
+        <li><a class="dropdown-item" href="#">Second item</a></li>
+      </ul>
+    </div>
+  </main>
+
+</body>
+</html>
