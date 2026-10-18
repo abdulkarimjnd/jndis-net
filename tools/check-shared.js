@@ -19,6 +19,10 @@
      - the copyright year inside data-current-year
      - HTML comments, line endings, and runs of whitespace
 
+   It also checks where the blocks SIT. Identical text in the wrong place is
+   still broken: a footer duplicated before <main> is drift-free and renders
+   the footer above the page content.
+
    Usage:
        node tools/check-shared.js
 
@@ -103,6 +107,8 @@ if (pages.length === 0) {
 console.log('Checking ' + pages.length + ' page(s) for shared-markup drift\n');
 
 var problems = 0;
+var driftProblems = 0;
+var layoutProblems = 0;
 
 BLOCKS.forEach(function (block) {
   var reference = null;
@@ -142,6 +148,7 @@ BLOCKS.forEach(function (block) {
 
   if (found.length) {
     problems += found.length;
+    driftProblems += found.length;
     console.log('  ' + block.name.toUpperCase() + '  DRIFT');
     found.forEach(function (line) { console.log(line); });
   } else {
@@ -151,10 +158,70 @@ BLOCKS.forEach(function (block) {
 
 console.log('');
 
+/* --------------------------------------------------------------------------
+   Placement, not just content.
+
+   The two blocks can be byte-identical and still sit in the wrong place. The
+   footer was originally duplicated before <main>: valid, drift-free markup
+   that renders the footer above the page content on every page. Comparing
+   text alone cannot see that, so check the landmark order too.
+   -------------------------------------------------------------------------- */
+var PLACEMENT = [
+  { label: '<header> before <main>', first: '<header', second: '<main' },
+  { label: '</main> before <footer>', first: '</main>', second: '<footer' }
+];
+
+console.log('Landmark placement');
+
+PLACEMENT.forEach(function (rule) {
+  var wrong = [];
+
+  pages.forEach(function (page) {
+    var raw;
+    try {
+      raw = fs.readFileSync(page, 'utf8');
+    } catch (err) {
+      return;
+    }
+
+    var first = raw.indexOf(rule.first);
+    var second = raw.indexOf(rule.second);
+
+    if (first === -1 || second === -1) {
+      wrong.push('  ' + relative(page) + ': expected both "' + rule.first +
+                 '" and "' + rule.second + '"');
+    } else if (first > second) {
+      wrong.push('  ' + relative(page) + ': "' + rule.second +
+                 '" appears before "' + rule.first + '"');
+    }
+  });
+
+  if (wrong.length) {
+    problems += wrong.length;
+    layoutProblems += wrong.length;
+    console.log('  ' + rule.label + '  WRONG PLACEMENT');
+    wrong.forEach(function (line) { console.log(line); });
+  } else {
+    console.log('  ' + rule.label + '  ok');
+  }
+});
+
+console.log('');
+
 if (problems) {
-  console.log('FAILED — ' + problems + ' problem(s). Copy the canonical block from the');
-  console.log('page quoted as the reference into the ones that differ.');
+  console.log('FAILED — ' + problems + ' problem(s).');
+  if (driftProblems) {
+    console.log('');
+    console.log('Content drift: copy the canonical block from the page quoted as the');
+    console.log('reference into the ones that differ.');
+  }
+  if (layoutProblems) {
+    console.log('');
+    console.log('Placement: the header block belongs right after <body>, the footer block');
+    console.log('right before </body> — that is, after </main>. A footer before <main>');
+    console.log('renders above the page content. See DESIGN.md, "Shared markup".');
+  }
   process.exit(1);
 }
 
-console.log('OK — every page carries the same header and footer.');
+console.log('OK — every page carries the same header and footer, in the right place.');

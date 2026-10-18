@@ -202,6 +202,26 @@ Card body copy is short by design — roughly two lines at `col-lg-4`. The grid 
 
 On Surface sections cards are White by default; on White sections add `.bg-surface` to the card to invert them.
 
+## Feature list
+
+Icon-and-text columns, used for the "Why choose" band. **No card chrome, deliberately** — placed straight after the services grid, cards would read as a second set of services.
+
+```html
+<div class="row g-4">
+  <div class="col-12 col-md-6 col-lg-3">
+    <svg class="icon text-primary d-block mb-3" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path d="…"/></svg>
+    <h3 class="mb-2">Feature name</h3>
+    <p class="mb-0">Two or three lines of description.</p>
+  </div>
+</div>
+```
+
+- **Adds no new CSS.** It is `.section`, `.container`, the Bootstrap grid, `.icon` from `jnd.css` §10, and `.text-primary` for the icon colour.
+- The icon is **32px**, larger than the 24px inside `.card-icon`, because it stands alone rather than sitting in a tile.
+- Icon colour is **Primary `#1455A0`, not Accent.** Accent `#50B8E8` reaches only 2.24:1 on white, so an accent icon would be almost invisible.
+- **`d-block` on the `<svg>` matters.** Without it the icon sits on a text baseline and leaves a stray gap above the heading.
+- **Four items at `col-lg-3`**, so the row divides evenly. Three would leave an empty column at desktop.
+
 ## Hero
 
 The home page hero is **one band built from existing components — no hero-specific CSS**:
@@ -295,6 +315,20 @@ The cost is duplication, so both blocks are fenced in every page:
 
 **The only permitted per-page difference is the active nav link** — `class="active"` plus `aria-current="page"`. Everything else inside a fence must stay byte-identical.
 
+**Order matters, and the two fences do not travel together.** The header block goes right after `<body>`; the footer block goes right before `</body>`, i.e. *after* `</main>`:
+
+```html
+<body>
+  <!-- BEGIN shared header --> … <!-- END shared header -->
+
+  <main id="main" tabindex="-1"> … </main>
+
+  <!-- BEGIN shared footer --> … <!-- END shared footer -->
+</body>
+```
+
+A footer placed before `<main>` is valid, drift-free, and renders the footer **above the page content** — which is what it did until TASK-013, because the two fences had been kept together for convenience. `check-shared.js` therefore verifies landmark order as well as text; identical bytes cannot catch a misplacement.
+
 **When the nav or footer changes:** edit it in one page, then run
 
 ```
@@ -361,6 +395,7 @@ Every shared component, where it is styled, and the class to reach for. If somet
 | Card icon tile | `.card-icon` | `jnd.css` §6 |
 | Card "Learn more" link | `.card-link` | `jnd.css` §6 |
 | Inline icon | `.icon` | `jnd.css` §10 |
+| Icon, 32px feature list | `.icon.text-primary.d-block` | `jnd.css` §10 |
 | Service card grid | `.row.g-4` of `.card.h-100` | `jnd.css` §6 |
 | Hero band | `.section.bg-grad-modern.text-white` | `jnd.css` §3, §4 |
 | Header | `header.site-header` | `jnd.css` §7 |

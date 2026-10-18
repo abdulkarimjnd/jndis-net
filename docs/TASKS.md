@@ -62,7 +62,7 @@ Services hub: `services/index.html`. About: `about.html`. Contact: `contact.html
 
 - [x] TASK-011: Hero section with tagline and call-to-action buttons — composed from existing components only; the Modern gradient was redefined AA-safe (see DESIGN.md)
 - [x] TASK-012: Services overview grid (10 services, linked to detail pages) — `.card.h-100` on a Surface band, inline Lucide icons, one aria-label per link
-- [ ] TASK-013: Why choose JND section (Reliable Support, Professional Service)
+- [x] TASK-013: Why choose JND section (Reliable Support, Professional Service) — four `.col-lg-3` feature columns, no card chrome, no new CSS. Also fixed: the shared footer was sitting *before* `<main>` and rendering above the page content; `check-shared.js` now verifies landmark order
 - [ ] TASK-014: Call-to-action banner (Modern Gradient)
 - [ ] TASK-015: Scroll reveal animations (respect `prefers-reduced-motion`)
 
